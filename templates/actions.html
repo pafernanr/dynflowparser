@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{label}} {{execution_plan_uuid}}</title>
+    <link rel="stylesheet" href="../html/css/dynflowparser.css" />
+    <link rel="stylesheet" href="../html/css/jquery.treetable.css" />
+    <link rel="stylesheet" href="../html/css/jquery.treetable.theme.default.css" />
+    <script src="../html/js/jquery.js"></script>
+    <script src="../html/js/jquery.treetable.js"></script>
+    <script src="../html/js/dynflowparser.js"></script>
+  </head>
+<body>{% include "header.html" %}
+  <table class="sosdetails"><tr>
+    <th>Plan Label</th><td>{{label}}</td>
+  </tr><tr>
+    <th>Path</th><td><ul class="path">
+      <li><b>Task id: </b> {{actions[0][13]}}<ul class="path">
+      {% if caller_execution_plan_id %}
+      <li><b>Action caller_execution_plan_id:</b> <a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a>
+        <ul class="path">
+      {% endif %}
+          <li><b>Action uuid:</b> {{execution_plan_uuid}}</li>
+      {% if caller_execution_plan_id %}
+        </ul>
+      </li>
+      {% endif %}
+    </ul></li></ul></td>
+  </tr><tr>
+    <th>Task action</th><td><pre>{{actions[0][12]}}</pre></td>
+  </tr></table>
+
+  <button onclick="jQuery('#tblAction').treetable('collapseAll');expanderrors();">Expand Errors</button>
+  <button onclick="jQuery('#tblAction').treetable('expandAll');">Expand All</button>
+  <button onclick="jQuery('#tblAction').treetable('collapseAll');">Collapse All</button>
+
+<table id="tblAction" style="width:100%">
+    <thead>
+    <tr>
+       <th>Action class</th><th>Step started_at</th><th>Step ended_at</th><th>Step real_time</th><th>Step execution_time</th><th>state</th>
+    </tr>
+    </thead>
+    <tbody>
+   {% for a in actions %}
+      <tr class="action {{a[11]}}" data-tt-id="{{a[0]}}" {% if a[0] > 1 %} data-tt-parent-id="{{a[2]}}" {% endif %}>
+        <td colspan="5"><span class='folder'></span><span class="show">{{a[3]}}: {{a[4]}}</span></td>
+        <td class="{{a[10]}}">
+          {% if a[10]=="error" %}<strong>{{a[10]}}</strong>
+            {% elif a[10] in ["warning", "pending", "skipped"] %}<sup>{{a[10]}}</sup>
+            {% else %}<i>{{a[10]}}</i>
+          {% endif %}</td>
+      </tr>
+      <tr class="details" id="details_{{a[0]}}">
+        <td colspan="6">
+            <ul class="tabs"> 
+              <li><a id="tab1_{{a[0]}}" class="open">Action input</a>
+                <div class="container json open" id="tab1_{{a[0]}}_c">{{a[6]}}</div></li> 
+              <li><a id="tab2_{{a[0]}}">Action output</a>
+                <div class="container json" id="tab2_{{a[0]}}_c">{{a[7]}}</div></li>
+              <li><a id="tab3_{{a[0]}}">Action data</a>
+                <div class="container json" id="tab3_{{a[0]}}_c">{{a[5]}}</div></li> 
+            </ul>
+        </td>
+      </tr>
+      {% for s in a[14] %}
+        <tr class="step {{s[3]}}" data-tt-id="{{a[0]}}_{{s[1]}}" data-tt-parent-id="{{a[0]}}">
+          <td><span class="file"></span><span class="show">{{a[3]}}.{{s[1]}}: {{s[10]}}</span></td>
+          <td>{{s[4]}}</td>
+          <td>{{s[5]}}</td>
+          <td>{{s[6]}}</td>
+          <td>{{s[7]}}</td>
+          <td class="{{s[3]}}">
+            {% if s[3]=="error" %}<strong>{{s[3]}}</strong>
+              {% elif s[3] in ["warning", "pending"] %}<sup>{{s[3]}}</sup>
+              {% else %}<i>{{s[3]}}</i>
+            {% endif %}</td>
+        </tr>
+        <tr class="details" id="details_{{a[0]}}_{{s[1]}}">
+          <td colspan="6"><ul class="tabs">
+            <li><a id="tab1_s{{a[0]}}_{{s[1]}}" class="open">Step error</a>
+              <div class="container json open" id="tab1_s{{a[0]}}_{{s[1]}}_c"> {{s[13]}}</div></li>
+            <li><a id="tab2_s{{a[0]}}_{{s[1]}}">Step queue</a>
+              <div class="container json" id="tab2_s{{a[0]}}_{{s[1]}}_c"> {{s[12]}}</div></li>
+            <li><a id="tab3_s{{a[0]}}_{{s[1]}}">Step children</a>
+              <div class="container json" id="tab3_s{{a[0]}}_{{s[1]}}_c"> {{s[14]}}</div></li>
+            <li><a id="tab4_s{{a[0]}}_{{s[1]}}">Step data</a>
+              <div class="container json" id="tab4_s{{a[0]}}_{{s[1]}}_c"> {{s[15]}}</div></li>
+          </ul>
+          </td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+    </tbody>
+  </table>
+  </body>

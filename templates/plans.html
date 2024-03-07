@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Plans</title>
+    <link rel="stylesheet" href="html/css/dynflowparser.css" />
+    <link rel="stylesheet" href="html/css/jquery.treetable.css" />
+    <link rel="stylesheet" href="html/css/jquery.treetable.theme.default.css" />
+  </head>
+<body>{% include "header.html" %}
+<table id="tblPlans" class="treetable">
+  <thead>
+  <tr>
+    <th>label</th><th>uuid</th><th>task_id</th><th>started_at</th><th>ended_at</th><th>state</th><th>result</th>
+    <!--<th>action</th>-->
+  </tr>
+  </thead>
+  <tbody>
+  {% for p in rows %} 
+  <tr>
+    <td>
+      {% if p[0] and p[0]|length %}&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+      {% else %}<span class="expanded"> </span>{% endif %}
+      <span class=folder><a href='actions/{{p[1]}}.html' target="_blank">{{p[2]}}</a></span>
+    </td>
+    <td>{{p[1]}}</td>
+    <td>{{p[8]}}</td>
+    <td>{{p[5]}}</td>
+    <td>{{p[6]}}</td>
+    <td>{{p[3]}}</td>
+    <td class="{{p[4]}}">{{p[4]}}</td>
+    <!--<td>{{p[7]}}</td>-->
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+

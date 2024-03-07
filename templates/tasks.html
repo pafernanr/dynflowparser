@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tasks</title>
+    <link rel="stylesheet" href="html/css/dynflowparser.css" />
+    <link rel="stylesheet" href="html/css/jquery.treetable.css" />
+    <link rel="stylesheet" href="html/css/jquery.treetable.theme.default.css" />
+  </head>
+<body>{% include "header.html" %}
+<table id="tblPlans" class="treetable">
+  <thead>
+  <tr>
+    <th>Task action</th><!--<th>Task label</th>--><th>Plan uuid</th><th>Task id</th><!--<th>external_id</th>-->
+    <th>Task started_at</th><th>Task ended_at</th> 
+    <th>Task state</th><th>Task result</th>
+  </tr>
+  </thead>
+  <tbody>                                
+  {% for t in rows %} 
+  <tr>
+    <td class="action"> 
+      {% if t[0] and t[0]|length %}
+         <span class="folder indented">{{t[8]}}</span>
+      {% else %}
+         <span class="folder unindented">{{t[8]}}</span>
+      {% endif %}
+    </td>
+    <!--<td>{{t[3]}}</td>-->
+    <td><a href='actions/{{t[2]}}.html'>{{t[2]}}</a></td>
+    <td>{{t[1]}}</td>
+    <td>{{t[6]}}</td>
+    <td>{{t[7]}}</td>
+    <td>{{t[4]}}</td>
+    <td class="{{t[5]}}">
+      {% if t[5]=="error" %}<strong>{{t[5]}}</strong>
+        {% elif t[5] in ["warning", "pending", "skipped"] %}<sup>{{t[5]}}</sup>
+        {% else %}<i>{{t[5]}}</i>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
