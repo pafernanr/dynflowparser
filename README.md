@@ -29,6 +29,6 @@ Usage: configuration.py [Options] [INPUTDIR] [OUTPUTDIR]
 ~~~ 
 
 #### Limitations
-- [sosreport](https://github.com/sosreport/sos) by default requests last 14 days.
-- [sosreport](https://github.com/sosreport/sos) truncates output files at 100M, hence some records could be missing.
-- Only Dynflow schema version 24 is supported. (v20 is not completely CSV compliant)
+- sosreport by default requests last 14 days.
+- sosreport truncates output files at 100M, hence some records could be missing.
+- Only Dynflow schema version 24 is supported. (v20 is not CSV compliant)
