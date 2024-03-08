@@ -16,7 +16,7 @@ Required python libraries:
 
 #### Usage 
 ~~~
-Usage: configuration.py [Options] [INPUTDIR] [OUTPUTDIR]
+Usage: dynflowparser.py [Options] [INPUTDIR] [OUTPUTDIR]
   Options:
     [-a|--all]: Show all Plans. By default only unsuccess are parsed.
     [-d|--debug]: Debug level [D,I,W,E].
