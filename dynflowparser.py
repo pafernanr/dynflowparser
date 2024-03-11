@@ -126,8 +126,8 @@ if __name__ == "__main__":
     # Search for Tasks that should to include
     headers = Conf.parser['tasks']['headers']
     dynflow = read_dynflow('tasks')
-    # begin workaround for mysteriously disordered fields on some task files 
-    if str(int(dynflow[2][13])) == dynflow[2][13]:
+    # begin workaround for mysteriously disordered fields on some task files
+    if " " not in dynflow[2][13]:
         Conf.parser['tasks']['headers'] = 'id,type,label,started_at,ended_at,state,result,external_id,parent_task_id,start_at,start_before,action,state_updated_at,user_id'.split(",")  # noqa E501
     # end workaround
     for i in range(0, len(dynflow)):
