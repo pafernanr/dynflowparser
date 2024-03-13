@@ -37,6 +37,9 @@ class OutputSQLite:
     def execute(self, sql, params=None):
         self.cursor.execute(sql, params or ())
 
+    def executemany(self, sql, params=None):
+        self.cursor.executemany(sql, params or ())
+
     def fetchall(self):
         return self.cursor.fetchall()
 
@@ -49,29 +52,26 @@ class OutputSQLite:
 
     def insert_tasks(self, values):
         query = "INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        for v in values:
-            Util.debug(self.Conf, "D", query + " " + str(v))
-            self.execute(query, v)
+        Util.debug(self.Conf, "D", query + ", " + str(values))
+        self.executemany(query, values)
+        self.commit()
 
     def insert_plans(self, values):
         query = "INSERT INTO plans VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        for v in values:
-            Util.debug(self.Conf, "D", query + " " + str(v))
-            self.execute(query, v)
+        Util.debug(self.Conf, "D", query + " " + str(values))
+        self.executemany(query, values)
         self.commit()
 
     def insert_actions(self, values):
         query = "INSERT INTO actions VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-        for v in values:
-            Util.debug(self.Conf, "D", query + " " + str(v))
-            self.execute(query, v)
+        Util.debug(self.Conf, "D", query + " " + str(values))
+        self.executemany(query, values)
         self.commit()
 
     def insert_steps(self, values):
         query = "INSERT INTO steps VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        for v in values:
-            Util.debug(self.Conf, "D", query + " " + str(v))
-            self.execute(query, v)
+        Util.debug(self.Conf, "D", query + " " + str(values))
+        self.executemany(query, values)
         self.commit()
 
     def create_tables(self):
@@ -224,9 +224,9 @@ class OutputSQLite:
                         fields.append(csv[i][h])
                 Util.debug(self.Conf, "I", str(fields))
                 multi.append(fields)
-                #if i > 999 and i % 1000 == 0:  # insert every 1000 records
-                self.insert_multi(type, multi)
-                multi = []
+                if i > 499 and i % 500 == 0:  # insert every 1000 records
+                    self.insert_multi(type, multi)
+                    multi = []
                 if not self.Conf.quiet:
                     pb.print_bar(i)
 
