@@ -224,7 +224,7 @@ class OutputSQLite:
                         fields.append(csv[i][h])
                 Util.debug(self.Conf, "I", str(fields))
                 multi.append(fields)
-                if i > 499 and i % 500 == 0:  # insert every 1000 records
+                if i > 999 and i % 1000 == 0:  # insert every 1000 records
                     self.insert_multi(type, multi)
                     multi = []
                 if not self.Conf.quiet:
