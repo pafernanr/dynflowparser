@@ -149,17 +149,6 @@ class OutputHtml:
                 steps[r[0]] = {r[2]: [r]}
         # fetch actions
         actions = {}
-        sql = ("SELECT a.id, a.execution_plan_uuid, a.caller_action_id,"
-               + " a.run_step_id, a.class, a.data, a.input, a.output,"
-               + " p.result, p.label, MIN(s.state),"
-               + " a.caller_execution_plan_id, MAX(t.action), MAX(t.id)"
-               + " FROM actions a"
-               + " LEFT JOIN plans p on a.execution_plan_uuid = p.uuid"
-               + " LEFT JOIN steps s on s.execution_plan_uuid = p.uuid"
-               + " LEFT JOIN tasks t"
-               + " ON p.uuid=t.external_id"
-               + " AND s.action_id = a.id"
-               + " GROUP BY a.execution_plan_uuid, a.id")
         sql = ("SELECT s.action_id, p.uuid, a.caller_action_id,"
                + " a.run_step_id, s.action_class, a.data, a.input, a.output,"
                + " p.result, p.label, MIN(s.state),"
@@ -229,10 +218,12 @@ class OutputHtml:
         parent = os.path.dirname(os.path.realpath(__file__)) + "/../templates/"
         environment = Environment(loader=FileSystemLoader(parent))
         template = environment.get_template(templatefile)
-        # func_dict = {
-        #     "show_json": self.show_json
-        # }
-        # template.globals.update(func_dict)
+        # ##### could be useful in the future
+        # ##### it can make functions available on jinja2 space
+        # # func_dict = {
+        # #     "show_json": self.show_json
+        # # }
+        # # template.globals.update(func_dict)
         # Write output csv file
         with open(outputfile, mode="w", encoding="utf-8") as results:
             results.write(template.render(context))
