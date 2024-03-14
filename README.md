@@ -1,5 +1,5 @@
 ### dynflowparser
-Get [sosreport](https://github.com/sosreport/sos) dynflow files and generates user friendly html pages for Tasks, Plans, Actions and Steps
+Read [sosreport](https://github.com/sosreport/sos) dynflow files and generates user friendly html pages for Tasks, Plans, Actions and Steps
 
 - Only unsuccessful Tasks are parsed by default. (Use '-a' to parse all).
 - Failed Actions & Steps are automatically expanded on the Plan page for easy error location.
