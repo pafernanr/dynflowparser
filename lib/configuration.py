@@ -90,6 +90,9 @@ class Conf:
                 elif len(remainder) > 2:
                     Conf.show_help("Wrong parameters count")
 
+            if not os.path.exists(Conf.inputdir + "/sos_commands"):
+                Conf.show_help("'" + Conf.inputdir + "' doesn't look like a sosreport")  # noqa E501
+
             Conf.set_sos_details()
             Conf.outputdir = str(Conf.outputdir + "/dynflowparser/"
                                  + Conf.sos['sosname'] + "/").replace('//', '/')  # noqa E501
@@ -105,9 +108,6 @@ class Conf:
             shutil.copytree(os.path.dirname(
                         os.path.realpath(__file__)) + "/../html",
                         Conf.outputdir + "/html")
-
-            if not os.path.exists(Conf.inputdir + "/sos_commands"):
-                Conf.show_help("'" + Conf.inputdir + "' doesn't look like a sosreport")  # noqa E501
 
             Conf.dbfile = Conf.outputdir + "dynflowparser.db"
 
