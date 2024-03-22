@@ -91,7 +91,7 @@ class Conf:
                     Conf.show_help("Wrong parameters count")
 
             if not os.path.exists(Conf.inputdir + "/sos_commands"):
-                Conf.show_help("'" + Conf.inputdir + "' doesn't look like a sosreport")  # noqa E501
+                Conf.show_help("'" + Conf.inputdir + "' doesn't look like a sosreport valid path")  # noqa E501
 
             Conf.set_sos_details()
             Conf.outputdir = str(Conf.outputdir + "/dynflowparser/"
