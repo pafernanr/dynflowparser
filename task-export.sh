@@ -44,7 +44,7 @@ queries[dynflow_steps]="select dynflow_steps.* from foreman_tasks_tasks
 mkdir -p sos_commands/{systemd,foreman,processor}
 mkdir -p etc/foreman-installer/scenarios.d
 
-# get required details (basic to sosreport details)
+# get basic sosreport details
 timedatectl &> sos_commands/systemd/timedatectl
 hostname &> hostname
 free &> free
