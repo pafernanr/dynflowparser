@@ -9,7 +9,7 @@ Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and
 - Automatically opens output on default browser.
 - Lynx friendly.
 
-| Tasks list | Task detail | Lynx |
+| Tasks list | Task details | Lynx |
 | --- | --- | --- |
 | ![](html/images/_screenshot1.png) | ![](html/images/_screenshot2.png) | ![](html/images/_screenshot3.png) |
 
