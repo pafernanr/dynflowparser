@@ -1,5 +1,5 @@
 ### dynflowparser
-Read [sosreport](https://github.com/sosreport/sos) dynflow files and generates user friendly html pages for Tasks, Plans, Actions and Steps
+Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and generates user friendly html pages for Tasks, Plans, Actions and Steps
 
 - Only unsuccessful Tasks are parsed by default. (Use '-a' to parse all).
 - Failed Actions & Steps are automatically expanded on the Plan page for easy error location.
@@ -8,6 +8,8 @@ Read [sosreport](https://github.com/sosreport/sos) dynflow files and generates u
 - Dynflow UTC dates are automatically converted to honor sosreport timezone according to "/sos_commands/systemd/timedatectl".
 - Automatically opens output on default browser.
 - Lynx friendly.
+
+| ![](html/images/_screenshot1.png) | ![](html/images/_screenshot2.png) | ![](html/images/_screenshot3.png) |
 
 #### Dependencies
 Required python libraries:
@@ -32,3 +34,14 @@ Usage: dynflowparser.py [Options] [INPUTDIR] [OUTPUTDIR]
 - sosreport by default requests last 14 days.
 - sosreport truncates output files at 100M, hence some records could be missing.
 - Only Dynflow schema version 24 is supported. (v20 is not CSV compliant)
+
+#### How to accurately export tasks.
+Included `task-export.sh` can be used to export the required files without the sosreport limitations. Just execute it as follows.
+~~~
+Usage: task-export.sh DAYS RESULT
+  DAYS: Number of days to export.
+  RESULT: Filter exported tasks by result: [all cancelled error pending warning].
+Example: ./task-export.sh 3 all
+~~~
+
+
