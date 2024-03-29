@@ -1,24 +1,36 @@
 #!/bin/bash
+# Author: Pablo Fernández Rodríguez
+# Web: https://github.com/pafernanr/dynflowparser
+# Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
+
+result=(all cancelled error pending warning)
+
+help () {
+    echo "Usage: task-export.sh DAYS RESULT"
+    echo "  DAYS: Number of days to export."
+    echo "  RESULT: Filter exported tasks by result: [${result[@]}]."
+    echo "Example: ./task-export.sh 3 all"
+    echo
+    exit 1
+}
+
+# Get parameters
+if [ "$#" -ne 2 ]; then
+    help
+elif ! [[ ${result[*]} =~ "$2" ]]; then
+    echo -e "ERROR: Unknown result '$2'.\n"
+    help
+else
+    interval="'$1 days'"
+    if [[ "$2" != "all" ]]; then
+        filter="AND foreman_tasks_tasks.result='${2}'"
+    fi
+fi
 
 # create output folder
 outdir="task-export$(date +%Y%m%d-%H%M%S)"
 mkdir /tmp/${outdir}
 cd /tmp/${outdir}
-
-# Set export parameters
-if [[ "$1" -eq "" ]]; then
-    interval="'14 days'"
-else
-    if [ -n "$2" ]; then
-        interval="'$1 $2'"
-        if [ -n "$3" ]; then
-            filter="AND foreman_tasks_tasks.state='${3}'"
-        fi
-    else
-        echo "ERROR: Usage: task-export.sh [number] [days|weeks|months] [paused|warning|error|pending]"
-        exit 1
-    fi
-fi
 
 # Define output files and queries
 declare -A queries

@@ -1,4 +1,9 @@
 #!/usr/bin/python3
+'''
+Author: Pablo Fernández Rodríguez
+Web: https://github.com/pafernanr/dynflowparser
+Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
+'''
 from lib.configuration import Conf
 from lib.outputSQLite import OutputSQLite
 from lib.outputHtml import OutputHtml
