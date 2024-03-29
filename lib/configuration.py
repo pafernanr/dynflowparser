@@ -1,3 +1,8 @@
+'''
+Author: Pablo Fernández Rodríguez
+Web: https://github.com/pafernanr/dynflowparser
+Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
+'''
 import os
 import getopt
 import sys
@@ -17,28 +22,24 @@ class Conf:
         }
     inputdir = "."
     outputdir = "./"
-    timezone = False
     unsuccess = True
-    output = " html json "
-    dbfile = ""
     writesql = True
     sos = {}
     quiet = False
     debug = "W"  # [D, I, W, E]
-    logfile = "/tmp/dynflowparser.log"
 
     def show_help(errmsg=""):
         print("Usage: dynflowparser.py"
               + " [Options] [INPUTDIR] [OUTPUTDIR]"
               "\n  Options:"
               "\n    [-a|--all]: Parse all Plans. By default only unsuccess are parsed."  # noqa E501
-              "\n    [-d|--debug]: Debug level [D,I,W,E]. Logfile: /tmp/dynflowparser.log"  # noqa E501
+              "\n    [-d|--debug]: Debug level [D,I,W,E]. Default Warning."  # noqa E501
               "\n    [-h|--help]: Show help."
               "\n    [-n|--nosql]: Reuse existent sqlite file. (Useful for self debuging)"  # noqa E501
               "\n    [-q|--quiet]: Quiet. Don't show progress bar."
               "\n  Arguments:"
-              "\n    [INPUTDIR]: Default current path."
-              "\n    [OUTPUTDIR]: Default current path plus '/dynflowparser/'.")  # noqa E501
+              "\n    [INPUTDIR]: Default is current path."
+              "\n    [OUTPUTDIR]: Default is current path plus '/dynflowparser/'.")  # noqa E501
         if errmsg != "":
             print("\nERROR: " + errmsg)
             sys.exit(1)
@@ -90,6 +91,9 @@ class Conf:
                 elif len(remainder) > 2:
                     Conf.show_help("Wrong parameters count")
 
+            if not os.path.exists(Conf.inputdir + "/sos_commands"):
+                Conf.show_help("'" + Conf.inputdir + "' doesn't look a valid sosreport folder")  # noqa E501
+
             Conf.set_sos_details()
             Conf.outputdir = str(Conf.outputdir + "/dynflowparser/"
                                  + Conf.sos['sosname'] + "/").replace('//', '/')  # noqa E501
@@ -105,9 +109,6 @@ class Conf:
             shutil.copytree(os.path.dirname(
                         os.path.realpath(__file__)) + "/../html",
                         Conf.outputdir + "/html")
-
-            if not os.path.exists(Conf.inputdir + "/sos_commands"):
-                Conf.show_help("'" + Conf.inputdir + "' doesn't look like a sosreport")  # noqa E501
 
             Conf.dbfile = Conf.outputdir + "dynflowparser.db"
 
