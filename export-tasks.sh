@@ -6,10 +6,10 @@
 result=(all cancelled error pending warning)
 
 help () {
-    echo "Usage: task-export.sh DAYS RESULT"
+    echo "Usage: export-tasks.sh DAYS RESULT"
     echo "  DAYS: Number of days to export."
     echo "  RESULT: Filter exported tasks by result: [${result[@]}]."
-    echo "Example: ./task-export.sh 3 all"
+    echo "Example: ./export-tasks.sh 3 all"
     echo
     exit 1
 }

@@ -38,12 +38,12 @@ Usage: dynflowparser.py [Options] [INPUTDIR] [OUTPUTDIR]
 - Only Dynflow schema version 24 is supported. (v20 is not CSV compliant)
 
 #### How to accurately export tasks.
-Included `task-export.sh` can be used to export the required files without the sosreport limitations. Just execute it as follows.
+Included `export-tasks.sh` can be used to export the required files without the sosreport limitations. Just execute it as follows.
 ~~~
-Usage: task-export.sh DAYS RESULT
+Usage: export-tasks.sh DAYS RESULT
   DAYS: Number of days to export.
   RESULT: Filter exported tasks by result: [all cancelled error pending warning].
-Example: ./task-export.sh 3 all
+Example: ./export-tasks.sh 3 all
 ~~~
 
 
