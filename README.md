@@ -18,14 +18,14 @@ Required python libraries:
 ~~~
 Usage: dynflowparser.py [Options] [INPUTDIR] [OUTPUTDIR]
   Options:
-    [-a|--all]: Show all Plans. By default only unsuccess are parsed.
-    [-d|--debug]: Debug level [D,I,W,E].
+    [-a|--all]: Parse all Plans. By default only unsuccess are parsed.
+    [-d|--debug]: Debug level [D,I,W,E]. Default Warning.
     [-h|--help]: Show help.
-    [-n|--nosql]: Reuse existent sqlite file. (Probably only useful for self debuging purposes)
+    [-n|--nosql]: Reuse existent sqlite file. (Useful for self debuging)
     [-q|--quiet]: Quiet. Don't show progress bar.
   Arguments:
-    [INPUTDIR]: Default './'.
-    [OUTPUTDIR]: Default './dynflowparser/'.
+    [INPUTDIR]: Default is current path.
+    [OUTPUTDIR]: Default is current path plus '/dynflowparser/'.
 ~~~ 
 
 #### Limitations

@@ -28,13 +28,13 @@ class Conf:
               + " [Options] [INPUTDIR] [OUTPUTDIR]"
               "\n  Options:"
               "\n    [-a|--all]: Parse all Plans. By default only unsuccess are parsed."  # noqa E501
-              "\n    [-d|--debug]: Debug level [D,I,W,E]. Logfile: /tmp/dynflowparser.log"  # noqa E501
+              "\n    [-d|--debug]: Debug level [D,I,W,E]. Default Warning."  # noqa E501
               "\n    [-h|--help]: Show help."
               "\n    [-n|--nosql]: Reuse existent sqlite file. (Useful for self debuging)"  # noqa E501
               "\n    [-q|--quiet]: Quiet. Don't show progress bar."
               "\n  Arguments:"
-              "\n    [INPUTDIR]: Default current path."
-              "\n    [OUTPUTDIR]: Default current path plus '/dynflowparser/'.")  # noqa E501
+              "\n    [INPUTDIR]: Default is current path."
+              "\n    [OUTPUTDIR]: Default is current path plus '/dynflowparser/'.")  # noqa E501
         if errmsg != "":
             print("\nERROR: " + errmsg)
             sys.exit(1)
