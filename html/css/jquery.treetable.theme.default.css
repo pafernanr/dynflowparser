@@ -30,6 +30,10 @@ table.treetable tbody tr {
   border-bottom: 1px solid #888;
 }
 
+table.treetable tbody tr:hover {
+  background-color: lightyellow;
+}
+
 table.treetable tbody tr td{
   padding: .1em .17em 0 .17em;
   border: 1px solid #888;
