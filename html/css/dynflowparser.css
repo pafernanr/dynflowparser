@@ -52,6 +52,9 @@
   td.pending {
 	background-color: rgba(255, 166, 0, 0.650);;
   }
+  td.suspended {
+    background-color: rgba(255, 166, 0, 0.650);;
+  }
   td.skipped {
 	background-color: rgba(255, 255, 0, 0.650);
   }
