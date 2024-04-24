@@ -108,6 +108,8 @@
    outline:none;
   }
   .container {
+   text-wrap: wrap;
+   word-wrap: break-word;
    position: absolute;
    left: 4%;
    min-height: 2em;
