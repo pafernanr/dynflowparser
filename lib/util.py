@@ -22,7 +22,9 @@ class Util:
                   }
         if levels[sev] >= levels[Conf.debug]:
             print(f"[{sev}] {str(msg)}\n")
-
+        if sev == 'E':
+            sys.exit(1)
+            
     def exec_command(Conf, cmd):
         Util.debug(Conf, "D", "execcommand: " + cmd)
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
