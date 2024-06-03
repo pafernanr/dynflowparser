@@ -43,7 +43,7 @@
     </thead>
     <tbody>
    {% for a in actions %}
-   {% if a[4] == 'Actions::RemoteExecution::ProxyAction' and a[7] != '' and '&quot;exit_status&quot;:&nbsp;0,' not in a[7] %}
+   {% if a[4] is not none and a[7] is not none and a[4] == 'Actions::RemoteExecution::ProxyAction' and a[7] != '' and '&quot;exit_status&quot;:&nbsp;0,' not in a[7] %}
      {% set state = 'error' %}
    {% else %}
      {% set state = a[10] %}

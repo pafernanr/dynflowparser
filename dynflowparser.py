@@ -117,7 +117,8 @@ def get_dynflow_schema():
         }
     else:
         print("ERROR: Dynflow schema version "
-              + f"{Conf.parser['version']} not supported.")
+              + f"{Conf.parser['version']} is not supported. "
+              + "Please refer to README.")
         sys.exit(1)
 
 

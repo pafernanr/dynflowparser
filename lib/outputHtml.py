@@ -29,7 +29,6 @@ class OutputHtml:
 
     def write(self):
         self.write_tasks()
-        # self.write_plans()  # deprecated
         self.write_actions()
 
     def write_tasks(self):
@@ -77,58 +76,6 @@ class OutputHtml:
             "rows": rows
         }
         self.write_report(context, "tasks.html", outputfile)
-
-    def write_plans(self):
-        Util.debug(self.Conf, "I", "write_plans")
-        if self.Conf.unsuccess:
-            where = " AND p.result != 'success'"
-        else:
-            where = ""
-
-        tmp = self.db.query("SELECT a.caller_execution_plan_id, p.uuid,"
-                            + " p.label, p.state, p.result, p.started_at,"
-                            + " p.ended_at, t.action, t.id"
-                            + " FROM plans p"
-                            + " LEFT JOIN actions a"
-                            + " ON p.uuid=a.execution_plan_uuid"
-                            + " LEFT JOIN tasks t"
-                            + " ON p.uuid=t.external_id"
-                            + " WHERE (a.caller_execution_plan_id=''"
-                            + " OR a.caller_execution_plan_id IS NULL)" 
-                            + " AND (a.id=1 OR a.id IS NULL)"
-                            + where
-                            + " GROUP BY p.uuid"
-                            + " ORDER BY p.started_at DESC")
-        rowsdict = {}
-        for t in tmp:
-            rowsdict[t[1]] = [t]
-
-        tmp = self.db.query("SELECT a.caller_execution_plan_id, p.uuid,"
-                            + " p.label, p.state, p.result, p.started_at,"
-                            + " p.ended_at, t.action, t.id"
-                            + " FROM plans p"
-                            + " LEFT JOIN actions a"
-                            + " ON p.uuid=a.execution_plan_uuid"
-                            + " LEFT JOIN tasks t"
-                            + " ON p.uuid=t.external_id"
-                            + " WHERE a.caller_execution_plan_id!=''"
-                            + where
-                            + " ORDER BY p.started_at ASC")
-        for t in tmp:
-            if t[0] in rowsdict.keys():
-                rowsdict[t[0]].append(t)
-
-        rows = []
-        for vs in rowsdict.values():
-            if vs:
-                for v in vs:
-                    rows.append(v)
-
-        outputfile = self.Conf.outputdir + "/plans.html"
-        context = {
-            "rows": rows
-        }
-        self.write_report(context, "plans.html", outputfile)
 
     def write_actions(self):
         Util.debug(self.Conf, "I", "writeActionTree")
