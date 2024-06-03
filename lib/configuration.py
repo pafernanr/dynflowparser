@@ -54,7 +54,7 @@ class Conf:
         Conf.sos['tuning'] = Util.exec_command(Conf, 'grep tuning  ' + Conf.inputdir + '/etc/foreman-installer/scenarios.d/satellite.yaml | cut -d ":" -f2')  # noqa E501
         Conf.sos['satversion'] = Util.exec_command(Conf, "grep -E 'satellite-6' "  # noqa E501
                                                    + " " + Conf.inputdir + "/installed-rpms | cut -d ' ' -f1").strip()  # noqa E501
-        Conf.parser['version'] = Util.exec_command(Conf, "sed -n '3p'  " + Conf.inputdir + "/sos_commands/foreman/dynflow_schema_info  | sed 's/ *//'").strip()  # noqa E501
+        Conf.parser['version'] = Util.exec_command(Conf, "tail -n3 " + Conf.inputdir + "/sos_commands/foreman/dynflow_schema_info | head -1 | sed 's/ *//'").strip()  # noqa E501
         Conf.sos['sosname'] = os.path.basename(os.path.normpath(Conf.inputdir))  # noqa E501
         if Conf.sos['sosname'] == ".":
             Conf.sos['sosname'] = ""

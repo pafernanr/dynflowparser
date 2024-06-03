@@ -1,6 +1,6 @@
 // expand non success branchs automatically
 function expanderrors() {
-  $('tr.error, tr.warning, tr.pending, tr.skipped').each(function(){
+  $('tr.error, tr.warning, tr.pending, tr.skipped, tr.suspended').each(function(){
     $('#tblAction').treetable('expandNode', 1);
     id = $(this).attr('data-tt-id');
     // $('#details_'+id).show();

@@ -116,9 +116,9 @@ def get_dynflow_schema():
             'headers': 'execution_plan_uuid,id,action_id,state,started_at,ended_at,real_time,execution_time,progress_done,progress_weight,class,action_class,queue,error,children,data'.split(",")  # noqa E501
         }
     else:
-        print("ERROR: Unknown schema version ("
-              + Conf.parser['version'] + ")."
-              + " dynflowparser is limited to version 24")
+        print("ERROR: Dynflow schema version "
+              + f"{Conf.parser['version']} is not supported. "
+              + "Please refer to README.")
         sys.exit(1)
 
 
