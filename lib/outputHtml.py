@@ -72,10 +72,12 @@ class OutputHtml:
                     rows.append(v)
 
         outputfile = self.Conf.outputdir + "/index.html"
+        outputcsv = self.Conf.outputdir + "/tasks.csv"
         context = {
             "rows": rows
         }
         self.write_report(context, "tasks.html", outputfile)
+        self.write_report(context, "tasks.csv", outputcsv)
 
     def write_actions(self):
         Util.debug(self.Conf, "I", "writeActionTree")
