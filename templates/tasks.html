@@ -28,7 +28,11 @@
       {% endif %}
     </td>
     <!--<td>{{t[3]}}</td>-->
+    {% if t[5] == "pending" %}
+    <td>{{t[2]}}</td>
+    {% else %}
     <td><a href='actions/{{t[2]}}.html'>{{t[2]}}</a></td>
+    {% endif %}
     <td>{{t[1]}}</td>
     <td>{{t[6]}}</td>
     <td>{{t[7]}}</td>
