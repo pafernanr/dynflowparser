@@ -28,7 +28,7 @@
       {% endif %}
     </td>
     <!--<td>{{t[3]}}</td>-->
-    {% if t[5] == "pending" %}
+    {% if t[5] == "pending" and t[4] == "scheduled"%}
     <td>{{t[2]}}</td>
     {% else %}
     <td><a href='actions/{{t[2]}}.html'>{{t[2]}}</a></td>

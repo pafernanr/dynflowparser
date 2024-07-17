@@ -97,6 +97,7 @@ class OutputHtml:
                     steps[r[0]][r[2]] = [r]
             else:
                 steps[r[0]] = {r[2]: [r]}
+
         # fetch actions
         actions = {}
         sql = ("SELECT s.action_id, p.uuid, a.caller_action_id,"
