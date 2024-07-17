@@ -1,17 +1,13 @@
-'''
-Author: Pablo Fernández Rodríguez
-Web: https://github.com/pafernanr/dynflowparser
-Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
-'''
-import os
-import json
-import html
 import datetime
-import time
-from jinja2 import Environment, FileSystemLoader
+import html
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
+import json
 from lib.outputSQLite import OutputSQLite
 from lib.util import ProgressBarFromFileLines
 from lib.util import Util
+import os
+import time
 
 
 class OutputHtml:
@@ -42,7 +38,7 @@ class OutputHtml:
                             + " t.label, t.state, t.result, t.started_at,"
                             + " t.ended_at, t.action"
                             + " FROM tasks t"
-                            + " INNER JOIN plans p"
+                            + " LEFT JOIN plans p"
                             + " ON t.external_id=p.uuid"
                             + " WHERE t.parent_task_id=''"
                             + where
@@ -56,7 +52,7 @@ class OutputHtml:
                             + " t.label, t.state, t.result, t.started_at,"
                             + " t.ended_at, t.action"
                             + " FROM tasks t"
-                            + " INNER JOIN plans p"
+                            + " LEFT JOIN plans p"
                             + " ON t.external_id=p.uuid"
                             + " WHERE t.parent_task_id!=''"
                             + where
@@ -72,10 +68,12 @@ class OutputHtml:
                     rows.append(v)
 
         outputfile = self.Conf.outputdir + "/index.html"
+        outputcsv = self.Conf.outputdir + "/tasks.csv"
         context = {
             "rows": rows
         }
         self.write_report(context, "tasks.html", outputfile)
+        self.write_report(context, "tasks.csv", outputcsv)
 
     def write_actions(self):
         Util.debug(self.Conf, "I", "writeActionTree")

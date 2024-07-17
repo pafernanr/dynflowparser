@@ -1,0 +1,3 @@
+action	label	Plan uuid	id	started_at	ended_at	state	result{% for t in rows %} 
+{{t[8]}}	{{t[3]}}	{{t[2]}}	{{t[1]}}	{{t[6]}}	{{t[7]}}	{{t[4]}}	{{t[5]}}
+{% endfor %}
