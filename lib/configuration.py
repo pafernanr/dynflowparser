@@ -26,6 +26,8 @@ class Conf:
     writesql = True
     sos = {}
     quiet = False
+    dto = "2999-01-01"
+    dfrom = "1974-10-04"
     debug = "W"  # [D, I, W, E]
 
     def show_help(errmsg=""):
@@ -34,8 +36,10 @@ class Conf:
               "\n  Options:"
               "\n    [-a|--all]: Parse all Plans. By default only unsuccess are parsed."  # noqa E501
               "\n    [-d|--debug]: Debug level [D,I,W,E]. Default Warning."  # noqa E501
+              "\n    [-f|--from]: Filter events running from this datetime."
               "\n    [-h|--help]: Show help."
               "\n    [-n|--nosql]: Reuse existent sqlite file. (Useful for self debuging)"  # noqa E501
+              "\n    [-t|--to]: Filter events running up to this datetime."
               "\n    [-q|--quiet]: Quiet. Don't show progress bar."
               "\n  Arguments:"
               "\n    [INPUTDIR]: Default is current path."
@@ -61,18 +65,22 @@ class Conf:
 
     def get_opts():
         try:
-            options, remainder = getopt.getopt(sys.argv[1:], 'ahnd:q',
-                                               ['all', 'help', 'nosql',
-                                                'debug=', 'quiet'])
+            options, remainder = getopt.getopt(
+                sys.argv[1:], 'adf:hnt:q', ['all', 'debug=', 'from=', 'help',
+                                           'nosql', 'to=', 'quiet'])
             for opt, arg in options:
                 if opt == '-a' or opt == '--all':
                     Conf.unsuccess = False
+                elif opt == '-d' or opt == '--debug':
+                    Conf.debug = arg
+                elif opt == '-f' or opt == '--from':
+                    Conf.dfrom = arg
                 elif opt == '-h' or opt == '--help':
                     Conf.show_help()
                 elif opt == '-n' or opt == '--nosql':
                     Conf.writesql = False
-                elif opt == '-d' or opt == '--debug':
-                    Conf.debug = arg
+                elif opt == '-t' or opt == '--to':
+                    Conf.dto = arg
                 elif opt == '-q' or opt == '--quiet':
                     Conf.quiet = True
             if len(remainder) > 0:

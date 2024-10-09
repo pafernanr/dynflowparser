@@ -57,20 +57,6 @@ def read_dynflow(type):
             inputfile = tmpfile
 
     with open(inputfile, "r+", encoding="utf-8") as csv_file:
-        # last = csv_file.readlines()[-1]
-        # # If last line contains the row count remove it.
-        # # probably this workaround should be deprecated
-        # if re.match(r'^\([0-9]+ rows\)$', last):
-        #     csv_file.seek(0, os.SEEK_END)
-        #     pos = csv_file.tell() - 1
-        #     while pos > 0 and csv_file.read(1) != "\n":
-        #         pos -= 1
-        #         csv_file.seek(pos, os.SEEK_SET)
-        #     if pos > 0:
-        #         csv_file.seek(pos, os.SEEK_SET)
-        #         csv_file.truncate()
-        # csv_file.seek(0)  # rewind
-
         reader = csv.reader(csv_file, delimiter=",")
         next(reader)  # discard header line (or truncated first line)
         # sreader = sorted(reader, key=lambda row: sort, reverse=True) # is it faster?  # noqa E501
@@ -135,12 +121,32 @@ if __name__ == "__main__":
     if " " not in dynflow[2][13]:
         Conf.parser['tasks']['headers'] = 'id,type,label,started_at,ended_at,state,result,external_id,parent_task_id,start_at,start_before,action,state_updated_at,user_id'.split(",")  # noqa E501
     # end workaround
-    for i in range(0, len(dynflow)):
-        if Conf.unsuccess:
-            if (dynflow[i][headers.index('result')] != 'success'):
-                Conf.parser['includedUUID'].append(dynflow[i][headers.index('external_id')])  # noqa E501
-        else:
-            Conf.parser['includedUUID'].append(dynflow[i][headers.index('external_id')])  # noqa E501
+    for i, dline in enumerate(dynflow):
+        # exclude task is not between dfrom and dto
+        starts = "1974-04-10"
+        ends = "2999-01-01"
+        if 'started_at' in headers:
+            istarts = headers.index('started_at')
+            iends = headers.index('ended_at')
+            if dline[istarts] != "":
+                starts = dline[istarts]
+            if dline[iends] != "":
+                ends = dline[iends]
+        dfrom = Util.date_from_string(Conf.dfrom)
+        dto = Util.date_from_string(Conf.dto)
+        starts = Util.change_timezone(Conf.sos['timezone'], starts)
+        ends = Util.change_timezone(Conf.sos['timezone'], ends)
+        if (dfrom <= starts <= dto) or (dfrom <= ends <= dto):
+            # include only success tasks or all
+            if Conf.unsuccess:
+                if dline[headers.index('result')] != 'success':
+                    Conf.parser['includedUUID'].append(
+                        dline[headers.index('external_id')]
+                    )
+            else:
+                Conf.parser['includedUUID'].append(
+                    dline[headers.index('external_id')]
+                    )
     # Write Tasks to SQLite
     if Conf.writesql:
         for d in ['tasks', 'plans', 'actions', 'steps']:
@@ -149,9 +155,12 @@ if __name__ == "__main__":
     html.write()
 
     if not Conf.quiet:
-        print("\nOutputFolder: " + Conf.outputdir)
-        print("UTC dates converted to: " + Conf.sos['timezone'])
+        print("\nUTC dates converted to: " + Conf.sos['timezone'])
         print("TotalTime: "
               + Util.seconds_to_str(time.time() - start_time) + "\n")
+        print(f"OutputFile: {os.getcwd()}/{Conf.outputdir}/index.html"
+              .replace('//', '/')
+              .replace('/./', '/'))
 
     webbrowser.open(Conf.outputdir + "/index.html", 0, True)
+
