@@ -3,16 +3,33 @@ Author: Pablo Fernández Rodríguez
 Web: https://github.com/pafernanr/dynflowparser
 Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
 '''
-from datetime import datetime as mytime
 import datetime
-from dateutil import tz
 import re
 import subprocess
 import sys
+from datetime import datetime as mytime
+from dateutil import tz
 
 
 class Util:
     USERS = {}
+
+    def date_from_string(d):
+        out = '%Y-%m-%d %H:%M:%S'
+        valid = ["%Y-%m-%d %H:%M:%S.%f",
+                 "%Y-%m-%d",
+                 "%Y-%m-%d %H",
+                 "%Y-%m-%d %H:%M",
+                 "%Y-%m-%d %H:%M:%S",
+                 "%Y-%m-%dT%H:%M:%S",
+                 "%Y-%m-%dT%H:%M:%S%z",
+                 "%Y %b %d %H:%M:%S",
+                 ]
+        for v in valid:
+            try:
+                return datetime.datetime.strptime(d, v).strftime(out)
+            except ValueError:
+                continue
 
     def debug(Conf, sev, msg):
         levels = {'D': 0,
@@ -42,18 +59,17 @@ class Util:
         s = str(round(seconds % 60)) + "s"
         return m + s
 
+    def to_timezone(timezone, d):
+        to_zone = tz.gettz(timezone)
+        from_zone = tz.gettz('UTC')
+        newd = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
+        newd = newd.replace(tzinfo=from_zone)
+        return str(newd.astimezone(to_zone))
+
     def change_timezone(timezone, d):
         d = re.sub(r'\.[0-9]+', '', d)
         if d != "":
-            if re.match(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}', d):
-                to_zone = tz.gettz(timezone)
-                from_zone = tz.gettz('UTC')
-                newd = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
-                newd = newd.replace(tzinfo=from_zone)
-                return str(newd.astimezone(to_zone))
-            else:
-                print("WARNING: date '" + d
-                      + "' doesn't match %Y-%m-%d %H:%M:%S")
+            return Util.to_timezone(timezone, Util.date_from_string(d))
         return d
 
 

@@ -68,12 +68,10 @@ class OutputHtml:
                     rows.append(v)
 
         outputfile = self.Conf.outputdir + "/index.html"
-        outputcsv = self.Conf.outputdir + "/tasks.csv"
         context = {
             "rows": rows
         }
         self.write_report(context, "tasks.html", outputfile)
-        self.write_report(context, "tasks.csv", outputcsv)
 
     def write_actions(self):
         Util.debug(self.Conf, "I", "writeActionTree")
@@ -97,7 +95,6 @@ class OutputHtml:
                     steps[r[0]][r[2]] = [r]
             else:
                 steps[r[0]] = {r[2]: [r]}
-
         # fetch actions
         actions = {}
         sql = ("SELECT s.action_id, p.uuid, a.caller_action_id,"
@@ -143,6 +140,8 @@ class OutputHtml:
             self.write_report(context, "actions.html", outputfile)  # noqa E501
             if not self.Conf.quiet:
                 self.pb.print_bar(c)
+        self.write_report({'actions': actions}, "tasks.csv",
+                          self.Conf.outputdir + "/dynflowparser.csv")
         seconds = time.time() - start_time
         speed = round(c/seconds)
         if not self.Conf.quiet:
@@ -152,11 +151,17 @@ class OutputHtml:
 
     def show_json(self, txt):
         try:
-            return (html.escape(json.dumps(json.loads(txt), indent=4))
-                    .replace("\\r", "")
-                    .replace("\\n", "\n")
-                    .replace("\n", "<br>")
-                    .replace(" ", "&nbsp;"))
+            if '"backtrace":' in txt[0:30]:
+                return (html.escape(json.dumps(json.loads(txt), indent=4))
+                        .replace("\\r", "")
+                        .replace("\\n", "\n")
+                        .replace("\n", "<br>"))
+            else:
+                return (html.escape(json.dumps(json.loads(txt), indent=4))
+                        .replace("\\r", "")
+                        .replace("\\n", "\n")
+                        .replace("\n", "<br>")
+                        .replace(" ", "&nbsp;"))
         except Exception as e:  # noqa F841
             return txt
 
