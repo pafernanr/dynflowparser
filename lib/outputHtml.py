@@ -1,13 +1,14 @@
 import datetime
 import html
+import json
+import os
+import time
+
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
-import json
 from lib.outputSQLite import OutputSQLite
 from lib.util import ProgressBarFromFileLines
 from lib.util import Util
-import os
-import time
 
 
 class OutputHtml:

@@ -7,10 +7,10 @@ from lib.util import Util
 
 
 class OutputSQLite:
-    def __init__(self, Conf):
-        self._conn = sqlite3.connect(Conf.dbfile)
+    def __init__(self, conf):
+        self._conn = sqlite3.connect(conf.dbfile)
         self._cursor = self._conn.cursor()
-        self.Conf = Conf
+        self.conf = conf
         self.create_tables()
 
     def __enter__(self):
@@ -53,25 +53,25 @@ class OutputSQLite:
 
     def insert_tasks(self, values):
         query = "INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.Conf, "D", query + ", " + str(values))
+        Util.debug(self.conf, "D", query + ", " + str(values))
         self.executemany(query, values)
         self.commit()
 
     def insert_plans(self, values):
         query = "INSERT INTO plans VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.Conf, "D", query + " " + str(values))
+        Util.debug(self.conf, "D", query + " " + str(values))
         self.executemany(query, values)
         self.commit()
 
     def insert_actions(self, values):
         query = "INSERT INTO actions VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.Conf, "D", query + " " + str(values))
+        Util.debug(self.conf, "D", query + " " + str(values))
         self.executemany(query, values)
         self.commit()
 
     def insert_steps(self, values):
         query = "INSERT INTO steps VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.Conf, "D", query + " " + str(values))
+        Util.debug(self.conf, "D", query + " " + str(values))
         self.executemany(query, values)
         self.commit()
 
@@ -148,8 +148,9 @@ class OutputSQLite:
         input TEXT,
         output TEXT
         )""")
-        self.execute("CREATE INDEX actions_execution_plan_id ON actions(execution_plan_uuid)")  # noqa E501
-        self.execute("CREATE INDEX actions_id ON actions(id)")  # noqa E501
+        self.execute("""CREATE INDEX actions_execution_plan_id
+                     ON actions(execution_plan_uuid)""")
+        self.execute("CREATE INDEX actions_id ON actions(id)")
         self.commit()
 
     def create_steps(self):
@@ -171,73 +172,75 @@ class OutputSQLite:
         children TEXT,
         data TEXT
         )""")
-        self.execute("CREATE INDEX steps_execution_plan_uuid ON steps(execution_plan_uuid)")  # noqa E501
+        self.execute("""CREATE INDEX steps_execution_plan_uuid
+                     ON steps(execution_plan_uuid)""")
         self.execute("CREATE INDEX steps_action_id ON steps(action_id)")
         self.execute("CREATE INDEX steps_id ON steps(id)")
         self.commit()
 
-    def insert_multi(self, type, rows):
-        if type == "tasks":
+    def insert_multi(self, dtype, rows):
+        if dtype == "tasks":
             self.insert_tasks(rows)
-        if type == "plans":
+        if dtype == "plans":
             self.insert_plans(rows)
-        elif type == "actions":
+        elif dtype == "actions":
             self.insert_actions(rows)
-        elif type == "steps":
+        elif dtype == "steps":
             self.insert_steps(rows)
 
-    def write(self, type, csv):
+    def write(self, dtype, csv):
         pb = ProgressBarFromFileLines()
-        datefields = self.Conf.parser[type]['dates']
-        jsonfields = self.Conf.parser[type]['json']
-        headers = self.Conf.parser[type]['headers']
+        datefields = self.conf.parser[dtype]['dates']
+        jsonfields = self.conf.parser[dtype]['json']
+        headers = self.conf.parser[dtype]['headers']
         multi = []
         pb.all_entries = len(csv)
         pb.start_time = datetime.datetime.now()
         start_time = time.time()
-        for i in range(0, len(csv)):
-            if type == "tasks":
-                myid = csv[i][headers.index('external_id')]
-            elif type == "plans":
-                myid = csv[i][headers.index('uuid')]
-            elif type in ["actions", "steps"]:
-                myid = csv[i][headers.index('execution_plan_uuid')]
+        for i, lcsv in enumerate(csv):
+            if dtype == "tasks":
+                myid = lcsv[headers.index('external_id')]
+            elif dtype == "plans":
+                myid = lcsv[headers.index('uuid')]
+            elif dtype in ["actions", "steps"]:
+                myid = lcsv[headers.index('execution_plan_uuid')]
 
-            if myid in self.Conf.parser['includedUUID']:
-                Util.debug(self.Conf, "I", "outputSQLite.write "
-                           + type + " " + myid)
+            if myid in self.conf.parser['includedUUID']:
+                Util.debug(self.conf, "I", "outputSQLite.write "
+                           + dtype + " " + myid)
                 fields = []
-                for h in range(len(headers)):
-                    if headers[h] in jsonfields:
-                        if csv[i][h] == "":
+                for h, header in enumerate(headers):
+                    if header in jsonfields:
+                        if lcsv[h] == "":
                             fields.append("")
-                        elif csv[i][h].startswith("\\x"):
+                        elif lcsv[h].startswith("\\x"):
                             # posgresql bytea decoding (Work In Progress)
-                            btext = bytes.fromhex(csv[i][h][2:])
+                            btext = bytes.fromhex(lcsv[h][2:])
                             # enc = chardet.detect(btext)['encoding']
                             fields.append(btext.decode('Latin1'))
                             # return str(codecs.decode(text[2:], "hex"))
                         else:
-                            fields.append(str(csv[i][h]))
+                            fields.append(str(lcsv[h]))
                     elif headers[h] in datefields:
-                        fields.append(Util.change_timezone(self.Conf.sos['timezone'], csv[i][h]))  # noqa E501
+                        fields.append(Util.change_timezone(
+                            self.conf.sos['timezone'], lcsv[h]))
                     else:
-                        fields.append(csv[i][h])
-                Util.debug(self.Conf, "I", str(fields))
+                        fields.append(lcsv[h])
+                Util.debug(self.conf, "I", str(fields))
                 multi.append(fields)
                 if i > 999 and i % 1000 == 0:  # insert every 1000 records
-                    self.insert_multi(type, multi)
+                    self.insert_multi(dtype, multi)
                     multi = []
-                if not self.Conf.quiet:
+                if not self.conf.quiet:
                     pb.print_bar(i)
 
         if len(multi) > 0:
-            self.insert_multi(type, multi)
+            self.insert_multi(dtype, multi)
             multi = []
 
-        if not self.Conf.quiet:
+        if not self.conf.quiet:
             seconds = time.time() - start_time
             speed = round(i/seconds)
-            print("  - Parsed " + str(i) + " " + type + " in "
+            print("  - Parsed " + str(i) + " " + dtype + " in "
                   + Util.seconds_to_str(seconds)
                   + " (" + str(speed) + " lines/second)")

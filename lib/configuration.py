@@ -1,14 +1,9 @@
-'''
-Author: Pablo Fernández Rodríguez
-Web: https://github.com/pafernanr/dynflowparser
-Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
-'''
-import os
 import getopt
-import sys
+import os
 import shutil
-from lib.util import Util
+import sys
 from pathlib import Path
+from lib.util import Util
 
 
 class Conf:
