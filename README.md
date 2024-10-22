@@ -24,8 +24,10 @@ Usage: dynflowparser.py [Options] [INPUTDIR] [OUTPUTDIR]
   Options:
     [-a|--all]: Parse all Plans. By default only unsuccess are parsed.
     [-d|--debug]: Debug level [D,I,W,E]. Default Warning.
+    [-f|--from]: Filter events running from this datetime.
     [-h|--help]: Show help.
     [-n|--nosql]: Reuse existent sqlite file. (Useful for self debuging)
+    [-t|--to]: Filter events running up to this datetime.
     [-q|--quiet]: Quiet. Don't show progress bar.
   Arguments:
     [INPUTDIR]: Default is current path.

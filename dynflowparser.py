@@ -4,10 +4,6 @@ Author: Pablo Fernández Rodríguez
 Web: https://github.com/pafernanr/dynflowparser
 Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
 '''
-from lib.configuration import Conf
-from lib.outputSQLite import OutputSQLite
-from lib.outputHtml import OutputHtml
-from lib.util import Util
 import csv
 import operator
 import os
@@ -16,32 +12,36 @@ import sys
 import time
 import webbrowser
 
+from lib.configuration import Conf
+from lib.outputHtml import OutputHtml
+from lib.outputSQLite import OutputSQLite
+from lib.util import Util
 
 # increase csv field limit
-maxInt = sys.maxsize
+MAXINT = sys.maxsize
 while True:
     try:
-        csv.field_size_limit(maxInt)
+        csv.field_size_limit(MAXINT)
         break
     except OverflowError:
-        maxInt = int(maxInt/10)
+        MAXINT = int(MAXINT/10)
 
 
-def read_dynflow(type):
-    inputfile = Conf.inputdir + Conf.parser[type]['inputfile']
+def read_dynflow(dtype):
+    inputfile = Conf.inputdir + Conf.parser[dtype]['inputfile']
     if os.path.islink(inputfile):
-        Util.debug(Conf, "W", 
-                   f"read_dynflow: {Conf.parser[type]['inputfile']} "
-                   f"was truncated by sosreport. Some {type} may be missing.")
-    sort = Conf.parser[type]['headers'].index(Conf.parser[type]['sortby'])
-    reverse = Conf.parser[type]['reverse']
+        Util.debug(Conf, "W",
+                   f"read_dynflow: {Conf.parser[dtype]['inputfile']} "
+                   f"was truncated by sosreport. Some {dtype} may be missing.")
+    sort = Conf.parser[dtype]['headers'].index(Conf.parser[dtype]['sortby'])
+    reverse = Conf.parser[dtype]['reverse']
     # Workaround for old sosreport versions (Sat 6.11 RHEL7?)
     # probably this workaround should be deprecated
     with open(inputfile, "r+", encoding="utf-8") as csv_file:
         tmpfile = "/tmp/foreman_tasks_tasks"
-        if type == "tasks" and "|" in csv_file.readlines()[0]:
+        if dtype == "tasks" and "|" in csv_file.readlines()[0]:
             Util.debug(Conf, "W",
-                       f"File {Conf.parser[type]['inputfile']} "
+                       f"File {Conf.parser[dtype]['inputfile']} "
                        "is not in CSV format. "
                        f"Trying to convert it to ({tmpfile}).")
             csv_file.seek(0)
@@ -51,9 +51,8 @@ def read_dynflow(type):
             tmp = re.sub(r'\n\([0-9]+ rows\)\n+', '', tmp)
             tmp = re.sub(r'\n +', '\n', tmp)
             tmp = re.sub(r'^ +', '', tmp)
-            f = open(tmpfile, "w")
-            f.write(tmp)
-            f.close
+            with open(tmpfile, 'w', encoding="utf-8") as f:
+                f.write(tmp)
             inputfile = tmpfile
 
     with open(inputfile, "r+", encoding="utf-8") as csv_file:
@@ -75,15 +74,22 @@ def get_dynflow_schema():
             'reverse': True,  # sort order
             'dates': ['started_at', 'ended_at', 'state_updated_at'],
             'json': [],
-            'headers': 'id,type,label,started_at,ended_at,state,result,external_id,parent_task_id,start_at,start_before,action,user_id,state_updated_at'.split(",")  # noqa E501
+            'headers': ['id', 'dtype', 'label', 'started_at', 'ended_at',
+                        'state', 'result', 'external_id', 'parent_task_id',
+                        'start_at', 'start_before', 'action', 'user_id',
+                        'state_updated_at']
         }
         Conf.parser['plans'] = {
-            'inputfile': "/sos_commands/foreman/dynflow_execution_plans",  # noqa E501
+            'inputfile': "/sos_commands/foreman/dynflow_execution_plans",
             'sortby': 'started_at',  # sort by
             'reverse': True,  # sort order
             'dates': ['started_at', 'ended_at'],
-            'json': ['run_flow', 'finalize_flow', 'execution_history', 'step_ids'],   # noqa E501
-            'headers': 'uuid,state,result,started_at,ended_at,real_time,execution_time,label,class,root_plan_step_id,run_flow,finalize_flow,execution_history,step_ids,data'.split(",")  # noqa 501
+            'json': ['run_flow', 'finalize_flow',
+                     'execution_history', 'step_ids'],
+            'headers': ['uuid', 'state', 'result', 'started_at', 'ended_at',
+                        'real_time', 'execution_time', 'label', 'class',
+                        'root_plan_step_id', 'run_flow', 'finalize_flow',
+                        'execution_history', 'step_ids', 'data']
         }
         Conf.parser['actions'] = {
             'inputfile': "/sos_commands/foreman/dynflow_actions",  # noqa E501
@@ -91,7 +97,10 @@ def get_dynflow_schema():
             'reverse': False,  # sort order
             'json': ['input', 'output'],
             'dates': [],
-            'headers': 'execution_plan_uuid,id,caller_execution_plan_id,caller_action_id,class,plan_step_id,run_step_id,finalize_step_id,data,input,output'.split(",")  # noqa E501
+            'headers': ['execution_plan_uuid', 'id',
+                        'caller_execution_plan_id', 'caller_action_id',
+                        'class', 'plan_step_id', 'run_step_id',
+                        'finalize_step_id', 'data', 'input', 'output']
         }
         Conf.parser['steps'] = {
             'inputfile': "/sos_commands/foreman/dynflow_steps",
@@ -99,7 +108,11 @@ def get_dynflow_schema():
             'reverse': True,  # sort order
             'json': ['children', 'error'],
             'dates': ['started_at', 'ended_at'],
-            'headers': 'execution_plan_uuid,id,action_id,state,started_at,ended_at,real_time,execution_time,progress_done,progress_weight,class,action_class,queue,error,children,data'.split(",")  # noqa E501
+            'headers': ['execution_plan_uuid', 'id', 'action_id', 'state',
+                        'started_at', 'ended_at', 'real_time',
+                        'execution_time', 'progress_done', 'progress_weight',
+                        'class', 'action_class', 'queue', 'error',
+                        'children', 'data']
         }
     else:
         print("ERROR: Dynflow schema version "
@@ -119,24 +132,27 @@ if __name__ == "__main__":
     dynflow = read_dynflow('tasks')
     # begin workaround for mysteriously disordered fields on some task files
     if " " not in dynflow[2][13]:
-        Conf.parser['tasks']['headers'] = 'id,type,label,started_at,ended_at,state,result,external_id,parent_task_id,start_at,start_before,action,state_updated_at,user_id'.split(",")  # noqa E501
+        Conf.parser['tasks']['headers'] = [
+            'id', 'dtype', 'label', 'started_at', 'ended_at', 'state',
+            'result', 'external_id', 'parent_task_id', 'start_at',
+            'start_before', 'action', 'state_updated_at', 'user_id']
     # end workaround
     for i, dline in enumerate(dynflow):
         # exclude task is not between dfrom and dto
-        starts = "1974-04-10"
-        ends = "2999-01-01"
+        STARTS = "1974-04-10"
+        ENDS = "2999-01-01"
         if 'started_at' in headers:
-            istarts = headers.index('started_at')
-            iends = headers.index('ended_at')
-            if dline[istarts] != "":
-                starts = dline[istarts]
-            if dline[iends] != "":
-                ends = dline[iends]
+            iSTARTS = headers.index('started_at')
+            iENDS = headers.index('ended_at')
+            if dline[iSTARTS] != "":
+                STARTS = dline[iSTARTS]
+            if dline[iENDS] != "":
+                ENDS = dline[iENDS]
         dfrom = Util.date_from_string(Conf.dfrom)
         dto = Util.date_from_string(Conf.dto)
-        starts = Util.change_timezone(Conf.sos['timezone'], starts)
-        ends = Util.change_timezone(Conf.sos['timezone'], ends)
-        if (dfrom <= starts <= dto) or (dfrom <= ends <= dto):
+        STARTS = Util.change_timezone(Conf.sos['timezone'], STARTS)
+        ENDS = Util.change_timezone(Conf.sos['timezone'], ENDS)
+        if (dfrom <= STARTS <= dto) or (dfrom <= ENDS <= dto):
             # include only success tasks or all
             if Conf.unsuccess:
                 if dline[headers.index('result')] != 'success':
@@ -163,4 +179,3 @@ if __name__ == "__main__":
               .replace('/./', '/'))
 
     webbrowser.open(Conf.outputdir + "/index.html", 0, True)
-

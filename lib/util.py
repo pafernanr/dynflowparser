@@ -1,12 +1,8 @@
-'''
-Author: Pablo Fernández Rodríguez
-Web: https://github.com/pafernanr/dynflowparser
-Licence: GPLv3 https://www.gnu.org/licenses/gpl-3.0.en.html
-'''
 import datetime
 import re
 import subprocess
 import sys
+
 from datetime import datetime as mytime
 from dateutil import tz
 
@@ -60,6 +56,8 @@ class Util:
         return m + s
 
     def to_timezone(timezone, d):
+        if d is None:
+            return d
         to_zone = tz.gettz(timezone)
         from_zone = tz.gettz('UTC')
         newd = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
@@ -68,7 +66,7 @@ class Util:
 
     def change_timezone(timezone, d):
         d = re.sub(r'\.[0-9]+', '', d)
-        if d != "":
+        if d is not None:
             return Util.to_timezone(timezone, Util.date_from_string(d))
         return d
 
@@ -84,10 +82,10 @@ class ProgressBarFromFileLines:
         self.last_printed_tenth_of_percentage = 0
 
     def set_number_of_file_lines(self, log_file_name: str):
-        """ Return number of lines of the input file and set
-    all initial parameters for printing progress bar computed from
-    the number of all /processed lines of a file.
-    """
+        """Return number of lines of the input file and set
+        all initial parameters for printing progress bar computed from
+        the number of all /processed lines of a file.
+        """
         try:
             with open(log_file_name, 'r') as file:
                 self.all_entries = max(i for i, line in enumerate(file)) + 1
@@ -103,8 +101,8 @@ class ProgressBarFromFileLines:
 
     def print_bar(self, done_lines: int):
         """ If the progress bar should be rewritten (there is something new)
-    it is rewritten.
-    """
+        it is rewritten.
+        """
         if self.all_entries == 0:
             return
         tenth_of_percentage = int(1000 * (done_lines / self.all_entries))
