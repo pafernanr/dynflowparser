@@ -56,6 +56,8 @@ class Util:
         return m + s
 
     def to_timezone(timezone, d):
+        if d is None:
+            return d
         to_zone = tz.gettz(timezone)
         from_zone = tz.gettz('UTC')
         newd = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
@@ -64,7 +66,7 @@ class Util:
 
     def change_timezone(timezone, d):
         d = re.sub(r'\.[0-9]+', '', d)
-        if d != "":
+        if d is not None:
             return Util.to_timezone(timezone, Util.date_from_string(d))
         return d
 

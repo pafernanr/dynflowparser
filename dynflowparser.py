@@ -76,7 +76,7 @@ def get_dynflow_schema():
             'json': [],
             'headers': ['id', 'dtype', 'label', 'started_at', 'ended_at',
                         'state', 'result', 'external_id', 'parent_task_id',
-                        'start_at', 'start_before', 'action,user_id',
+                        'start_at', 'start_before', 'action', 'user_id',
                         'state_updated_at']
         }
         Conf.parser['plans'] = {
