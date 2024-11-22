@@ -170,12 +170,14 @@ if __name__ == "__main__":
             sqlite.write(d, dynflow)
     html.write()
 
+    indexpath = f"{os.getcwd()}/{Conf.outputdir}/index.html"
     if not Conf.quiet:
         print("\nUTC dates converted to: " + Conf.sos['timezone'])
         print("TotalTime: "
               + Util.seconds_to_str(time.time() - start_time) + "\n")
-        print(f"OutputFile: {os.getcwd()}/{Conf.outputdir}/index.html"
+        print(f"OutputFile: {indexpath}"
               .replace('//', '/')
               .replace('/./', '/'))
 
-    webbrowser.open(Conf.outputdir + "/index.html", 0, True)
+    # webbrowser.open(Conf.outputdir + "/index.html", 0, True)
+    webbrowser.open_new_tab(f"file:///{indexpath}")
