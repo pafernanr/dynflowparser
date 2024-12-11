@@ -49,7 +49,9 @@
      {% set state = a[10] %}
    {% endif %}
       <tr class="action {{a[11]}}" data-tt-id="{{a[0]}}" {% if a[0] > 1 %} data-tt-parent-id="{{a[2]}}" {% endif %}>
-        <td colspan="5"><span class='folder'></span><span class="show">{{a[3]}}: {{a[4]}}</span></td>
+        <td colspan="5">
+          <span class='folder'></span><span class="show">{{a[3]}}: {{a[4]}}</span>
+          {% if a[7] != "" and a[7] != "{}" %}<span class="caution">!</span>{% endif %}</td>
         <td class="{{state}}">{{state}}</td>
       </tr>
       <tr class="details" id="details_{{a[0]}}">
@@ -66,7 +68,10 @@
       </tr>
       {% for s in a[14] %}
         <tr class="step {{s[3]}}" data-tt-id="{{a[0]}}_{{s[1]}}" data-tt-parent-id="{{a[0]}}">
-          <td><span class="file"></span><span class="show">{{a[3]}}.{{s[1]}}: {{s[10]}}</span></td>
+          <td>
+            <span class="file"></span><span class="show">{{a[3]}}.{{s[1]}}: {{s[10]}}</span>
+            {% if s[13] != "" %}<span class="caution">!</span>{% endif %}
+          </td>
           <td>{{s[4]}}</td>
           <td>{{s[5]}}</td>
           <td>{{s[6]}}</td>

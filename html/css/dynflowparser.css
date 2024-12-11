@@ -21,6 +21,28 @@
     color:rgba(255, 0, 0, 0.650);             
     text-decoration: none;
   }
+  .caution {
+    color: crimson;    
+    font-size: 1.4em;
+    font-weight: bold;
+  }
+  .caution::after {
+    font-size: 0.7em;
+    font-weight: normal;
+    color: black;
+    content: "Either 'Output' or 'Error' fields contain details";
+    padding: 2px;
+    visibility: hidden;
+    position: absolute;
+    width:fit-content;
+    text-align: center;
+    background-color: #fef4c5;
+    border: 1px solid #d4b943;
+    border-radius: 2px;
+  }
+  .caution:hover::after {
+    visibility: visible;
+  }
   .details {
 	  display: none;
 	  background-color: #eeeeee;
