@@ -101,7 +101,7 @@ class OutputHtml:
         sql = ("SELECT s.action_id, p.uuid, a.caller_action_id,"
                + " a.run_step_id, s.action_class, a.data, a.input, a.output,"
                + " p.result, p.label, MIN(s.state),"
-               + " a.caller_execution_plan_id, MAX(t.action), MAX(t.id)"
+               + " a.caller_execution_plan_id, MAX(t.action), MAX(t.id), MAX(t.parent_task_id)"  # noqa E501
                + " FROM steps s"
                + " LEFT JOIN tasks t ON s.execution_plan_uuid = t.external_id"
                + " LEFT JOIN plans p ON s.execution_plan_uuid = p.uuid"
