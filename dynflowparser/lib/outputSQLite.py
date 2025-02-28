@@ -2,15 +2,16 @@ import datetime
 import sqlite3
 import time
 
-from lib.util import ProgressBarFromFileLines
-from lib.util import Util
+from dynflowparser.lib.util import ProgressBarFromFileLines
+from dynflowparser.lib.util import Util
 
 
 class OutputSQLite:
     def __init__(self, conf):
+        self.conf = conf
+        self.util = Util(conf.args.debug)
         self._conn = sqlite3.connect(conf.dbfile)
         self._cursor = self._conn.cursor()
-        self.conf = conf
         self.create_tables()
 
     def __enter__(self):
@@ -53,25 +54,25 @@ class OutputSQLite:
 
     def insert_tasks(self, values):
         query = "INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.conf, "D", query + ", " + str(values))
+        self.util.debug("D", query + ", " + str(values))
         self.executemany(query, values)
         self.commit()
 
     def insert_plans(self, values):
         query = "INSERT INTO plans VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.conf, "D", query + " " + str(values))
+        self.util.debug("D", query + " " + str(values))
         self.executemany(query, values)
         self.commit()
 
     def insert_actions(self, values):
         query = "INSERT INTO actions VALUES (?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.conf, "D", query + " " + str(values))
+        self.util.debug("D", query + " " + str(values))
         self.executemany(query, values)
         self.commit()
 
     def insert_steps(self, values):
         query = "INSERT INTO steps VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        Util.debug(self.conf, "D", query + " " + str(values))
+        self.util.debug("D", query + " " + str(values))
         self.executemany(query, values)
         self.commit()
 
@@ -190,13 +191,14 @@ class OutputSQLite:
 
     def write(self, dtype, csv):
         pb = ProgressBarFromFileLines()
-        datefields = self.conf.parser[dtype]['dates']
-        jsonfields = self.conf.parser[dtype]['json']
-        headers = self.conf.parser[dtype]['headers']
+        datefields = self.conf.dynflowdata[dtype]['dates']
+        jsonfields = self.conf.dynflowdata[dtype]['json']
+        headers = self.conf.dynflowdata[dtype]['headers']
         multi = []
         pb.all_entries = len(csv)
         pb.start_time = datetime.datetime.now()
         start_time = time.time()
+        myid = False
         for i, lcsv in enumerate(csv):
             if dtype == "tasks":
                 myid = lcsv[headers.index('external_id')]
@@ -205,9 +207,9 @@ class OutputSQLite:
             elif dtype in ["actions", "steps"]:
                 myid = lcsv[headers.index('execution_plan_uuid')]
 
-            if myid in self.conf.parser['includedUUID']:
-                Util.debug(self.conf, "I", "outputSQLite.write "
-                           + dtype + " " + myid)
+            if myid in self.conf.dynflowdata['includedUUID']:
+                self.util.debug(
+                    "I", f"outputSQLite.write {dtype} {myid}")
                 fields = []
                 for h, header in enumerate(headers):
                     if header in jsonfields:
@@ -222,25 +224,25 @@ class OutputSQLite:
                         else:
                             fields.append(str(lcsv[h]))
                     elif headers[h] in datefields:
-                        fields.append(Util.change_timezone(
+                        fields.append(self.util.change_timezone(
                             self.conf.sos['timezone'], lcsv[h]))
                     else:
                         fields.append(lcsv[h])
-                Util.debug(self.conf, "I", str(fields))
+                self.util.debug("I", str(fields))
                 multi.append(fields)
                 if i > 999 and i % 1000 == 0:  # insert every 1000 records
                     self.insert_multi(dtype, multi)
                     multi = []
-                if not self.conf.quiet:
+                if not self.conf.args.quiet:
                     pb.print_bar(i)
 
         if len(multi) > 0:
             self.insert_multi(dtype, multi)
             multi = []
 
-        if not self.conf.quiet:
+        if not self.conf.args.quiet:
             seconds = time.time() - start_time
             speed = round(i/seconds)
             print("  - Parsed " + str(i) + " " + dtype + " in "
-                  + Util.seconds_to_str(seconds)
+                  + self.util.seconds_to_str(seconds)
                   + " (" + str(speed) + " lines/second)")
