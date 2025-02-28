@@ -8,38 +8,39 @@ from dateutil import tz
 
 
 class Util:
-    USERS = {}
 
-    def date_from_string(d):
-        out = '%Y-%m-%d %H:%M:%S'
-        valid = ["%Y-%m-%d %H:%M:%S.%f",
-                 "%Y-%m-%d",
-                 "%Y-%m-%d %H",
-                 "%Y-%m-%d %H:%M",
-                 "%Y-%m-%d %H:%M:%S",
-                 "%Y-%m-%dT%H:%M:%S",
-                 "%Y-%m-%dT%H:%M:%S%z",
-                 "%Y %b %d %H:%M:%S",
-                 ]
+    def __init__(self, debuglevel) -> None:
+        self.debuglevel = debuglevel
+        self.valid_date_formats = [
+            "%Y-%m-%d",
+            "%Y-%m-%d %H",
+            "%Y-%m-%d %H:%M",
+            "%Y-%m-%d %H:%M:%S",
+            ]
+
+    def date_from_string(self, d):
+        valid = self.valid_date_formats
         for v in valid:
             try:
-                return datetime.datetime.strptime(d, v).strftime(out)
+                return datetime.datetime.strptime(d, v)
             except ValueError:
                 continue
+        self.debug('E', f"not a valid date: {d!r}. Valid formats: {str(valid)}")
+        sys.exit(1)
 
-    def debug(Conf, sev, msg):
+    def debug(self, sev, msg):
         levels = {'D': 0,
                   'I': 1,
                   'W': 2,
                   'E': 3
                   }
-        if levels[sev] >= levels[Conf.debug]:
+        if levels[sev] >= levels[self.debuglevel]:
             print(f"[{sev}] {str(msg)}\n")
         if sev == 'E':
             sys.exit(1)
 
-    def exec_command(Conf, cmd):
-        Util.debug(Conf, "D", "execcommand: " + cmd)
+    def exec_command(self, cmd):
+        self.debug("D", "execcommand: " + cmd)
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
@@ -50,24 +51,25 @@ class Util:
             sys.exit(1)
         return stdout
 
-    def seconds_to_str(seconds):
+    def seconds_to_str(self, seconds):
         m = str(round(seconds / 60)) + "m"
         s = str(round(seconds % 60)) + "s"
         return m + s
 
-    def to_timezone(timezone, d):
+    def to_timezone(self, timezone, d):
         if d is None:
             return d
         to_zone = tz.gettz(timezone)
         from_zone = tz.gettz('UTC')
-        newd = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
-        newd = newd.replace(tzinfo=from_zone)
-        return str(newd.astimezone(to_zone))
+        # newd = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
+        newd = d.replace(tzinfo=from_zone)
+        return newd.astimezone(to_zone)
 
-    def change_timezone(timezone, d):
+    def change_timezone(self, timezone, d):
         d = re.sub(r'\.[0-9]+', '', d)
-        if d is not None:
-            return Util.to_timezone(timezone, Util.date_from_string(d))
+        if d is not None and d != "":
+            return self.to_timezone(
+                timezone, self.date_from_string(d))
         return d
 
 
@@ -83,7 +85,9 @@ class ProgressBarFromFileLines:
 
     def set_number_of_file_lines(self, log_file_name: str):
         """Return number of lines of the input file and set
+
         all initial parameters for printing progress bar computed from
+
         the number of all /processed lines of a file.
         """
         try:
@@ -100,7 +104,8 @@ class ProgressBarFromFileLines:
         self.start_time = mytime.now()
 
     def print_bar(self, done_lines: int):
-        """ If the progress bar should be rewritten (there is something new)
+        """If the progress bar should be rewritten (there is something new)
+
         it is rewritten.
         """
         if self.all_entries == 0:
