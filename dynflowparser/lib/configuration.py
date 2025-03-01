@@ -1,9 +1,6 @@
 import argparse
-import datetime
 import os
-from pathlib import Path
 import shutil
-import sys
 from dynflowparser.lib.util import Util  # noqa H306
 
 
@@ -30,7 +27,7 @@ class Conf:
         self.parser.add_argument(
             '-a',
             '--all',
-            help='Parse all Plans. Only unsuccess parsed by default o.',
+            help='Parse all. By default only unsuccess plans are parsed.',
             default=False,
             action='store_true'
             )
@@ -43,22 +40,24 @@ class Conf:
             )
         self.parser.add_argument(
             '-f',
-            '--datefrom',
-            help='Filter events running from this datetime.',
+            '--from',
+            dest='datefrom',
+            help='Parse only Plans that were running from this datetime.',
             default='1974-04-10',
             type=self.valid_date
             )
         self.parser.add_argument(
             '-t',
-            '--dateto',
-            help='Filter events running up to this datetime.',
+            '--to',
+            dest='dateto',
+            help='Parse only Plans that were running up to this datetime.',
             default='2999-01-01',
             type=self.valid_date
             )
         self.parser.add_argument(
             '-n',
             '--nosql',
-            help='Reuse existent sqlite file. (For development).',
+            help='Reuse existent sqlite file. (Useful for development).',
             default=False,
             action='store_true'
             )
@@ -71,7 +70,7 @@ class Conf:
             )
         self.parser.add_argument(
             'sosreport_path',
-            help='Path to sos report. Default is current path.',
+            help='Path to sos report folder. Default is current path.',
             default=self.cwd,
             type=self.valid_sosreport_path,
             nargs='?'
@@ -141,7 +140,7 @@ class Conf:
         self.sos['ram'] = self.util.exec_command(
             f"cat  {self.args.sosreport_path}/free")
         self.sos['cpu'] = self.util.exec_command(
-            f"grep -e '^CPU(s)'  {self.args.sosreport_path}/sos_commands/processor/lscpu "
+            f"grep -e '^CPU(s)'  {self.args.sosreport_path}/sos_commands/processor/lscpu "  # noqa E501
             + " | awk '{print $2}'").strip()
         self.sos['tuning'] = self.util.exec_command(
             f"grep tuning  {self.args.sosreport_path}/etc/foreman-installer/scenarios.d/satellite.yaml | cut -d ':' -f2")  # noqa E501

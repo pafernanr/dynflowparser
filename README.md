@@ -11,7 +11,7 @@ Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and
 
 | Tasks list | Task details | Lynx |
 | --- | --- | --- |
-| ![](docs/files/_screenshot1.png) | ![](docs/files/_screenshot2.png) | ![](docs/files/_screenshot3.png) |
+| ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot2.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot3.png) |
 
 #### Dependencies
 Required python libraries:
