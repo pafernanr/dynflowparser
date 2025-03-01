@@ -13,10 +13,12 @@ Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and
 | --- | --- | --- |
 | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot2.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot3.png) |
 
+
 #### Dependencies
 Required python libraries:
-- python3-dateutil
-- python3-jinja2
+- Jinja2>=3.1.3
+- python_dateutil>=2.8.2
+
 
 #### Usage 
 ~~~
