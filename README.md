@@ -20,18 +20,25 @@ Required python libraries:
 
 #### Usage 
 ~~~
-Usage: dynflowparser.py [Options] [INPUTDIR] [OUTPUTDIR]
-  Options:
-    [-a|--all]: Parse all Plans. By default only unsuccess are parsed.
-    [-d|--debug]: Debug level [D,I,W,E]. Default Warning.
-    [-f|--from]: Filter events running from this datetime.
-    [-h|--help]: Show help.
-    [-n|--nosql]: Reuse existent sqlite file. (Useful for self debuging)
-    [-t|--to]: Filter events running up to this datetime.
-    [-q|--quiet]: Quiet. Don't show progress bar.
-  Arguments:
-    [INPUTDIR]: Default is current path.
-    [OUTPUTDIR]: Default is current path plus '/dynflowparser/'.
+usage: dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATEFROM] [-t DATETO] [-n] [-q] [sosreport_path] [output_path]
+
+Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
+
+positional arguments:
+  sosreport_path        Path to sos report folder. Default is current path.
+  output_path           Output path. Default is './dynflowparser/'.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -a, --all             Parse all. By default only unsuccess plans are parsed.
+  -d {D,I,W,E}, --debug {D,I,W,E}
+                        Debug level. Default 'W'
+  -f DATEFROM, --from DATEFROM
+                        Parse only Plans that were running from this datetime.
+  -t DATETO, --to DATETO
+                        Parse only Plans that were running up to this datetime.
+  -n, --nosql           Reuse existent sqlite file. (Useful for development).
+  -q, --quiet           Quiet. Don't show progress bar.
 ~~~ 
 
 #### Limitations
@@ -40,7 +47,7 @@ Usage: dynflowparser.py [Options] [INPUTDIR] [OUTPUTDIR]
 - Only Dynflow schema version 24 is supported. (v20 is not CSV compliant)
 
 #### How to accurately export tasks.
-Included `export-tasks.sh` can be used to overcome sosreport size limitations and get an accurate tasks export tarball. Just execute it as follows.
+Included `dynflowparser-export-tasks` can be used to overcome sosreport size limitations and get an accurate tasks export tarball. Just execute it as follows.
 ~~~
 Usage: export-tasks.sh DAYS RESULT
   DAYS: Number of days to export.
