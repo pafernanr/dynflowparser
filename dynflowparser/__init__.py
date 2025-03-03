@@ -6,7 +6,8 @@ import sys
 import time
 import webbrowser
 
-from dateutil import tz
+import pytz
+
 from dynflowparser.lib.configuration import Conf
 from dynflowparser.lib.outputhtml import OutputHtml
 from dynflowparser.lib.outputsqlite import OutputSQLite
@@ -134,10 +135,14 @@ class DynflowParser:
         html = OutputHtml(self.conf)
         headers = self.conf.dynflowdata['tasks']['headers']
         dynflow = self.read_dynflow('tasks')
-        dfrom = self.util.date_from_string(self.conf.args.datefrom).replace(
-            tzinfo=tz.gettz(self.conf.sos['timezone']))
-        dto = self.util.date_from_string(self.conf.args.dateto).replace(
-            tzinfo=tz.gettz(self.conf.sos['timezone']))
+        # dfrom = self.util.date_from_string(self.conf.args.datefrom).replace(
+        #     tzinfo=tz.gettz(self.conf.sos['timezone']))
+        # dto = self.util.date_from_string(self.conf.args.dateto).replace(
+        #     tzinfo=tz.gettz(self.conf.sos['timezone']))
+        dfrom = (self.util.date_from_string(self.conf.args.datefrom)
+                 .astimezone(tz=pytz.timezone(self.conf.sos['timezone'])))
+        dto = (self.util.date_from_string(self.conf.args.dateto)
+               .astimezone(tz=pytz.timezone(self.conf.sos['timezone'])))
         # workaround for mysteriously disordered fields on some csv files
         if " " not in dynflow[2][13]:
             self.conf.dynflowdata['tasks']['headers'] = [
