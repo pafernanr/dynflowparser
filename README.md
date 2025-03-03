@@ -1,5 +1,6 @@
 ### dynflowparser
-Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and generates user friendly html pages for Tasks, Plans, Actions and Steps
+Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and generates user friendly html pages for Tasks, Plans, Actions and Steps.
+Companion command `dynflowparser-export-tasks` helps to overcome `sosreport` file size limitations. (Read [Limitations](#limitations) below)
 
 - Only unsuccessful Tasks are parsed by default. (Use '-a' to parse all).
 - Failed Actions & Steps are automatically expanded on the Plan page for easy error location.
@@ -19,8 +20,12 @@ Required python libraries:
 - Jinja2>=3.1.3
 - python_dateutil>=2.8.2
 
+#### Installation
+~~~
+pip install dynflowparser
+~~~
 
-#### Usage 
+#### `dynflowparser` Usage
 ~~~
 usage: dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATEFROM] [-t DATETO] [-n] [-q] [sosreport_path] [output_path]
 
@@ -43,18 +48,25 @@ optional arguments:
   -q, --quiet           Quiet. Don't show progress bar.
 ~~~ 
 
+#### `dynflowparser-export-tasks` Usage
+This command must be executed on the `Foreman` server.
+~~~
+usage: dynflowparser-export-tasks [-h] [-d DAYS] [-f FILTER] [-r {cancelled,error,pending,success,warning}] [-s {paused,planning,pending,running,scheduled,stopped}]
+
+Create a Foreman task-export compressed file.
+
+options:
+  -h, --help            show this help message and exit
+  -d DAYS, --days DAYS  Number of days to export. By default last 14 days.
+  -f FILTER, --filter FILTER
+                        Filter query. E.g: label LIKE '%Manifest%'.
+  -r {cancelled,error,pending,success,warning}, --result {cancelled,error,pending,success,warning}
+                        Filter by Task Result.
+  -s {paused,planning,pending,running,scheduled,stopped}, --state {paused,planning,pending,running,scheduled,stopped}
+                        Filter by Task State.
+~~~
+
 #### Limitations
 - sosreport by default requests last 14 days.
 - sosreport truncates output files at 100M, hence some records could be missing.
 - Only Dynflow schema version 24 is supported. (v20 is not CSV compliant)
-
-#### How to accurately export tasks.
-Included `dynflowparser-export-tasks` can be used to overcome sosreport size limitations and get an accurate tasks export tarball. Just execute it as follows.
-~~~
-Usage: export-tasks.sh DAYS RESULT
-  DAYS: Number of days to export.
-  RESULT: Filter exported tasks by result: [all cancelled error pending warning].
-Example: ./export-tasks.sh 3 all
-~~~
-
-
