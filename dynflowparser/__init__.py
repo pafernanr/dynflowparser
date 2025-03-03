@@ -2,7 +2,6 @@ import csv
 import operator
 import os
 import re
-import subprocess
 import sys
 import time
 import webbrowser
@@ -15,6 +14,19 @@ from dynflowparser.lib.util import Util
 
 
 class DynflowParser:
+
+    def __init__(self):
+        self.conf = Conf()
+        self.util = Util(self.conf.args.debug)
+        self.get_dynflow_schema()
+        # increase csv field limit
+        maxint = sys.maxsize
+        while True:
+            try:
+                csv.field_size_limit(maxint)
+                break
+            except OverflowError:
+                maxint = int(maxint/10)
 
     def read_dynflow(self, dtype):
         inputfile = (self.conf.args.sosreport_path
@@ -115,24 +127,6 @@ class DynflowParser:
                   + f"{self.conf.dynflowdata['version']} is not supported. "
                   + "Please refer to README.")
             sys.exit(1)
-
-    def export_tasks(self):
-        return subprocess.call(
-            "./bin/dynflowparser-export-tasks.sh",
-            shell=True)
-
-    def __init__(self):
-        self.conf = Conf()
-        self.util = Util(self.conf.args.debug)
-        self.get_dynflow_schema()
-        # increase csv field limit
-        maxint = sys.maxsize
-        while True:
-            try:
-                csv.field_size_limit(maxint)
-                break
-            except OverflowError:
-                maxint = int(maxint/10)
 
     def main(self):
         start_time = time.time()
