@@ -12,12 +12,12 @@ URL:            https://github.com/pafernanr/dynflowparser
 Source0:        %{pypi_source}
 BuildArch:      noarch
 
-BuildRequires:  python3-devel
-BuildRequires:  (python3dist(hacking) >= 6 with python3dist(hacking) < 6.2~~)
-BuildRequires:  python3dist(jinja2) >= 3.1.3
-BuildRequires:  python3dist(pbr) >= 2
-BuildRequires:  python3dist(python-dateutil) >= 2.8.2
-BuildRequires:  python3dist(setuptools)
+# BuildRequires:  python3-devel
+# BuildRequires:  (python3dist(hacking) >= 6 with python3dist(hacking) < 6.2~~)
+# BuildRequires:  python3dist(jinja2) >= 3.1.3
+# BuildRequires:  python3dist(pbr) >= 2
+# BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(jinja2)
 
 %description
  dynflowparser Reads the dynflow files from a [sosreport]( and generates user

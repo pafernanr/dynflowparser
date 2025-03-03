@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 from datetime import datetime as mytime
-from dateutil import tz
+import pytz
 
 
 class Util:
@@ -59,11 +59,11 @@ class Util:
     def to_timezone(self, timezone, d):
         if d is None:
             return d
-        to_zone = tz.gettz(timezone)
-        from_zone = tz.gettz('UTC')
-        # newd = datetime.datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
-        newd = d.replace(tzinfo=from_zone)
-        return newd.astimezone(to_zone)
+        return d.astimezone(tz=pytz.timezone(timezone))
+        # to_zone = tz.gettz(timezone)
+        # from_zone = tz.gettz('UTC')
+        # newd = d.replace(tzinfo=from_zone)
+        # return newd.astimezone(to_zone)
 
     def change_timezone(self, timezone, d):
         d = re.sub(r'\.[0-9]+', '', d)
