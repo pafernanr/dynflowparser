@@ -8,8 +8,8 @@ import webbrowser
 
 from dateutil import tz
 from dynflowparser.lib.configuration import Conf
-from dynflowparser.lib.outputHtml import OutputHtml
-from dynflowparser.lib.outputSQLite import OutputSQLite
+from dynflowparser.lib.outputhtml import OutputHtml
+from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.util import Util
 
 
