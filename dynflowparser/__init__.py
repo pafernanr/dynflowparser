@@ -190,5 +190,4 @@ class DynflowParser:
                   .replace('//', '/')
                   .replace('/./', '/'))
 
-        # webbrowser.open(self.conf.outputdir + "/index.html", 0, True)
         webbrowser.open_new_tab(f"file:///{indexpath}")

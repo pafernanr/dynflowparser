@@ -20,6 +20,10 @@ Required python libraries:
 - Jinja2>=3.1.3
 - python_dateutil>=2.8.2
 
+#### Installation
+~~~
+pip install dynflowparser
+~~~
 
 #### `dynflowparser` Usage
 ~~~
@@ -45,6 +49,7 @@ optional arguments:
 ~~~ 
 
 #### `dynflowparser-export-tasks` Usage
+This command must be executed on the `Foreman` server.
 ~~~
 usage: dynflowparser-export-tasks [-h] [-d DAYS] [-f FILTER] [-r {cancelled,error,pending,success,warning}] [-s {paused,planning,pending,running,scheduled,stopped}]
 
