@@ -1,6 +1,6 @@
 # Created by pyp2rpm-3.3.10
 %global pypi_name dynflowparser
-%global pypi_version 0.1.1
+%global pypi_version 0.1.5
 
 Name:           python-%{pypi_name}
 Version:        %{pypi_version}
