@@ -1,0 +1,44 @@
+CHANGES
+=======
+
+* pypy compliant
+* ADD field "parent\_task\_id" to dynflow.csv
+* ADD '.caution' class to tag Outputs and Errors making easy to find useful details
+* webbroser automatically open now works on MacOS
+* update README
+* PEP8 fixes
+* ADD --from --to ADD output dynflowparser.csv
+* FIX unlink only scheduled pending tasks on index.html
+* FIX pending task were not shown in output
+* task.csv fix missing field
+* Adde tasks.csv output
+* FIX some truncated actions
+* minor fixes
+* exit on Error messages
+* modify state for Actions::RemoteExecution::ProxyAction for failed
+* DIVs CSS text-wrap enhacements
+* higlight rows on mouse over
+* auto expland "suspended" steps
+* update README
+* update README
+* Update README
+* Update README
+* Update README
+* Update README
+* Update README
+* Added author and license headers to files
+* Update README and Help
+* code cleanup
+* FIX non valid sosreport error message
+* Add task-export.sh script
+* Add task-export.sh script
+* update README
+* code cleanup
+* speed up SQLite inserts using executemany
+* speed up SQLite inserts using executemany
+* second "initial commit" (lib/ was included in .gitingore)
+* workaround for mysteriously disordered fields on some task files
+* fix help output
+* update README
+* initial commit
+* Initial commit

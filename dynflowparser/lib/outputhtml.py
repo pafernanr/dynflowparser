@@ -6,17 +6,19 @@ import time
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
-from lib.outputSQLite import OutputSQLite
-from lib.util import ProgressBarFromFileLines
-from lib.util import Util
+
+from dynflowparser.lib.outputsqlite import OutputSQLite
+from dynflowparser.lib.util import ProgressBarFromFileLines
+from dynflowparser.lib.util import Util
 
 
 class OutputHtml:
 
-    def __init__(self, Conf):
-        self.Conf = Conf
-        self.db = OutputSQLite(Conf)
+    def __init__(self, conf):
+        self.conf = conf
+        self.db = OutputSQLite(conf)
         self.pb = ProgressBarFromFileLines()
+        self.util = Util(conf.args.debug)
 
     def __enter__(self):
         return self
@@ -29,8 +31,8 @@ class OutputHtml:
         self.write_actions()
 
     def write_tasks(self):
-        Util.debug(self.Conf, "I", "write_tasks")
-        if self.Conf.unsuccess:
+        self.util.debug("I", "write_tasks")
+        if self.conf.unsuccess:
             where = " AND t.result != 'success'"
         else:
             where = ""
@@ -68,21 +70,21 @@ class OutputHtml:
                 for v in vs:
                     rows.append(v)
 
-        outputfile = self.Conf.outputdir + "/index.html"
+        outputfile = self.conf.args.output_path + "/index.html"
         context = {
             "rows": rows
         }
         self.write_report(context, "tasks.html", outputfile)
 
     def write_actions(self):
-        Util.debug(self.Conf, "I", "writeActionTree")
+        self.util.debug("I", "writeActionTree")
         c = 0
         # fetch steps
         steps = {}
         sql = ("SELECT * FROM steps ORDER BY id")
         rows = self.db.query(sql)
         for r in rows:
-            if self.Conf.unsuccess and r[8] == "success":
+            if self.conf.unsuccess and r[8] == "success":
                 continue
             r = list(r)
             r[12] = self.show_json(r[12])
@@ -101,7 +103,7 @@ class OutputHtml:
         sql = ("SELECT s.action_id, p.uuid, a.caller_action_id,"
                + " a.run_step_id, s.action_class, a.data, a.input, a.output,"
                + " p.result, p.label, MIN(s.state),"
-               + " a.caller_execution_plan_id, MAX(t.action), MAX(t.id)"
+               + " a.caller_execution_plan_id, MAX(t.action), MAX(t.id), MAX(t.parent_task_id)"  # noqa E501
                + " FROM steps s"
                + " LEFT JOIN tasks t ON s.execution_plan_uuid = t.external_id"
                + " LEFT JOIN plans p ON s.execution_plan_uuid = p.uuid"
@@ -113,7 +115,7 @@ class OutputHtml:
         self.pb.start_time = datetime.datetime.now()
         start_time = time.time()
         for r in rows:
-            if self.Conf.unsuccess and r[8] == "success":
+            if self.conf.unsuccess and r[8] == "success":
                 continue
             r = list(r)
             r[5] = self.show_json(r[5])
@@ -131,7 +133,7 @@ class OutputHtml:
         # write output
         for execution_plan_uuid, data in actions.items():
             c = c + 1
-            outputfile = self.Conf.outputdir + "/actions/" + execution_plan_uuid + ".html"  # noqa E501
+            outputfile = self.conf.args.output_path + "/actions/" + execution_plan_uuid + ".html"  # noqa E501
             context = {
                 "actions": data,
                 "label": data[0][9],
@@ -139,15 +141,15 @@ class OutputHtml:
                 "caller_execution_plan_id": data[0][11]
             }
             self.write_report(context, "actions.html", outputfile)  # noqa E501
-            if not self.Conf.quiet:
+            if not self.conf.args.quiet:
                 self.pb.print_bar(c)
         self.write_report({'actions': actions}, "tasks.csv",
-                          self.Conf.outputdir + "/dynflowparser.csv")
+                          self.conf.args.output_path + "/dynflowparser.csv")
         seconds = time.time() - start_time
         speed = round(c/seconds)
-        if not self.Conf.quiet:
+        if not self.conf.args.quiet:
             print("  - Written " + str(c) + " output plans in "
-                  + Util.seconds_to_str(seconds)
+                  + self.util.seconds_to_str(seconds)
                   + " (" + str(speed) + " lines/second)")
 
     def show_json(self, txt):
@@ -168,9 +170,9 @@ class OutputHtml:
 
     def write_report(self, context, templatefile, outputfile):
         context.update({
-            'sos': self.Conf.sos
+            'sos': self.conf.sos
             })
-        Util.debug(self.Conf, "D", "write_report " + outputfile)
+        self.util.debug("D", "write_report " + outputfile)
         # Load template
         parent = os.path.dirname(os.path.realpath(__file__)) + "/../templates/"
         environment = Environment(loader=FileSystemLoader(parent))
