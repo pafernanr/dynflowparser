@@ -9,6 +9,8 @@
 name: on_release Publish to Pypi
 
 on:
+  branches:
+    - main
   release:
     types: [published]
 
