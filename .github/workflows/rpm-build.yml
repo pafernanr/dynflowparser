@@ -1,7 +1,7 @@
 on:
     push:
         branches:
-            - main
+            - 'main'
         # Sequence of patterns matched against refs/tags
         tags:
             - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
@@ -18,21 +18,21 @@ jobs:
         - name: Checkout code
           uses: actions/checkout@master
 
-        #- name: Create Release
-        #  id: create_release
-        #  uses: actions/create-release@latest
-        #  env:
-        #      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        #  with:
-        #      tag_name: ${{ github.ref }}
-        #      release_name: Release ${{ github.ref }}
-        #      body: |
-        #        Changes in this Release
-        #        - Create RPM
-        #        - Upload Source RPM
-        #      draft: false
-        #      prerelease: false
-        #      allowUpdates: true
+        # - name: Create Release
+        #   id: create_release
+        #   uses: actions/create-release@latest
+        #   env:
+        #       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        #   with:
+        #       tag_name: ${{ github.ref }}
+        #       release_name: Release ${{ github.ref }}
+        #       body: |
+        #         Changes in this Release
+        #         - Create RPM
+        #         - Upload Source RPM
+        #       draft: false
+        #       prerelease: false
+        #       allowUpdates: true
             
         - name: build RPM package
           id: rpm_build
