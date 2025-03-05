@@ -1,2 +1,4 @@
 Jinja2
+pbr
 pytz
+setuptools
