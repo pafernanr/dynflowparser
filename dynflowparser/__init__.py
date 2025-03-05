@@ -6,8 +6,6 @@ import sys
 import time
 import webbrowser
 
-import pytz
-
 from dynflowparser.lib.configuration import Conf
 from dynflowparser.lib.outputhtml import OutputHtml
 from dynflowparser.lib.outputsqlite import OutputSQLite
@@ -135,14 +133,8 @@ class DynflowParser:
         html = OutputHtml(self.conf)
         headers = self.conf.dynflowdata['tasks']['headers']
         dynflow = self.read_dynflow('tasks')
-        # dfrom = self.util.date_from_string(self.conf.args.datefrom).replace(
-        #     tzinfo=tz.gettz(self.conf.sos['timezone']))
-        # dto = self.util.date_from_string(self.conf.args.dateto).replace(
-        #     tzinfo=tz.gettz(self.conf.sos['timezone']))
-        dfrom = (self.util.date_from_string(self.conf.args.datefrom)
-                 .astimezone(tz=pytz.timezone(self.conf.sos['timezone'])))
-        dto = (self.util.date_from_string(self.conf.args.dateto)
-               .astimezone(tz=pytz.timezone(self.conf.sos['timezone'])))
+        dfrom = self.util.date_from_string(self.conf.args.datefrom)
+        dto = self.util.date_from_string(self.conf.args.dateto)
         # workaround for mysteriously disordered fields on some csv files
         if " " not in dynflow[2][13]:
             self.conf.dynflowdata['tasks']['headers'] = [
@@ -151,7 +143,7 @@ class DynflowParser:
                 'start_before', 'action', 'state_updated_at', 'user_id']
         # end workaround
         for i, dline in enumerate(dynflow):
-            # exclude task is not between dfrom and dto
+            # exclude task if not between arguments dfrom and dto
             starts = "1974-04-10"
             ends = "2999-01-01"
             if 'started_at' in headers:
@@ -185,8 +177,6 @@ class DynflowParser:
                 sqlite.write(d, dynflow)
         html.write()
         indexpath = f"{self.conf.args.output_path}/index.html"
-        print(f"arg___ {self.conf.args.output_path}")
-        print(f"out___ {indexpath}")
         if not self.conf.args.quiet:
             print("\nUTC dates converted to: " + self.conf.sos['timezone'])
             print("TotalTime: "
