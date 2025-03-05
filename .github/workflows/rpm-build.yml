@@ -1,10 +1,7 @@
 name: Build Linux Packages
 on:
-  push:
-    branches:
-      - 'main'
-    # tags:
-    #  - 'v*.*.*' # Push events to matching i.e: v20.15.10
+  release:
+    types: [published]
 env:
   PKG_NAME: dynflowparser
   DIST: el7
