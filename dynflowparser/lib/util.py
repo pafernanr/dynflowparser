@@ -3,7 +3,6 @@ import re
 import subprocess
 import sys
 
-from datetime import datetime as mytime
 import pytz
 
 
@@ -56,20 +55,20 @@ class Util:
         s = str(round(seconds % 60)) + "s"
         return m + s
 
-    def to_timezone(self, timezone, d):
+    def to_timezone(self, tz, d):
         if d is None:
             return d
-        return d.astimezone(tz=pytz.timezone(timezone))
-        # to_zone = tz.gettz(timezone)
-        # from_zone = tz.gettz('UTC')
-        # newd = d.replace(tzinfo=from_zone)
-        # return newd.astimezone(to_zone)
+        to_zone = pytz.timezone(tz)
+        from_zone = datetime.timezone.utc
+        newd = d.replace(tzinfo=from_zone)
+        dlocal = newd.astimezone(to_zone).replace(tzinfo=None)
+        return dlocal
 
-    def change_timezone(self, timezone, d):
+    def change_timezone(self, tz, d):
         d = re.sub(r'\.[0-9]+', '', d)
         if d is not None and d != "":
             return self.to_timezone(
-                timezone, self.date_from_string(d))
+                tz, self.date_from_string(d))
         return d
 
 
@@ -96,12 +95,12 @@ class ProgressBarFromFileLines:
         except Exception as file_exception:
             print(file_exception)
 
-        self.start_time = mytime.now()
+        self.start_time = datetime.datetime.now()
         return self.all_entries
 
     def set_number_of_entries(self, number: int):
         self.all_entries = number
-        self.start_time = mytime.now()
+        self.start_time = datetime.datetime.now()
 
     def print_bar(self, done_lines: int):
         """If the progress bar should be rewritten (there is something new)
@@ -115,7 +114,7 @@ class ProgressBarFromFileLines:
             return
         half_percentage = int((tenth_of_percentage/1000) * (30 + 1))
         new_bar = chr(9608) * half_percentage + " " * (30 - half_percentage)
-        now = mytime.now()
+        now = datetime.datetime.now()
         left = (self.all_entries - done_lines) * (now - self.start_time) / done_lines  # noqa E501
         # sec = int(left.total_seconds())
         text = f"\r|{new_bar}| {tenth_of_percentage/10:.1f} %  "  # +\

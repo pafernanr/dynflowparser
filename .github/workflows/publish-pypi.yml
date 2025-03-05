@@ -2,8 +2,6 @@ name: on_release Publish to Pypi
 
 on:
   release:
-    branches:
-      - 'main'
     types: [published]
 
 permissions:

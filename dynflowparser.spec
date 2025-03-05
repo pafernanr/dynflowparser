@@ -1,6 +1,6 @@
 # Created by pyp2rpm-3.3.10
 %global pypi_name dynflowparser
-%global pypi_version 0.1.9
+%global pypi_version 0.2.0
 
 Name:           python-%{pypi_name}
 Version:        %{pypi_version}
@@ -12,12 +12,12 @@ URL:            https://github.com/pafernanr/dynflowparser
 Source0:        %{pypi_source}
 BuildArch:      noarch
 
-# BuildRequires:  python3-devel
-# BuildRequires:  (python3dist(hacking) >= 6 with python3dist(hacking) < 6.2~~)
+BuildRequires:  python3-devel
+BuildRequires:  python3dist(hacking)
 BuildRequires:  python3dist(jinja2)
-# BuildRequires:  python3dist(pbr) >= 2
+BuildRequires:  python3dist(pbr) >= 2
 BuildRequires:  python3dist(pytz)
-# BuildRequires:  python3dist(setuptools)
+BuildRequires:  python3dist(setuptools)
 
 %description
  dynflowparser Reads the dynflow files from a [sosreport]( and generates user
@@ -67,5 +67,5 @@ rm -rf %{pypi_name}.egg-info
 %{python3_sitelib}/%{pypi_name}-%{pypi_version}-py%{python3_version}.egg-info
 
 %changelog
-* Mon Mar 03 2025 Pablo Fernández Rodríguez <pafernan@redhat.com> - 0.1.9-1
+* Wed Mar 05 2025 Pablo Fernández Rodríguez <pafernan@redhat.com> - 0.1.9-1
 - Initial package.
