@@ -38,9 +38,6 @@ jobs:
       - name: Replace version in RPM spec so correct source is downloaded when building RPM
         run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ env.PKG_NAME }}.spec
 
-      - name: Replace pypi_version in RPM spec
-        run: sed -Ei 's/(^%global pypi_version[[:space:]]*).*/\1${{github.ref_name}}/' ${{ env.PKG_NAME }}.spec
-
       - name: Run rpmbuild on RPM spec to produce package
         id: rpm
         uses: naveenrajm7/rpmbuild@master
