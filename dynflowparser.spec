@@ -1,5 +1,5 @@
-Name:           python-dynflowparser
-Version:        0.2.12
+Name:           dynflowparser
+Version:        v0.2.15
 Release:        1%{?dist}
 Summary:        Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
@@ -9,9 +9,9 @@ Source0:        %{pypi_source}
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
-# BuildRequires:  (python3dist(hacking) >= 6 with python3dist(hacking) < 6.2~~)
+BuildRequires:  python3dist(hacking)
 BuildRequires:  python3dist(jinja2)
-# BuildRequires:  python3dist(pbr) >= 2
+BuildRequires:  python3dist(pbr)
 BuildRequires:  python3dist(pytz)
 BuildRequires:  python3dist(setuptools)
 
