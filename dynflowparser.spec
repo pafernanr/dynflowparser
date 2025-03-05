@@ -7,7 +7,7 @@ Version:        %{pypi_version}
 Release:        1%{?dist}
 Summary:        Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
-License:        None
+License:        GPL-3.0
 URL:            https://github.com/pafernanr/dynflowparser
 Source0:        %{pypi_source}
 BuildArch:      noarch
