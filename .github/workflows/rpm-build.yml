@@ -40,9 +40,11 @@ jobs:
 
       - name: Run rpmbuild on RPM spec to produce package
         id: rpm
-        uses: naveenrajm7/rpmbuild@master
+        # uses: naveenrajm7/rpmbuild@master
+        uses: naveenrajm7/rpmbuild@centos8
         with:
           spec_file: ${{ env.PKG_NAME }}.spec
+          # additional_repos: "['centos-release-scl', 'http://www.percona.com/downloads/percona-release/redhat/0.1-3/percona-release-0.1-3.noarch.rpm']"
 
       - name: Upload .rpm package as artifact
         uses: actions/upload-artifact@v4
