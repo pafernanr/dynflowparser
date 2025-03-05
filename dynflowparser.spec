@@ -13,9 +13,9 @@ Source0:        %{pypi_source}
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
-BuildRequires:  python3dist(hacking)
+# BuildRequires:  python3dist(hacking)
 BuildRequires:  python3dist(jinja2)
-BuildRequires:  python3dist(pbr) >= 2
+# BuildRequires:  python3dist(pbr) >= 2
 BuildRequires:  python3dist(pytz)
 BuildRequires:  python3dist(setuptools)
 
