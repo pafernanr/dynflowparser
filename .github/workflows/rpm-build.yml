@@ -6,8 +6,8 @@ on:
     # tags:
     #  - 'v*.*.*' # Push events to matching i.e: v20.15.10
 env:
-  DIST: ""
-  # el7
+  PKG_NAME: dynflowparser
+  DIST: el7
   ARCH: noarch
 
 jobs:
@@ -19,16 +19,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Replace version in RPM spec so correct source is downloaded when building RPM
-        run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ vars.PKG_NAME }}.spec
+        run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ env.PKG_NAME }}.spec
 
       - name: Create source archive
-        run: tar -cvf ${{ vars.PKG_NAME }}-${{ github.ref_name }}.tar.gz *
+        run: tar -cvf ${{ env.PKG_NAME }}-${{ github.ref_name }}.tar.gz *
 
       - name: Upload source archive as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ vars.PKG_NAME }}-${{ github.ref_name }}.tar.gz
-          path: ${{ vars.PKG_NAME }}-${{ github.ref_name }}.tar.gz
+          name: ${{ env.PKG_NAME }}-${{ github.ref_name }}.tar.gz
+          path: ${{ env.PKG_NAME }}-${{ github.ref_name }}.tar.gz
 
   build_rpm:
     name: Build .rpm package
@@ -39,18 +39,18 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Replace version in RPM spec so correct source is downloaded when building RPM
-        run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ vars.PKG_NAME }}.spec
+        run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ env.PKG_NAME }}.spec
 
       - name: Run rpmbuild on RPM spec to produce package
         id: rpm
         uses: naveenrajm7/rpmbuild@master
         with:
-          spec_file: ${{ vars.PKG_NAME }}.spec
+          spec_file: ${{ env.PKG_NAME }}.spec
 
       - name: Upload .rpm package as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ vars.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
+          name: ${{ env.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
           path: rpmbuild/RPMS/${{ env.ARCH }}/*.rpm
 
   build_deb:
@@ -62,7 +62,7 @@ jobs:
         uses: actions/download-artifact@v4
         id: download
         with:
-          name: ${{ vars.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
+          name: ${{ env.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm
 
       - name: Convert .rpm to .deb
         run: |
@@ -72,8 +72,8 @@ jobs:
       - name: Upload .deb package as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ vars.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.deb
-          path: ${{ vars.PKG_NAME }}*.deb
+          name: ${{ env.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.deb
+          path: ${{ env.PKG_NAME }}*.deb
 
   release:
     name: Create release with all assets
@@ -87,6 +87,6 @@ jobs:
         uses: softprops/action-gh-release@v4
         with:
           files: |
-            ${{ vars.PKG_NAME }}-${{ github.ref_name }}.tar.gz/*.tar.gz
-            ${{ vars.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm/**/*.rpm
-            ${{ vars.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.deb/**/*.deb
+            ${{ env.PKG_NAME }}-${{ github.ref_name }}.tar.gz/*.tar.gz
+            ${{ env.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.rpm/**/*.rpm
+            ${{ env.PKG_NAME }}-${{ github.ref_name }}-1.${{ env.DIST }}.${{ env.ARCH }}.deb/**/*.deb
