@@ -2,7 +2,7 @@
 %global pypi_name dynflowparser
 %global pypi_version 0.2.0
 
-Name:           python-%{pypi_name}
+Name:           %{pypi_name}
 Version:        %{pypi_version}
 Release:        1%{?dist}
 Summary:        Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
