@@ -5,7 +5,6 @@ Summary:        Get sosreport dynflow files and generates user friendly html pag
 
 License:        None
 URL:            https://github.com/pafernanr/dynflowparser
-Source0:        %{pypi_source}
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
