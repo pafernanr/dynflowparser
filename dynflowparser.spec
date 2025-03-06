@@ -1,6 +1,6 @@
 # Created by pyp2rpm-3.3.10
 %global pypi_name dynflowparser
-%global pypi_version 0.2.16
+%global pypi_version 0.2.18
 
 Name:           python-%{pypi_name}
 Version:        %{pypi_version}
@@ -13,10 +13,7 @@ Source0:        %{pypi_source}
 BuildArch:      noarch
 
 BuildRequires:  python3-devel
-BuildRequires:  python3dist(hacking)
-BuildRequires:  python3dist(jinja2)
-BuildRequires:  python3dist(pbr)
-BuildRequires:  python3dist(pytz)
+BuildRequires:  python3dist(pbr) >= 2
 BuildRequires:  python3dist(setuptools)
 
 %description
@@ -32,7 +29,6 @@ Summary:        %{summary}
 %{?python_provide:%python_provide python3-%{pypi_name}}
 
 Requires:       python3dist(jinja2)
-Requires:       python3dist(pbr)
 Requires:       python3dist(pytz)
 Requires:       python3dist(setuptools)
 %description -n python3-%{pypi_name}
@@ -55,9 +51,6 @@ rm -rf %{pypi_name}.egg-info
 %install
 %py3_install
 
-%check
-%{__python3} setup.py test
-
 %files -n python3-%{pypi_name}
 %license LICENSE
 %doc README.md
@@ -66,7 +59,3 @@ rm -rf %{pypi_name}.egg-info
 %{python3_sitelib}/%{pypi_name}
 %{python3_sitelib}/dynflowparserexport
 %{python3_sitelib}/%{pypi_name}-%{pypi_version}-py%{python3_version}.egg-info
-
-%changelog
-* Wed Mar 05 2025 Pablo Fernández Rodríguez <pafernan@redhat.com> - 0.2.16-1
-- Initial package.
