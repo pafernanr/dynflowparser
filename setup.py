@@ -3,7 +3,8 @@ import setuptools
 
 setuptools.setup(
     name='dynflowparser',
-    version='1.0.6',
+    version='0.0.0',
+    no-autoreq=yes,
     setup_requires=['Jinja2', 'pytz'],
     long_description="Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps.",
     author='Pablo Fernández Rodríguez',
