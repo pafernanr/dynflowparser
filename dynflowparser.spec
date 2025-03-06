@@ -56,4 +56,7 @@ friendly html pages for Tasks, Plans, Actions and Steps. Companion command
 %doc README.md
 %{python3_sitelib}/dynflowparser
 %{python3_sitelib}/dynflowparserexport
-%{python3_sitelib}/%{name}-%{version}.dist-info
+# fedora 41
+# %{python3_sitelib}/%{name}-%{version}.dist-info
+# rhel7
+# %{python3_sitelib}/%{name}-%{version}-py%{python3_version}.egg-info
