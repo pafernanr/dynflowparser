@@ -1,7 +1,7 @@
 %define _unpackaged_files_terminate_build 0
 
 Name:           dynflowparser
-Version:        0.2.19
+Version:        1.0.6
 Release:        1%{?dist}
 Summary:        Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
