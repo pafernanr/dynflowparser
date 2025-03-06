@@ -15,6 +15,7 @@ from dynflowparser.lib.util import Util
 class DynflowParser:
 
     def __init__(self):
+        print("cccc")
         self.conf = Conf()
         self.util = Util(self.conf.args.debug)
         self.get_dynflow_schema()
@@ -29,7 +30,7 @@ class DynflowParser:
 
     def read_dynflow(self, dtype):
         inputfile = (self.conf.args.sosreport_path
-                    + self.conf.dynflowdata[dtype]['inputfile'])
+                     + self.conf.dynflowdata[dtype]['inputfile'])
         if os.path.islink(inputfile):
             self.util.debug(
                 "W",
