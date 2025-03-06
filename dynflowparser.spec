@@ -2,7 +2,8 @@
 
 Name:           dynflowparser
 Version:        0.0.0
-Release:        1%{?dist}
+Release:        1
+# 1%{?dist}
 Summary:        Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
 License:        None
@@ -10,6 +11,7 @@ URL:            https://github.com/pafernanr/dynflowparser
 Source0: https://github.com/pafernanr/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
+BuildRequires: python3 >= 3.8
 BuildRequires: python3-devel
 # BuildRequires: python3dist(wheel)
 %if 0%{?rhel} && 0%{?rhel} < 10
@@ -17,6 +19,7 @@ BuildRequires: python3-setuptools
 %else
 BuildRequires: python3-packaging
 %endif
+Requires: python3 >= 3.8
 Requires: python3dist(jinja2)
 Requires: python3dist(pytz)
 
