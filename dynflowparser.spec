@@ -11,7 +11,7 @@ Source0: https://github.com/pafernanr/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires: python3-devel
-BuildRequires: python3dist(wheel)
+# BuildRequires: python3dist(wheel)
 %if 0%{?rhel} && 0%{?rhel} < 10
 BuildRequires: python3-setuptools
 %else
