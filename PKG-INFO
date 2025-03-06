@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: dynflowparser
-Version: 0.2.18
+Version: 0.2.19
 Summary: Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 Home-page: https://github.com/pafernanr/dynflowparser
 Author: Pablo Fernández Rodríguez
