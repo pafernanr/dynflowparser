@@ -1,3 +1,5 @@
+%define _unpackaged_files_terminate_build 0
+
 Name:           dynflowparser
 Version:        0.2.19
 Release:        1%{?dist}
@@ -9,14 +11,14 @@ Source0: https://github.com/pafernanr/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
 BuildRequires: python3-devel
-BuildRequires: python3-wheel
+BuildRequires: python3dist(wheel)
 %if 0%{?rhel} && 0%{?rhel} < 10
 BuildRequires: python3-setuptools
 %else
 BuildRequires: python3-packaging
 %endif
-Requires: python3-jinja2
-Requires: python3-pytz
+Requires: python3dist(jinja2)
+Requires: python3dist(pytz)
 
 %description
 Dynflowparser reads the dynflow files from a `sosreport` and generates user
