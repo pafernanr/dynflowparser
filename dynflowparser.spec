@@ -2,8 +2,7 @@
 
 Name:           dynflowparser
 Version:        0.0.0
-Release:        1
-# 1%{?dist}
+Release:        1%{?dist}
 Summary:        Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
 License:        None
