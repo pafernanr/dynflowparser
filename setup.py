@@ -28,7 +28,7 @@ setuptools.setup(
         tasks, plans, actions and steps.""",
     long_description_content_type='text/markdown',
     long_description=read("README.md"),
-    classifier=[
+    classifiers=[
         'Intended Audience :: Information Technology',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
