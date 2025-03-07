@@ -26,6 +26,7 @@ setuptools.setup(
     description="""
         Get sosreport dynflow files and generates user friendly html pages for
         tasks, plans, actions and steps.""",
+    long_description_content_type='text/markdown',
     long_description=read("README.md"),
     classifier=[
         'Intended Audience :: Information Technology',
