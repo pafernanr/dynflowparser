@@ -11,15 +11,9 @@ URL:            https://github.com/pafernanr/dynflowparser
 Source0: https://github.com/pafernanr/%{name}-%{version}.tar.gz
 BuildArch:      noarch
 
-BuildRequires: python3 >= 3.8
-BuildRequires: python3-devel
-# BuildRequires: python3dist(wheel)
-%if 0%{?rhel} && 0%{?rhel} < 10
-BuildRequires: python3-setuptools
-%else
-BuildRequires: python3-packaging
-%endif
-Requires: python3 >= 3.8
+AutoReq: no
+# BuildRequires: python3-devel
+# BuildRequires: python3-setuptools
 Requires: python3dist(jinja2)
 Requires: python3dist(pytz)
 
