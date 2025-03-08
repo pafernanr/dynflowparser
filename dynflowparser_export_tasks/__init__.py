@@ -20,13 +20,13 @@ class DynflowParserExportTasks:
             except OverflowError:
                 maxint = int(maxint/10)
         # Define output files and queries
-        filter = (
+        tasksfilter = (
             f"AND foreman_tasks_tasks.{self.conf.args.filter}"
             if self.conf.args.filter else "")
-        filter_result = (
+        tasksfilter_result = (
             f"AND foreman_tasks_tasks.result='{self.conf.args.result}'"
             if self.conf.args.result else "")
-        filter_state = (
+        tasksfilter_state = (
             f"AND foreman_tasks_tasks.state='{self.conf.args.state}'"
             if self.conf.args.state else "")
         self.queries = {
@@ -36,7 +36,7 @@ class DynflowParserExportTasks:
                 f"""select foreman_tasks_tasks.* from foreman_tasks_tasks
                 where
                   started_at > NOW() - interval '{self.conf.args.days} days'
-                  {filter} {filter_result} {filter_state}
+                  {tasksfilter} {tasksfilter_result} {tasksfilter_state}
                 order by started_at asc"""),
             "dynflow_execution_plans": (
                 f"""select dynflow_execution_plans.* from foreman_tasks_tasks
@@ -44,7 +44,7 @@ class DynflowParserExportTasks:
                 (foreman_tasks_tasks.external_id = dynflow_execution_plans.uuid::varchar)
                 where
                   foreman_tasks_tasks.started_at > NOW() - interval '{self.conf.args.days} days'
-                  {filter} {filter_result} {filter_state}
+                  {tasksfilter} {tasksfilter_result} {tasksfilter_state}
                 order by foreman_tasks_tasks.started_at asc"""),
             "dynflow_actions": (
                 f"""select dynflow_actions.* from foreman_tasks_tasks
@@ -52,7 +52,7 @@ class DynflowParserExportTasks:
                 (foreman_tasks_tasks.external_id = dynflow_actions.execution_plan_uuid::varchar)
                 where
                   foreman_tasks_tasks.started_at > NOW() - interval '{self.conf.args.days} days'
-                  {filter} {filter_result} {filter_state}
+                  {tasksfilter} {tasksfilter_result} {tasksfilter_state}
                 order by foreman_tasks_tasks.started_at asc"""),
             "dynflow_steps": (
                 f"""select dynflow_steps.* from foreman_tasks_tasks
@@ -60,7 +60,7 @@ class DynflowParserExportTasks:
                 (foreman_tasks_tasks.external_id = dynflow_steps.execution_plan_uuid::varchar)
                 where
                   foreman_tasks_tasks.started_at > NOW() - interval '{self.conf.args.days} days'
-                  {filter} {filter_result} {filter_state}
+                  {tasksfilter} {tasksfilter_result} {tasksfilter_state}
                 order by foreman_tasks_tasks.started_at asc"""),
         }
 
