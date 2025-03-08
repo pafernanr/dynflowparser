@@ -13,7 +13,7 @@ BuildRoot: %{_tmppath}/%{name}-buildroot
 BuildRequires:  python3-devel
 BuildRequires:  python3-setuptools
 Requires: python3-jinja2
-Requires: python3-dateutil
+Requires: python3-pytz
 
 %description
 Read sosreport dynflow files and generates user friendly html pages for Tasks, Plans, Actions and Steps
@@ -27,9 +27,9 @@ Read sosreport dynflow files and generates user friendly html pages for Tasks, P
 rm -rf ${RPM_BUILD_ROOT}
 
 mkdir -p ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin
-install -D -m 755 dynflowparser/bin/dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin/dynflowparser
+install -D -m 755 dynflowparser/bin/__init__.py ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin/__init__.py
 mkdir -p ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser_export_tasks/bin
-install -D -m 755 dynflowparser_export_tasks/bin/dynflowparser-export-tasks ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser_export_tasks/bin/dynflowparser-export-tasks
+install -D -m 755 dynflowparser_export_tasks/bin/__init__.py ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser_export_tasks/bin/__init__.py
 cp -rp dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/
 cp -rp dynflowparser_export_tasks ${RPM_BUILD_ROOT}/usr/lib/tools/
 
@@ -37,8 +37,8 @@ rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/lib/__pycache__
 rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/html/images
 
 %post
-ln -s -f /usr/lib/tools/dynflowparser/bin/dynflowparser /usr/bin/dynflowparser
-ln -s -f /usr/lib/tools/dynflowparser_export_tasks/bin/dynflowparser-export-tasks /usr/bin/dynflowparser-export-tasks
+ln -s -f /usr/lib/tools/dynflowparser/bin/__init__.py /usr/bin/dynflowparser
+ln -s -f /usr/lib/tools/dynflowparser_export_tasks/bin/__init__.py /usr/bin/dynflowparser-export-tasks
 
 %postun
 if [ $1 -eq 0 ] ; then

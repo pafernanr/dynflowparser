@@ -13,8 +13,14 @@ setuptools.setup(
     version='0.0.0',
     setup_requires=['Jinja2', 'pytz'],
     scripts=[
-        'dynflowparser/bin/dynflowparser',
-        'dynflowparser_export_tasks/bin/dynflowparser-export-tasks'],
+        'dynflowparser/bin/__init__.py',
+        'dynflowparser_export_tasks/bin/__init__.py'],
+    entry_points={
+        'console_scripts': [
+            'dynflowparser=dynflowparser.bin:main',
+            'dynflowparser-export-tasks=dynflowparser_export_tasks.bin:main',
+            ],
+        },
     packages=setuptools.find_packages(),
     package_data={
         'dynflowparser.html.css': ['*'],
