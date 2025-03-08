@@ -15,7 +15,6 @@ from dynflowparser.lib.util import Util
 class DynflowParser:
 
     def __init__(self):
-        print("cccc")
         self.conf = Conf()
         self.util = Util(self.conf.args.debug)
         self.get_dynflow_schema()

@@ -1,57 +1,54 @@
-%define _unpackaged_files_terminate_build 0
+Name: dynflowparser
+Version: 0.0.0
+Release: py3
+Summary: Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
-Name:           dynflowparser
-Version:        0.0.0
-Release:        1%{?dist}
-Summary:        Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
-
-License:        None
+License: GPLv3
 URL:            https://github.com/pafernanr/dynflowparser
 Source0: https://github.com/pafernanr/%{name}-%{version}.tar.gz
-BuildArch:      noarch
+Group: Applications/System
+BuildArch: noarch
 
-BuildRequires: python3-devel
-BuildRequires: python3-setuptools
-Requires: python3dist(jinja2)
-Requires: python3dist(pytz)
+BuildRoot: %{_tmppath}/%{name}-buildroot
+BuildRequires:  python3-devel
+BuildRequires:  python3-setuptools
+Requires: python3-jinja2
+Requires: python3-dateutil
 
 %description
-Dynflowparser reads the dynflow files from a `sosreport` and generates user
-friendly html pages for Tasks, Plans, Actions and Steps. Companion command
-`dynflowparser-export-tasks` helps to overcome sosreport 100Mb file size limit.
+Read sosreport dynflow files and generates user friendly html pages for Tasks, Plans, Actions and Steps
 
 %prep
 %setup -qn %{name}-%{version}
 
-%if 0%{?fedora} >= 39
-%generate_buildrequires
-%pyproject_buildrequires
-%endif
-
 %build
-%if 0%{?fedora} >= 39
-%pyproject_wheel
-%else
-%py3_build
-%endif
 
 %install
-%if 0%{?fedora} >= 39
-%pyproject_install
-%pyproject_save_files dynflowparser
-%pyproject_save_files dynflowparserexport
-%else
-%py3_install
-%endif
+rm -rf ${RPM_BUILD_ROOT}
+
+mkdir -p ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/bin
+install -D -m 755 bin/dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin/dynflowparser
+install -D -m 755 bin/dynflowparser-export-tasks ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin/dynflowparser-export-tasks
+cp -rp dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/
+cp -rp dynflowparserexport ${RPM_BUILD_ROOT}/usr/lib/tools/
+
+rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/lib/__pycache__
+rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/html/images
+
+%post
+ln -s -f /usr/lib/tools/dynflowparser/bin/dynflowparser /usr/bin/dynflowparser
+ln -s -f /usr/lib/tools/dynflowparser/bin/dynflowparser-export-tasks /usr/bin/dynflowparser-export-tasks
+
+%postun
+if [ $1 -eq 0 ] ; then
+    rm -f /usr/bin/%{name}
+    rm -f /usr/bin/export-tasks
+fi
+
+%clean
+rm -rf ${RPM_BUILD_ROOT}
 
 %files
-%{_bindir}/dynflowparser
-%{_bindir}/dynflowparser-export-tasks
-%license LICENSE
-%doc README.md
-%{python3_sitelib}/dynflowparser
-%{python3_sitelib}/dynflowparserexport
-# fedora 41
-# %{python3_sitelib}/%{name}-%{version}.dist-info
-# rhel7
-# %{python3_sitelib}/%{name}-%{version}-py%{python3_version}.egg-info
+%defattr(-,root,root,-)
+/usr/lib/tools/dynflowparser
+/usr/lib/tools/dynflowparserexport
