@@ -26,18 +26,19 @@ Read sosreport dynflow files and generates user friendly html pages for Tasks, P
 %install
 rm -rf ${RPM_BUILD_ROOT}
 
-mkdir -p ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/bin
-install -D -m 755 bin/dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin/dynflowparser
-install -D -m 755 bin/dynflowparser-export-tasks ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin/dynflowparser-export-tasks
+mkdir -p ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin
+install -D -m 755 dynflowparser/bin/dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser/bin/dynflowparser
+mkdir -p ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser_export_tasks/bin
+install -D -m 755 dynflowparser_export_tasks/bin/dynflowparser-export-tasks ${RPM_BUILD_ROOT}/usr/lib/tools/dynflowparser_export_tasks/bin/dynflowparser-export-tasks
 cp -rp dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/
-cp -rp dynflowparserexport ${RPM_BUILD_ROOT}/usr/lib/tools/
+cp -rp dynflowparser_export_tasks ${RPM_BUILD_ROOT}/usr/lib/tools/
 
 rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/lib/__pycache__
 rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/html/images
 
 %post
 ln -s -f /usr/lib/tools/dynflowparser/bin/dynflowparser /usr/bin/dynflowparser
-ln -s -f /usr/lib/tools/dynflowparser/bin/dynflowparser-export-tasks /usr/bin/dynflowparser-export-tasks
+ln -s -f /usr/lib/tools/dynflowparser_export_tasks/bin/dynflowparser-export-tasks /usr/bin/dynflowparser-export-tasks
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -51,4 +52,4 @@ rm -rf ${RPM_BUILD_ROOT}
 %files
 %defattr(-,root,root,-)
 /usr/lib/tools/dynflowparser
-/usr/lib/tools/dynflowparserexport
+/usr/lib/tools/dynflowparser_export_tasks

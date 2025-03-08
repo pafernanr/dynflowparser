@@ -18,7 +18,7 @@ Requires: python3dist(pytz)
 %description
 Dynflowparser reads the dynflow files from a `sosreport` and generates user
 friendly html pages for Tasks, Plans, Actions and Steps. Companion command
-`dynflowparser-export-tasks` helps to overcome sosreport 100Mb file size limit.
+`dynflowparser_export_tasks` helps to overcome sosreport 100Mb file size limit.
 
 %prep
 %setup -qn %{name}-%{version}
@@ -39,15 +39,15 @@ friendly html pages for Tasks, Plans, Actions and Steps. Companion command
 %if 0%{?fedora} >= 39
 %pyproject_install
 %pyproject_save_files dynflowparser
-%pyproject_save_files dynflowparserexport
+%pyproject_save_files dynflowparser_export_tasks
 %else
 %py3_install
 %endif
 
 %files
 %{_bindir}/dynflowparser
-%{_bindir}/dynflowparser-export-tasks
+%{_bindir}/dynflowparser_export_tasks
 %license LICENSE
 %doc README.md
 %{python3_sitelib}/dynflowparser
-%{python3_sitelib}/dynflowparserexport
+%{python3_sitelib}/dynflowparser_export_tasks
