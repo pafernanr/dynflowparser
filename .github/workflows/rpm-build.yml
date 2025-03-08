@@ -19,7 +19,7 @@ jobs:
         run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ env.PKG_NAME }}.spec
 
       - name: Create source archive
-        run: tar -zcvf ${{ env.PKG_NAME }}-${{ github.ref_name }}.tar.gz * -transform "s,^,${{ env.PKG_NAME }}-${{ github.ref_name }}/,"
+        run: tar -zcvf ${{ env.PKG_NAME }}-${{ github.ref_name }}.tar.gz * --transform "s,^,${{ env.PKG_NAME }}-${{ github.ref_name }}/,"
 
       - name: Upload source archive as artifact
         uses: actions/upload-artifact@v4
