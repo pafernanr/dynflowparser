@@ -3,10 +3,10 @@ import os
 import sys
 
 from dynflowparser.lib.util import Util
-from dynflowparserexport.lib.configuration import Conf
+from dynflowparser_export_tasks.lib.configuration import Conf
 
 
-class DynflowParserExport:
+class DynflowParserExportTasks:
 
     def __init__(self):
         self.conf = Conf()
