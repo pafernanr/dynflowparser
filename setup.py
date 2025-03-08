@@ -12,7 +12,15 @@ setuptools.setup(
     name='dynflowparser',
     version='0.0.0',
     setup_requires=['Jinja2', 'pytz'],
-    scripts=['dynflowparser/bin/dynflowparser', 'dynflowparser_export_tasks/bin/dynflowparser-export-tasks'],
+    scripts=[
+        'dynflowparser/bin/__init__.py',
+        'dynflowparser_export_tasks/bin/__init__.py'],
+    entry_points={
+        'console_scripts': [
+            'dynflowparser=dynflowparser.bin:main',
+            'dynflowparser-export-tasks=dynflowparser_export_tasks.bin:main',
+            ],
+        },
     packages=setuptools.find_packages(),
     package_data={
         'dynflowparser.html.css': ['*'],
@@ -35,11 +43,5 @@ setuptools.setup(
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
-        'Programming Language :: Python :: 3.10',
-        'Programming Language :: Python :: 3.11',
-        'Programming Language :: Python :: 3.12',
-        'Programming Language :: Python :: 3.13',
     ],
     )
