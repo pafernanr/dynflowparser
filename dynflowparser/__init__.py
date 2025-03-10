@@ -160,8 +160,7 @@ class DynflowParser:
                 self.conf.sos['timezone'],
                 ends)
             if (dfrom <= starts <= dto) or (dfrom <= ends <= dto):
-                # include only success tasks or all
-                if self.conf.unsuccess:
+                if not self.conf.args.showall:
                     if dline[headers.index('result')] != 'success':
                         self.conf.dynflowdata['includedUUID'].append(
                             dline[headers.index('external_id')]

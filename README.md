@@ -17,8 +17,8 @@ Companion command `dynflowparser-export-tasks` helps to overcome `sosreport` fil
 
 #### Dependencies
 Required python libraries:
-- Jinja2>=3.1.3
-- python_dateutil>=2.8.2
+- Jinja2
+- pytz
 
 #### Installation
 ~~~

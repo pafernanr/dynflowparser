@@ -32,10 +32,10 @@ class OutputHtml:
 
     def write_tasks(self):
         self.util.debug("I", "write_tasks")
-        if self.conf.unsuccess:
-            where = " AND t.result != 'success'"
-        else:
+        if self.conf.args.showall:
             where = ""
+        else:
+            where = " AND t.result != 'success'"
 
         tmp = self.db.query("SELECT t.parent_task_id, t.id, t.external_id,"
                             + " t.label, t.state, t.result, t.started_at,"
@@ -84,7 +84,7 @@ class OutputHtml:
         sql = ("SELECT * FROM steps ORDER BY id")
         rows = self.db.query(sql)
         for r in rows:
-            if self.conf.unsuccess and r[8] == "success":
+            if not self.conf.args.showall and r[8] == "success":
                 continue
             r = list(r)
             r[12] = self.show_json(r[12])
@@ -115,7 +115,7 @@ class OutputHtml:
         self.pb.start_time = datetime.datetime.now()
         start_time = time.time()
         for r in rows:
-            if self.conf.unsuccess and r[8] == "success":
+            if not self.conf.args.showall and r[8] == "success":
                 continue
             r = list(r)
             r[5] = self.show_json(r[5])
