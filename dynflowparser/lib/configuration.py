@@ -15,7 +15,6 @@ class Conf:
             'actions': {'times': 0},
             'includedUUID': [],
             }
-        self.unsuccess = True
         self.writesql = True
         self.sos = {}
         self.dbfile = ""
@@ -27,6 +26,7 @@ class Conf:
         self.parser.add_argument(
             '-a',
             '--all',
+            dest='showall',
             help='Parse all. By default only unsuccess plans are parsed.',
             default=False,
             action='store_true'
