@@ -12,7 +12,7 @@
 <table id="tblPlans" class="treetable">
   <thead>
   <tr>
-    <th>Task action</th><!--<th>Task label</th>--><th>Plan uuid</th><th>Task id</th><!--<th>external_id</th>-->
+    <th>Task action</th><!--<th>Task label</th>--><th>Task id</th><th>Plan uuid</th><!--<th>external_id</th>-->
     <th>Task started_at</th><th>Task ended_at</th> 
     <th>Task state</th><th>Task result</th>
   </tr>
@@ -22,18 +22,18 @@
   <tr>
     <td class="action"> 
       {% if t[0] and t[0]|length %}
-         <span class="folder indented">{{t[8]}}</span>
+         <span title="{{t[3]}}" class="folder indented">{{t[8]}}</span>
       {% else %}
-         <span class="folder unindented">{{t[8]}}</span>
+         <span title="{{t[3]}}" class="folder unindented">{{t[8]}}</span>
       {% endif %}
     </td>
+    <td>{{t[1]}}</td>
     <!--<td>{{t[3]}}</td>-->
     {% if t[5] == "pending" and t[4] == "scheduled"%}
     <td>{{t[2]}}</td>
     {% else %}
     <td><a href='actions/{{t[2]}}.html'>{{t[2]}}</a></td>
     {% endif %}
-    <td>{{t[1]}}</td>
     <td>{{t[6]}}</td>
     <td>{{t[7]}}</td>
     <td>{{t[4]}}</td>
