@@ -39,7 +39,7 @@ class OutputHtml:
 
         tmp = self.db.query("SELECT t.parent_task_id, t.id, t.external_id,"
                             + " t.label, t.state, t.result, t.started_at,"
-                            + " t.ended_at, t.action"
+                            + " t.ended_at, t.action, p.state, p.result"
                             + " FROM tasks t"
                             + " LEFT JOIN plans p"
                             + " ON t.external_id=p.uuid"
