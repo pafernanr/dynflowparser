@@ -197,5 +197,13 @@
   #tblPlans td:nth-child(5) {
     white-space: nowrap;
   }
-
-  
+  #tblBlame td {
+    text-align: right;
+  }
+  #tblBlame td:nth-child(1) {
+    text-align: left;
+  }
+  .tblTop td:nth-child(1),
+  .tblTop td:nth-child(2) {
+    text-align: right;
+  }

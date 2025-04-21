@@ -1,4 +1,6 @@
 import datetime
+import json
+import re
 import sqlite3
 import time
 
@@ -76,23 +78,21 @@ class OutputSQLite:
         self.executemany(query, values)
         self.commit()
 
+    def insert_blametaskexecution(self, values):
+        query = "INSERT INTO blametaskexecution VALUES (?,?,?,?,?,?,?,?,?)"
+        self.util.debug("D", query + " " + str(values))
+        self.executemany(query, values)
+        self.commit()
+
     def create_tables(self):
         self.execute("""SELECT name FROM sqlite_master
                      WHERE type='table' AND name='tasks';""")
         if not self.fetchone():
             self.create_tasks()
-        self.execute("""SELECT name FROM sqlite_master
-                     WHERE type='table' AND name='plans';""")
-        if not self.fetchone():
             self.create_plans()
-        self.execute("""SELECT name FROM sqlite_master
-                     WHERE type='table' AND name='actions';""")
-        if not self.fetchone():
             self.create_actions()
-        self.execute("""SELECT name FROM sqlite_master
-                     WHERE type='table' AND name='steps';""")
-        if not self.fetchone():
             self.create_steps()
+            self.create_blametaskexecution()
 
     def create_tasks(self):
         self.execute("""CREATE TABLE IF NOT EXISTS tasks (
@@ -179,6 +179,23 @@ class OutputSQLite:
         self.execute("CREATE INDEX steps_id ON steps(id)")
         self.commit()
 
+    def create_blametaskexecution(self):
+        self.execute("""CREATE TABLE IF NOT EXISTS blametaskexecution (
+        execution_plan_uuid TEXT,
+        type TEXT,
+        total FLOAT,
+        sidewait FLOAT,
+        sideexec FLOAT,
+        pulpwait FLOAT,
+        pulpexec FLOAT,
+        candlewait FLOAT,
+        candleexec FLOAT
+        )""")
+        self.execute("""CREATE INDEX blametaskexecution_execution_plan_id
+                     ON blametaskexecution(execution_plan_uuid)""")
+        self.execute("CREATE INDEX blametaskexecution_type ON blametaskexecution(type)")
+        self.commit()
+
     def insert_multi(self, dtype, rows):
         if dtype == "tasks":
             self.insert_tasks(rows)
@@ -188,6 +205,8 @@ class OutputSQLite:
             self.insert_actions(rows)
         elif dtype == "steps":
             self.insert_steps(rows)
+        elif dtype == "blametaskexecution":
+            self.insert_blametaskexecution(rows)
 
     def write(self, dtype, csv):
         pb = ProgressBarFromFileLines()
@@ -222,7 +241,17 @@ class OutputSQLite:
                             fields.append(btext.decode('Latin1'))
                             # return str(codecs.decode(text[2:], "hex"))
                         else:
-                            fields.append(str(lcsv[h]))
+                            value = str(lcsv[h])
+                            # pulp output timezone change
+                            if '"pulp_created":' in value:
+                                dates = re.findall(
+                                    r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+\+\d{2}:\d{2}',
+                                    value)
+                                for d in dates:
+                                    value = value.replace(
+                                        d, str(self.util.change_timezone(self.conf.sos['timezone'], d))  # noqa E501
+                                        )
+                            fields.append(value)
                     elif headers[h] in datefields:
                         fields.append(self.util.change_timezone(
                             self.conf.sos['timezone'], lcsv[h]))

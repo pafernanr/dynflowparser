@@ -41,7 +41,7 @@ class Conf:
         self.parser.add_argument(
             '-f',
             '--from',
-            dest='datefrom',
+            dest='date_from',
             help='Parse only Plans that were running from this datetime.',
             default='1974-04-10',
             type=self.valid_date
@@ -49,10 +49,17 @@ class Conf:
         self.parser.add_argument(
             '-t',
             '--to',
-            dest='dateto',
+            dest='date_to',
             help='Parse only Plans that were running up to this datetime.',
             default='2999-01-01',
             type=self.valid_date
+            )
+        self.parser.add_argument(
+            '-l',
+            '--last',
+            dest='last_n_days',
+            help='Parse only last N days. Overrides `--from` and `--to`.',
+            type=int
             )
         self.parser.add_argument(
             '-n',
@@ -134,7 +141,10 @@ class Conf:
     def set_sos_details(self):
         self.sos['timezone'] = self.util.exec_command(
             f"grep 'Time zone:' {self.args.sosreport_path}/sos_commands/systemd/timedatectl"  # noqa E501
-            + " |  awk '{print $3}'").strip()
+            + " | awk '{print $3}'").strip()
+        self.sos['localtime'] = self.util.exec_command(
+            f"grep 'Local time:' {self.args.sosreport_path}/sos_commands/systemd/timedatectl"  # noqa E501
+            + " | awk '{print $4\" 23:59:59\"}'").strip()
         self.sos['hostname'] = self.util.exec_command(
             f"cat  {self.args.sosreport_path}/hostname").strip()
         self.sos['ram'] = self.util.exec_command(

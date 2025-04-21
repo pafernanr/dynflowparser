@@ -11,26 +11,48 @@
     <script src="../html/js/jquery.treetable.js"></script>
     <script src="../html/js/dynflowparser.js"></script>
   </head>
-<body>{% include "header.html" %}
+<body>
+<table><tr><td style="width:50%; vertical-align: top;">
   <table class="sosdetails"><tr>
-    <th>Plan Label</th><td>{{label}}</td>
+    <th>Plan Label</th><td><b>{{label}}</b></td>
   </tr><tr>
-    <th>Path</th><td><ul class="path">
-      <li><b>Task id: </b> {{actions[0][13]}}<ul class="path">
-      {% if caller_execution_plan_id %}
-      <li><b>Action caller_execution_plan_id:</b> <a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a>
-        <ul class="path">
-      {% endif %}
-          <li><b>Action uuid:</b> {{execution_plan_uuid}}</li>
-      {% if caller_execution_plan_id %}
-        </ul>
-      </li>
-      {% endif %}
-    </ul></li></ul></td>
-  </tr><tr>
-    <th>Task action</th><td><pre>{{actions[0][12]}}</pre></td>
+    <th>Task action</th><td>{{actions[0][12]}}</td>
+  
   </tr></table>
-
+  <table class="sosdetails"><tr>
+    <th>Foreman Task id</th>
+    {% if caller_execution_plan_id %}<th>Dynflow caller_execution_plan_uuid</th>{% endif %}
+    <th>Dynflow execution_plan_uuid</th>
+  </tr><tr>
+    <td>{{actions[0][13]}}</td>
+    {% if caller_execution_plan_id %}<td><a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a></td>{% endif %}
+    <td><b>{{execution_plan_uuid}}</b></td>
+  </tr></table>
+</td><td style="width:50%; vertical-align: top;">  
+  {% if blametaskexecution|length > 0 %}
+  <table id="tblBlame" class="sosdetails">
+    <tr>
+      <th rowspan="2">Blame Task Execution</th><th rowspan="2">Total</th>
+      <th colspan="2">Sideiq</th><th colspan="2">Pulp</th><th colspan="2">Candlepin</th>
+    </tr><tr>
+      <th>Wait</th><th>Exec</th><th>Wait</th><th>Exec</th><th>Wait</th><th>Exec</th>
+    </tr>
+  {% for row in blametaskexecution %}
+    <tr>
+    {% for f in row %}
+      {% if loop.index == 1 %}
+      <td>{{ f }}</td>
+      {% elif loop.index == 2 %}
+      <td>{{ "%0.2f" | format(f|float) }}</td>
+      {% else %}
+      <td>{{ "%0.2f" | format(f|float) }}({{ "%0.1f" | format(f|float * 100 / row[1]|float) }}%)</td>
+      {% endif %}
+    {% endfor %}
+    </tr>
+  {% endfor %}
+  </table>
+  {% endif %}
+</td></tr></table>
   <button onclick="jQuery('#tblAction').treetable('collapseAll');expanderrors();">Expand Errors</button>
   <button onclick="jQuery('#tblAction').treetable('expandAll');">Expand All</button>
   <button onclick="jQuery('#tblAction').treetable('collapseAll');">Collapse All</button>

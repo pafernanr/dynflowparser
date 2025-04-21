@@ -1,4 +1,5 @@
 import csv
+import datetime
 import operator
 import os
 import re
@@ -6,6 +7,8 @@ import sys
 import time
 import webbrowser
 
+from dynflowparser.plugins.blametaskexecution import BlameTaskExecution
+# from dynflowparser.plugins.dynflowpolling import DynflowPolling
 from dynflowparser.lib.configuration import Conf
 from dynflowparser.lib.outputhtml import OutputHtml
 from dynflowparser.lib.outputsqlite import OutputSQLite
@@ -133,8 +136,13 @@ class DynflowParser:
         html = OutputHtml(self.conf)
         headers = self.conf.dynflowdata['tasks']['headers']
         dynflow = self.read_dynflow('tasks')
-        dfrom = self.util.date_from_string(self.conf.args.datefrom)
-        dto = self.util.date_from_string(self.conf.args.dateto)
+        if self.conf.args.last_n_days:
+            dto = self.util.date_from_string(self.conf.sos['localtime'])
+            dfrom = dto - datetime.timedelta(days=self.conf.args.last_n_days)
+            print(f"{dfrom}___{dto}")
+        else:
+            dfrom = self.util.date_from_string(self.conf.args.date_from)
+            dto = self.util.date_from_string(self.conf.args.date_to)
         # workaround for mysteriously disordered fields on some csv files
         if " " not in dynflow[2][13]:
             self.conf.dynflowdata['tasks']['headers'] = [
@@ -174,6 +182,13 @@ class DynflowParser:
             for d in ['tasks', 'plans', 'actions', 'steps']:
                 dynflow = self.read_dynflow(d)
                 sqlite.write(d, dynflow)
+        ###
+        # Enrich Plugins
+        # dynflowpolling = DynflowPolling(self.conf)
+        # dynflowpolling.main()
+        blametaskexecution = BlameTaskExecution(self.conf)
+        blametaskexecution.main()
+        ###
         html.write()
         indexpath = f"{self.conf.args.output_path}/index.html"
         if not self.conf.args.quiet:
