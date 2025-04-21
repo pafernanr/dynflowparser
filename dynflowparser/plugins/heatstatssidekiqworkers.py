@@ -2,7 +2,6 @@
 from datetime import datetime
 
 from dynflowparser.lib.outputsqlite import OutputSQLite
-from dynflowparser.lib.util import ProgressBarFromFileLines
 from dynflowparser.lib.util import Util
 
 
@@ -50,7 +49,8 @@ class HeatStatsSidekiqWorkers:
                 exectime = float(exectime)
             except Exception:
                 continue
-            # truncate steps starting before --from and adjust exectime accordingly
+            # truncate steps starting before --from
+            # and adjust exectime accordingly
             if start < self.from_ts:
                 exectime *= (finish-self.from_ts) / (finish-start)
                 start = self.from_ts
@@ -121,4 +121,8 @@ class HeatStatsSidekiqWorkers:
                 heat_intervals[ts]['load']
                 ])
 
-        return({"execdata": execdata, "countdata": countdata, "intervals": intervals})
+        return ({
+            "execdata": execdata,
+            "countdata": countdata,
+            "intervals": intervals
+            })
