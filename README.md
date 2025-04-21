@@ -27,7 +27,7 @@ pip install dynflowparser
 
 #### `dynflowparser` Usage
 ~~~
-usage: dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATEFROM] [-t DATETO] [-n] [-q] [sosreport_path] [output_path]
+usage: dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO] [-l LAST_N_DAYS] [-n] [-q] [sosreport_path] [output_path]
 
 Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
@@ -40,10 +40,12 @@ optional arguments:
   -a, --all             Parse all. By default only unsuccess plans are parsed.
   -d {D,I,W,E}, --debug {D,I,W,E}
                         Debug level. Default 'W'
-  -f DATEFROM, --from DATEFROM
+  -f DATE_FROM, --from DATE_FROM
                         Parse only Plans that were running from this datetime.
-  -t DATETO, --to DATETO
+  -t DATE_TO, --to DATE_TO
                         Parse only Plans that were running up to this datetime.
+  -l LAST_N_DAYS, --last LAST_N_DAYS
+                        Parse only last N days. Overrides `--from` and `--to`.
   -n, --nosql           Reuse existent sqlite file. (Useful for development).
   -q, --quiet           Quiet. Don't show progress bar.
 ~~~ 

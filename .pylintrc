@@ -3,8 +3,12 @@ disable=
     C0114, # missing-module-docstring
     C0115, # missing-class-docstring
     C0116, # missing-function-docstring
+    C0201, # consider-iterating-dictionary
+    C0206, # consider-using-dict-items
+    C0301, # line-too-long
     # W1514, # unspecified-encoding
     R0914, # Too many local variables (16/15) (too-many-locals)
     W0612, # Unused variable 'i' (unused-variable)
+
 
 

@@ -8,7 +8,46 @@
     <link rel="stylesheet" href="html/css/jquery.treetable.css" />
     <link rel="stylesheet" href="html/css/jquery.treetable.theme.default.css" />
   </head>
-<body>{% include "header.html" %}
+<body>
+<table width="100%"><tr><td style="width:33%; vertical-align: top;">
+  <table class="sosdetails">
+    <tr>
+      <th>Hostname</th><td>{{sos['hostname']}}</td>
+      <th>version</th><td>{{sos['satversion']}}</td>
+    </tr><tr>
+      <th>Time zone</th><td>{{sos['timezone']}}</td>
+      <th>Tuning</th><td>{{sos['tuning']}}</td>
+    </tr><tr>
+      <th></th><td></td>
+      <th>CPU</th><td>{{sos['cpu']}}</td>
+    </tr><tr>
+      <th colspan="4">RAM</th>
+    </tr><tr>
+      <td colspan="4"><pre>{{sos['ram']}}</pre></td>
+    </tr>
+  </table>
+</td><td style="width:33%; vertical-align: top;">
+  <table class="sosdetails tblTop">
+    <tr>
+      <th colspan="3">Top steps per execution time</th>
+    </tr><tr>
+      <th>Steps</th><th>Exectime</th><th>Label</th>
+    </tr>{% for r in dataheatstatssidekiqworkers['execdata'] %}  
+        <tr><td>{{ r[0] }}</td><td>{{ "%0.2f" | format(r[1]) }}</td><td>{{ r[2] }}</td></tr>
+    {% endfor %}
+  </table>
+</td><td style="width:33%; vertical-align: top;">
+  <table class="sosdetails tblTop">
+    <tr>
+      <th colspan="3">Top steps per count</th>
+    </tr><tr>
+      <th>Steps</th><th>Exectime</th><th>Label</th>
+    </tr>{% for r in dataheatstatssidekiqworkers['countdata'] %}  
+        <tr><td>{{ r[0] }}</td><td>{{ "%0.2f" | format(r[1]) }}</td><td>{{ r[2] }}</td></tr>
+    {% endfor %}
+  </table>
+</td>
+</tr></table>
 <table id="tblPlans" class="treetable">
   <thead>
   <tr>

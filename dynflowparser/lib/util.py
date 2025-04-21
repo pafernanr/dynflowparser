@@ -1,5 +1,4 @@
 import datetime
-import re
 import subprocess
 import sys
 
@@ -15,17 +14,10 @@ class Util:
             "%Y-%m-%d %H",
             "%Y-%m-%d %H:%M",
             "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d %H:%M:%S.%f",
+            "%Y-%m-%dT%H:%M:%S.%f",
+            "%Y-%m-%dT%H:%M:%S.%f%z",
             ]
-
-    def date_from_string(self, d):
-        valid = self.valid_date_formats
-        for v in valid:
-            try:
-                return datetime.datetime.strptime(d, v)
-            except ValueError:
-                continue
-        self.debug('E', f"not a valid date: {d!r}. Valid formats: {str(valid)}")
-        sys.exit(1)
 
     def debug(self, sev, msg):
         levels = {'D': 0,
@@ -64,8 +56,17 @@ class Util:
         dlocal = newd.astimezone(to_zone).replace(tzinfo=None)
         return dlocal
 
+    def date_from_string(self, d):
+        valid = self.valid_date_formats
+        for v in valid:
+            try:
+                return datetime.datetime.strptime(d, v)
+            except ValueError:
+                continue
+        self.debug('E', f"not a valid date: {d!r}. Valid formats: {str(valid)}")
+        sys.exit(1)
+
     def change_timezone(self, tz, d):
-        d = re.sub(r'\.[0-9]+', '', d)
         if d is not None and d != "":
             return self.to_timezone(
                 tz, self.date_from_string(d))

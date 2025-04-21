@@ -10,6 +10,7 @@ from jinja2 import FileSystemLoader
 from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.util import ProgressBarFromFileLines
 from dynflowparser.lib.util import Util
+from dynflowparser.plugins.heatstatssidekiqworkers import HeatStatsSidekiqWorkers  # noqa E501
 
 
 class OutputHtml:
@@ -70,9 +71,14 @@ class OutputHtml:
                 for v in vs:
                     rows.append(v)
 
+        # fetch 
+        heatstatssidekiqworkers = HeatStatsSidekiqWorkers(self.conf)
+        dataheatstatssidekiqworkers = heatstatssidekiqworkers.main()
+
         outputfile = self.conf.args.output_path + "/index.html"
         context = {
-            "rows": rows
+            "rows": rows,
+            "dataheatstatssidekiqworkers": dataheatstatssidekiqworkers,
         }
         self.write_report(context, "tasks.html", outputfile)
 
@@ -98,6 +104,7 @@ class OutputHtml:
                     steps[r[0]][r[2]] = [r]
             else:
                 steps[r[0]] = {r[2]: [r]}
+        
         # fetch actions
         actions = {}
         sql = ("SELECT s.action_id, p.uuid, a.caller_action_id,"
@@ -130,15 +137,28 @@ class OutputHtml:
             else:
                 actions[r[1]] = [r]
 
+        # fetch blametaskexecution
+        datablametaskexecution = {}
+        sql = "SELECT * from blametaskexecution"
+        rows = self.db.query(sql)
+        for r in rows:
+            if r[0] not in datablametaskexecution:
+                datablametaskexecution[r[0]] = []
+            datablametaskexecution[r[0]].append(r[1:])
         # write output
         for execution_plan_uuid, data in actions.items():
             c = c + 1
             outputfile = self.conf.args.output_path + "/actions/" + execution_plan_uuid + ".html"  # noqa E501
+            if data[0][1] in datablametaskexecution:
+                blametaskexecution = datablametaskexecution[data[0][1]]
+            else:
+                blametaskexecution = []
             context = {
                 "actions": data,
                 "label": data[0][9],
                 "execution_plan_uuid": execution_plan_uuid,
-                "caller_execution_plan_id": data[0][11]
+                "caller_execution_plan_id": data[0][11],
+                "blametaskexecution": blametaskexecution
             }
             self.write_report(context, "actions.html", outputfile)  # noqa E501
             if not self.conf.args.quiet:
