@@ -174,8 +174,6 @@ class BlameTaskExecution:
                 if 'pulp_tasks' in data:
                     for task in data['pulp_tasks']:
                         if task.keys() >= {"pulp_created", "started_at", "finished_at"}:  # noqa E501
-                            print(self.foreman_uuid)
-                            print(task)
                             self.process_external_task(
                                 step_id, 'pulp',
                                 task['pulp_created'][:23],
