@@ -173,6 +173,8 @@ class BlameTaskExecution:
                 # pulp tasks
                 if 'pulp_tasks' in data:
                     for task in data['pulp_tasks']:
+                        if task == "task":
+                            continue
                         if task.keys() >= {"pulp_created", "started_at", "finished_at"}:  # noqa E501
                             self.process_external_task(
                                 step_id, 'pulp',
@@ -183,7 +185,7 @@ class BlameTaskExecution:
                 if 'task_groups' in data and data['task_groups']:
                     for group in data['task_groups']:
                         for task in group["tasks"]:
-                            if task.keys() >= {"pulp_created", "started_at", "finished_at"}:  # noqa E501
+                            if task.keys() >= {"pulp_created", "started_at", "finished_at"}:  # noqa
                                 self.process_external_task(
                                     step_id, 'pulp',
                                     task['pulp_created'][:23],
