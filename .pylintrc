@@ -9,6 +9,7 @@ disable=
     # W1514, # unspecified-encoding
     R0914, # Too many local variables (16/15) (too-many-locals)
     W0612, # Unused variable 'i' (unused-variable)
+    W0718, # broad-exception-caught
 
 
 

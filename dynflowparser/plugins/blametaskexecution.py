@@ -173,7 +173,9 @@ class BlameTaskExecution:
                 # pulp tasks
                 if 'pulp_tasks' in data:
                     for task in data['pulp_tasks']:
-                        if "pulp_created" in task:
+                        if task.keys() >= {"pulp_created", "started_at", "finished_at"}:  # noqa E501
+                            print(self.foreman_uuid)
+                            print(task)
                             self.process_external_task(
                                 step_id, 'pulp',
                                 task['pulp_created'][:23],
@@ -183,21 +185,23 @@ class BlameTaskExecution:
                 if 'task_groups' in data and data['task_groups']:
                     for group in data['task_groups']:
                         for task in group["tasks"]:
-                            self.process_external_task(
-                                step_id, 'pulp',
-                                task['pulp_created'][:23],
-                                task['started_at'][:23],
-                                task['finished_at'][:23])
+                            if task.keys() >= {"pulp_created", "started_at", "finished_at"}:  # noqa E501
+                                self.process_external_task(
+                                    step_id, 'pulp',
+                                    task['pulp_created'][:23],
+                                    task['started_at'][:23],
+                                    task['finished_at'][:23])
                 # candlepin tasks
                 if 'task' in data:
                     task = data['task']
                     # time format is '2024-10-02T12:18:04+0000' so strip the
                     # trailing timezone
-                    self.process_external_task(
-                        step_id, 'candle',
-                        task['created'].split('+')[0],
-                        task['startTime'].split('+')[0],
-                        task['endTime'].split('+')[0])
+                    if task.keys() >= {'created', 'startTime', 'endTime'}:
+                        self.process_external_task(
+                            step_id, 'candle',
+                            task['created'].split('+')[0],
+                            task['startTime'].split('+')[0],
+                            task['endTime'].split('+')[0])
 
             # for each action_intervals[step_id], distribute the execution
             # time among partial intervals and store the final value in final
