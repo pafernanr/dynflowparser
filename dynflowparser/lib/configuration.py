@@ -1,13 +1,15 @@
 import argparse
 import os
 import shutil
-from dynflowparser.lib.util import Util  # noqa H306
+
+from dynflowparser.lib.util import Util
 
 
 class Conf:
 
     def __init__(self):
         self.cwd = os.getcwd()
+        self.util = Util("W")
         self.dynflowdata = {
             'version': "0",
             'plans': {'times': 0},
@@ -76,22 +78,21 @@ class Conf:
             action='store_true'
             )
         self.parser.add_argument(
+            '-o',
+            '--output_path',
+            help="Write output to this path. Default is './dynflowparser/'.",
+            default=self.cwd,
+            type=self.valid_output_path
+            )
+        self.parser.add_argument(
             'sosreport_path',
             help='Path to sos report folder. Default is current path.',
             default=self.cwd,
             type=self.valid_sosreport_path,
             nargs='?'
             )
-        self.parser.add_argument(
-            'output_path',
-            help="Output path. Default is './dynflowparser/'.",
-            default=self.cwd,
-            type=self.valid_output_path,
-            nargs='?'
-            )
         self.args = self.parser.parse_args()
 
-        self.util = Util(self.args.debug)
         self.set_sos_details()
         self.args.output_path = (
             f"{self.args.output_path}/dynflowparser/{self.sos['sosname']}"
@@ -132,7 +133,7 @@ class Conf:
         valid = Util("W").valid_date_formats
         for v in valid:
             try:
-                return d
+                return self.util.date_from_string(d)
             except ValueError:
                 pass
         raise argparse.ArgumentTypeError(
