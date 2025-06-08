@@ -139,10 +139,9 @@ class DynflowParser:
         if self.conf.args.last_n_days:
             dto = self.util.date_from_string(self.conf.sos['localtime'])
             dfrom = dto - datetime.timedelta(days=self.conf.args.last_n_days)
-            print(f"{dfrom}___{dto}")
         else:
-            dfrom = self.util.date_from_string(self.conf.args.date_from)
-            dto = self.util.date_from_string(self.conf.args.date_to)
+            dfrom = self.conf.args.date_from
+            dto = self.conf.args.date_to
         # workaround for mysteriously disordered fields on some csv files
         if " " not in dynflow[2][13]:
             self.conf.dynflowdata['tasks']['headers'] = [

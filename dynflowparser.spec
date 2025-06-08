@@ -34,7 +34,6 @@ cp -rp dynflowparser ${RPM_BUILD_ROOT}/usr/lib/tools/
 cp -rp dynflowparser_export_tasks ${RPM_BUILD_ROOT}/usr/lib/tools/
 
 rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/lib/__pycache__
-rm -rf ${RPM_BUILD_ROOT}/usr/lib/tools/%{name}/html/images
 
 %post
 ln -s -f /usr/lib/tools/dynflowparser/bin/__init__.py /usr/bin/dynflowparser
