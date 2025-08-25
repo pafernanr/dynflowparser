@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 import sqlite3
 import time
@@ -191,9 +190,10 @@ class OutputSQLite:
         candlewait FLOAT,
         candleexec FLOAT
         )""")
-        self.execute("""CREATE INDEX blametaskexecution_execution_plan_id
-                     ON blametaskexecution(execution_plan_uuid)""")
-        self.execute("CREATE INDEX blametaskexecution_type ON blametaskexecution(type)")
+        self.execute("CREATE INDEX blametaskexecution_execution_plan_id "
+                     "ON blametaskexecution(execution_plan_uuid)")
+        self.execute("CREATE INDEX blametaskexecution_type "
+                     "ON blametaskexecution(type)")
         self.commit()
 
     def insert_multi(self, dtype, rows):
@@ -245,11 +245,12 @@ class OutputSQLite:
                             # pulp output timezone change
                             if '"pulp_created":' in value:
                                 dates = re.findall(
-                                    r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+\+\d{2}:\d{2}',
+                                    r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+\+\d{2}:\d{2}',  # noqa E501
                                     value)
                                 for d in dates:
                                     value = value.replace(
-                                        d, str(self.util.change_timezone(self.conf.sos['timezone'], d))  # noqa E501
+                                        d, str(self.util.change_timezone(
+                                            self.conf.sos['timezone'], d))
                                         )
                             fields.append(value)
                     elif headers[h] in datefields:
