@@ -249,8 +249,9 @@ class BlameTaskExecution:
                             started_at = self.action_intervals[step_id][0][0] + \
                                 self.action_intervals[step_id][0][1]
                             self.action_intervals[step_id].pop(0)
-                    else:
-                        print(f"ERROR: not a List: {self.action_intervals[step_id][0][0]}")
+                    # else:
+                    #    print(f"ERROR: not a List: {self.foreman_uuid} \
+                    #           {self.action_intervals[step_id][0][0]}")
                     # if there is a trailing time spent by sidekiq, blame for it  # noqa E501
                     if started_at < ended_at:
                         duration = ended_at-started_at

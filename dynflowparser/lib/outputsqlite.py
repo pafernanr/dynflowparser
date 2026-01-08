@@ -92,6 +92,10 @@ class OutputSQLite:
             self.create_actions()
             self.create_steps()
             self.create_blametaskexecution()
+            self.create_core_task()
+            self.create_core_taskgroup()
+            self.create_core_progressreport()
+            self.create_core_groupprogressreport()
 
     def create_tasks(self):
         self.execute("""CREATE TABLE IF NOT EXISTS tasks (
@@ -199,7 +203,7 @@ class OutputSQLite:
     def insert_multi(self, dtype, rows):
         if dtype == "tasks":
             self.insert_tasks(rows)
-        if dtype == "plans":
+        elif dtype == "plans":
             self.insert_plans(rows)
         elif dtype == "actions":
             self.insert_actions(rows)
@@ -207,6 +211,16 @@ class OutputSQLite:
             self.insert_steps(rows)
         elif dtype == "blametaskexecution":
             self.insert_blametaskexecution(rows)
+        elif dtype == "core_task":
+            self.insert_core_task(rows)
+        elif dtype == "core_taskgroup":
+            self.insert_core_taskgroup(rows)
+        elif dtype == "core_progressreport":
+            self.insert_core_progressreport(rows)
+        elif dtype == "core_groupprogressreport":
+            self.insert_core_groupprogressreport(rows)
+        else:
+            print(f"ERROR: Unknown table '{dtype}'")
 
     def write(self, dtype, csv):
         pb = ProgressBarFromFileLines()
@@ -276,3 +290,100 @@ class OutputSQLite:
             print("  - Parsed " + str(i) + " " + dtype + " in "
                   + self.util.seconds_to_str(seconds)
                   + " (" + str(speed) + " lines/second)")
+
+    # pulpcore methods
+    def create_core_task(self):
+        self.execute("""CREATE TABLE IF NOT EXISTS core_task (
+        pulp_id TEXT,
+        pulp_created INTEGER,
+        pulp_last_updated INTEGER,
+        state TEXT,
+        name TEXT,
+        started_at INTEGER,
+        finished_at INTEGER,
+        error TEXT,
+        worker_id TEXT,
+        parent_task_id TEXT,
+        task_group_id TEXT,
+        logging_cid TEXT,
+        reserved_resources_record TEXT,
+        pulp_domain_id TEXT,
+        versions TEXT,
+        unblocked_at TEXT
+        )""")
+        self.execute("CREATE INDEX core_task_pulp_id ON core_task(pulp_id)")
+        self.commit()
+
+    def create_core_taskgroup(self):
+        self.execute("""CREATE TABLE IF NOT EXISTS core_taskgroup (
+        pulp_id TEXT,
+        pulp_created INTEGER,
+        pulp_last_updated INTEGER,
+        description TEXT,
+        all_tasks_dispatched TEXT,
+        pulp_domain_id TEXT
+        )""")
+        self.execute("CREATE INDEX core_taskgroup_pulp_id \
+                     ON core_taskgroup(pulp_id)")
+        self.commit()
+
+    def create_core_progressreport(self):
+        self.execute("""CREATE TABLE IF NOT EXISTS core_progressreport (
+        pulp_id TEXT,
+        pulp_created INTEGER,
+        pulp_last_updated INTEGER,
+        message TEXT,
+        state TEXT,
+        total TEXT,
+        done TEXT,
+        suffix TEXT,
+        task_id TEXT,
+        code TEXT
+        )""")
+        self.execute("CREATE INDEX core_progressreport_pulp_id \
+                     ON core_progressreport(pulp_id)")
+        self.commit()
+
+    def create_core_groupprogressreport(self):
+        self.execute("""CREATE TABLE IF NOT EXISTS core_groupprogressreport (
+        pulp_id TEXT,
+        pulp_created INtEGER,
+        pulp_last_updated INTEGER,
+        message TEXT,
+        code TEXT,
+        total TEXT,
+        done TEXT,
+        suffix TEXT,
+        task_group_id TEXT
+        )""")
+        self.execute("CREATE INDEX core_groupprogressreport_pulp_id \
+                     ON core_groupprogressreport(pulp_id)")
+        self.commit()
+
+    def insert_core_task(self, values):
+        query = "INSERT INTO core_task VALUES \
+            (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
+        self.util.debug("D", query + ", " + str(values))
+        self.executemany(query, values)
+        self.commit()
+
+    def insert_core_taskgroup(self, values):
+        query = "INSERT INTO core_taskgroup VALUES \
+            (?,?,?,?,?,?)"
+        self.util.debug("D", query + ", " + str(values))
+        self.executemany(query, values)
+        self.commit()
+
+    def insert_core_progressreport(self, values):
+        query = "INSERT INTO core_progressreport VALUES \
+            (?,?,?,?,?,?,?,?,?,?)"
+        self.util.debug("D", query + ", " + str(values))
+        self.executemany(query, values)
+        self.commit()
+
+    def insert_core_groupprogressreport(self, values):
+        query = "INSERT INTO core_groupprogressreport VALUES \
+            (?,?,?,?,?,?,?,?,?)"
+        self.util.debug("D", query + ", " + str(values))
+        self.executemany(query, values)
+        self.commit()

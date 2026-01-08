@@ -7,12 +7,13 @@ import sys
 import time
 import webbrowser
 
-from dynflowparser.plugins.blametaskexecution import BlameTaskExecution
-# from dynflowparser.plugins.dynflowpolling import DynflowPolling
 from dynflowparser.lib.configuration import Conf
 from dynflowparser.lib.outputhtml import OutputHtml
 from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.util import Util
+from dynflowparser.plugins.blametaskexecution import BlameTaskExecution
+from dynflowparser.plugins.pulpcore import PulpCore
+# from dynflowparser.plugins.dynflowpolling import DynflowPolling
 
 
 class DynflowParser:
@@ -185,8 +186,8 @@ class DynflowParser:
         # Enrich Plugins
         # dynflowpolling = DynflowPolling(self.conf)
         # dynflowpolling.main()
-        blametaskexecution = BlameTaskExecution(self.conf)
-        blametaskexecution.main()
+        BlameTaskExecution(self.conf).main()
+        #PulpCore(self.conf).main()
         ###
         html.write()
         indexpath = f"{self.conf.args.output_path}/index.html"

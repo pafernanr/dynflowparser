@@ -17,6 +17,13 @@ class Conf:
             'actions': {'times': 0},
             'includedUUID': [],
             }
+        self.pulpcoredata = {
+            'version': "0",
+            'core_task': {'times': 0},
+            'core_taskgroup': {'times': 0},
+            'core_progressreport': {'times': 0},
+            'core_groupprogressreport': {'times': 0}
+            }
         self.writesql = True
         self.sos = {}
         self.dbfile = ""
