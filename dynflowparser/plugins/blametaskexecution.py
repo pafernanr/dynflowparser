@@ -222,32 +222,36 @@ class BlameTaskExecution:
                         continue
                     exec2real = exectime/realtime
                     # while there is an action within this sidekiq interval..
-                    while ended_at > self.action_intervals[step_id][0][0]:
-                        # blame sidekiq for period prior the external action
-                        if started_at < self.action_intervals[step_id][0][0]:
-                            duration = self.action_intervals[step_id][0][0]-started_at  # noqa E501
+                    if isinstance(self.action_intervals[step_id][0][0], list):
+                        while ended_at > self.action_intervals[step_id][0][0]:
+                            # blame sidekiq for period prior the external action
+                            if started_at < self.action_intervals[step_id][0][0]:
+                                duration = self.action_intervals[step_id][0][0]-started_at  # noqa E501
+                                self.blame_periods.add(
+                                    (started_at, duration, 'sidewait', 1-exec2real))  # noqa E501
+                                self.blame_periods.add(
+                                    (started_at, duration, 'sideexec', exec2real))
+                            # now blame pulp/candlepin and sideexec - nowadays, we
+                            # treat both them fully concurrently, not interfering
+                            # each other "blame" or weight. This approach alone
+                            # could mean simplier code but the current code is
+                            # prepared for a variant "blame them with proper
+                            # "weights" (sideexec might affect pulp/candlepin..?)
                             self.blame_periods.add(
-                                (started_at, duration, 'sidewait', 1-exec2real))  # noqa E501
+                                (self.action_intervals[step_id][0][0],
+                                 self.action_intervals[step_id][0][1],
+                                 self.action_intervals[step_id][0][2], 1))
                             self.blame_periods.add(
-                                (started_at, duration, 'sideexec', exec2real))
-                        # now blame pulp/candlepin and sideexec - nowadays, we
-                        # treat both them fully concurrently, not interfering
-                        # each other "blame" or weight. This approach alone
-                        # could mean simplier code but the current code is
-                        # prepared for a variant "blame them with proper
-                        # "weights" (sideexec might affect pulp/candlepin..?)
-                        self.blame_periods.add(
-                            (self.action_intervals[step_id][0][0],
-                             self.action_intervals[step_id][0][1],
-                             self.action_intervals[step_id][0][2], 1))
-                        self.blame_periods.add(
-                            (self.action_intervals[step_id][0][0],
-                             self.action_intervals[step_id][0][1],
-                             'sideexec', exec2real))
-                        # move in time beyond the action
-                        started_at = self.action_intervals[step_id][0][0] + \
-                            self.action_intervals[step_id][0][1]
-                        self.action_intervals[step_id].pop(0)
+                                (self.action_intervals[step_id][0][0],
+                                 self.action_intervals[step_id][0][1],
+                                 'sideexec', exec2real))
+                            # move in time beyond the action
+                            started_at = self.action_intervals[step_id][0][0] + \
+                                self.action_intervals[step_id][0][1]
+                            self.action_intervals[step_id].pop(0)
+                    # else:
+                    #    print(f"ERROR: not a List: {self.foreman_uuid} \
+                    #           {self.action_intervals[step_id][0][0]}")
                     # if there is a trailing time spent by sidekiq, blame for it  # noqa E501
                     if started_at < ended_at:
                         duration = ended_at-started_at
