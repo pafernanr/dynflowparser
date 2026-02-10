@@ -12,47 +12,44 @@
     <script src="../html/js/dynflowparser.js"></script>
   </head>
 <body>
-<table><tr><td style="width:50%; vertical-align: top;">
-  <table class="sosdetails"><tr>
-    <th>Plan Label</th><td><b>{{label}}</b></td>
-  </tr><tr>
-    <th>Task action</th><td>{{actions[0][12]}}</td>
-  
-  </tr></table>
-  <table class="sosdetails"><tr>
-    <th>Foreman Task id</th>
-    {% if caller_execution_plan_id %}<th>Dynflow caller_execution_plan_uuid</th>{% endif %}
-    <th>Dynflow execution_plan_uuid</th>
-  </tr><tr>
-    <td>{{actions[0][13]}}</td>
-    {% if caller_execution_plan_id %}<td><a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a></td>{% endif %}
-    <td><b>{{execution_plan_uuid}}</b></td>
-  </tr></table>
-</td><td style="width:50%; vertical-align: top;">  
-  {% if blametaskexecution|length > 0 %}
-  <table id="tblBlame" class="sosdetails">
-    <tr>
-      <th rowspan="2">Blame Task Execution</th><th rowspan="2">Total</th>
-      <th colspan="2">Sideiq</th><th colspan="2">Pulp</th><th colspan="2">Candlepin</th>
-    </tr><tr>
-      <th>Wait</th><th>Exec</th><th>Wait</th><th>Exec</th><th>Wait</th><th>Exec</th>
-    </tr>
-  {% for row in blametaskexecution %}
-    <tr>
-    {% for f in row %}
-      {% if loop.index == 1 %}
-      <td>{{ f }}</td>
-      {% elif loop.index == 2 %}
-      <td>{{ "%0.2f" | format(f|float) }}</td>
-      {% else %}
-      <td>{{ "%0.2f" | format(f|float) }}({{ "%0.1f" | format(f|float * 100 / row[1]|float) }}%)</td>
-      {% endif %}
-    {% endfor %}
-    </tr>
-  {% endfor %}
-  </table>
+<table class="sosdetails">
+  <tr><th>Task action</th><td>{{actions[0][12]}}</td></tr>
+  <tr><th>Foreman Task id</th><td>{{actions[0][13]}}</td></tr>
+</table>
+<table class="sosdetails">
+  <tr><th>Plan Label</th><td><b>{{label}}</b></td>
+  {% if caller_execution_plan_id %}
+  <th>caller_execution_plan_uuid</th><td><a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a></td>
   {% endif %}
-</td></tr></table>
+  <th>execution_plan_uuid</th><td><b>{{execution_plan_uuid}}</b></td></tr>
+</table>
+
+<table><tr>
+  <td style="vertical-align: top;">
+  <table id="tblDynflow" class="sosdetails tblTop">
+    <thead>
+      <tr><th colspan="3">Dynflow Top 5 Exectime</th></tr>
+    </thead>
+    <tr><th>Exectime</th><th>Steps</th><th>Name</th></tr>
+    {% for r in dynflow_exectime %}
+        <tr><td>{{ "{:0,.0f}".format(r[1][0]) }}</td><td>{{ "{:0,.0f}".format(r[1][1]) }}</td><td>{{ r[0] }}</td></tr>
+    {% endfor %}
+    </table>
+  </td>
+  {% if pulp_exectime|length > 0 %}
+  <td width=50% style="vertical-align: top;">
+  <table id="tblPulp" class="sosdetails tblTop">
+    <thead>
+      <tr><th colspan="3">Pulp Top 5 Exectime</th></tr>
+    </thead>
+    <tr><th>Exectime</th><th>Actions</th><th>Name</th></tr>
+    {% for r in pulp_exectime %}
+        <tr><td>{{ "{:0,.0f}".format(r[1][0]) }}</td><td>{{ "{:0,.0f}".format(r[1][1]) }}</td><td>{{ r[0] }}</td></tr>
+    {% endfor %}
+    </table></td>
+  {% endif %}
+</tr></table>
+
   <button onclick="jQuery('#tblAction').treetable('collapseAll');expanderrors();">Expand Errors</button>
   <button onclick="jQuery('#tblAction').treetable('expandAll');">Expand All</button>
   <button onclick="jQuery('#tblAction').treetable('collapseAll');">Collapse All</button>
@@ -94,10 +91,10 @@
             <span class="file"></span><span class="show">{{a[3]}}.{{s[1]}}: {{s[10]}}</span>
             {% if s[13]|length %}<span class="caution">!</span>{% endif %}
           </td>
-          <td>{{s[4]}}</td>
-          <td>{{s[5]}}</td>
-          <td>{{s[6]}}</td>
-          <td>{{s[7]}}</td>
+          <td>{{ s[4].split(".")[0] }}</td>
+          <td>{{ s[5].split(".")[0] }}</td>
+          <td>{{ "{:0,.2f}".format(s[6]) }}</td>
+          <td>{{ "{:0,.2f}".format(s[7]) }}</td>
           <td class="{{s[3]}}">
             {% if s[3]=="error" %}<strong>{{s[3]}}</strong>
               {% elif s[3] in ["warning", "pending"] %}<sup>{{s[3]}}</sup>

@@ -11,8 +11,6 @@ from dynflowparser.lib.configuration import Conf
 from dynflowparser.lib.outputhtml import OutputHtml
 from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.util import Util
-from dynflowparser.plugins.blametaskexecution import BlameTaskExecution
-from dynflowparser.plugins.pulpcore import PulpCore
 # from dynflowparser.plugins.dynflowpolling import DynflowPolling
 
 
@@ -140,10 +138,12 @@ class DynflowParser:
         if self.conf.args.last_n_days:
             dto = self.util.date_from_string(self.conf.sos['localtime'])
             dfrom = dto - datetime.timedelta(days=self.conf.args.last_n_days)
+            self.conf.args.date_from = dfrom
+            self.conf.args.date_to = dto
         else:
             dfrom = self.conf.args.date_from
             dto = self.conf.args.date_to
-        # workaround for mysteriously disordered fields on some csv files
+        # workaround for disordered fields on some csv files
         if " " not in dynflow[2][13]:
             self.conf.dynflowdata['tasks']['headers'] = [
                 'id', 'dtype', 'label', 'started_at', 'ended_at', 'state',
@@ -186,8 +186,7 @@ class DynflowParser:
         # Enrich Plugins
         # dynflowpolling = DynflowPolling(self.conf)
         # dynflowpolling.main()
-        BlameTaskExecution(self.conf).main()
-        #PulpCore(self.conf).main()
+        # PulpCore(self.conf).main()
         ###
         html.write()
         indexpath = f"{self.conf.args.output_path}/index.html"
