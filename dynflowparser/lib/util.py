@@ -15,6 +15,7 @@ class Util:
             "%Y-%m-%d %H:%M",
             "%Y-%m-%d %H:%M:%S",
             "%Y-%m-%d %H:%M:%S.%f",
+            "%Y-%m-%d %H:%M:%S.%f%z",
             "%Y-%m-%dT%H:%M:%S.%f",
             "%Y-%m-%dT%H:%M:%S.%f%z",
             ]
