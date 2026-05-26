@@ -370,7 +370,7 @@ body {
 
 .action-header {
   display: grid;
-  grid-template-columns: 1fr auto auto auto auto auto;
+  grid-template-columns: 1fr 140px 140px 100px 100px 100px;
   gap: var(--spacing-sm);
   padding: 0.375rem 0.75rem;
   align-items: center;
@@ -516,7 +516,7 @@ body {
 
 .step-header {
   display: grid;
-  grid-template-columns: 1fr auto auto auto auto auto;
+  grid-template-columns: 1fr 140px 140px 100px 100px 100px;
   gap: var(--spacing-sm);
   padding: 0.25rem 0.5rem;
   align-items: center;
@@ -1106,7 +1106,7 @@ body.page-actions .page-container {
 /* Action List Header */
 .action-list-header {
   display: grid;
-  grid-template-columns: 1fr auto auto auto auto auto;
+  grid-template-columns: 1fr 140px 140px 100px 100px 100px;
   gap: var(--spacing-sm);
   padding: 0.375rem 0.75rem;
   background: var(--bg-tertiary);
