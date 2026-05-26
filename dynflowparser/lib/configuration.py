@@ -161,6 +161,32 @@ class Conf:
         raise argparse.ArgumentTypeError(
             f"not a valid date: {d!r}. Valid formats: {str(valid)}")
 
+    def parse_ram_info(self, free_output):
+        """Parse free command output and return memory/swap in GB."""
+        try:
+            lines = free_output.strip().split('\n')
+            mem_total = 0
+            swap_total = 0
+
+            for line in lines:
+                if line.startswith('Mem:'):
+                    # Extract total memory (second column)
+                    parts = line.split()
+                    mem_total = int(parts[1])
+                elif line.startswith('Swap:'):
+                    # Extract total swap (second column)
+                    parts = line.split()
+                    swap_total = int(parts[1])
+
+            # Convert to GB (assuming input is in KB)
+            mem_gb = round(mem_total / 1024 / 1024, 1)
+            swap_gb = round(swap_total / 1024 / 1024, 1)
+
+            return f"Physical: {mem_gb}G / Swap: {swap_gb}G"
+        except Exception:
+            # If parsing fails, return a simple message
+            return "N/A"
+
     def set_sos_details(self):
         self.sos['timezone'] = self.util.exec_command(
             f"grep 'Time zone:' {self.args.sosreport_path}/sos_commands/systemd/timedatectl"  # noqa E501
@@ -170,8 +196,9 @@ class Conf:
             + " | awk '{print $4\" 23:59:59\"}'").strip()
         self.sos['hostname'] = self.util.exec_command(
             f"cat  {self.args.sosreport_path}/hostname").strip()
-        self.sos['ram'] = self.util.exec_command(
+        ram_raw = self.util.exec_command(
             f"cat  {self.args.sosreport_path}/free")
+        self.sos['ram'] = self.parse_ram_info(ram_raw)
         self.sos['cpu'] = self.util.exec_command(
             f"grep -e '^CPU(s)'  {self.args.sosreport_path}/sos_commands/processor/lscpu "  # noqa E501
             + " | awk '{print $2}'").strip()
