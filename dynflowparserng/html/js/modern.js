@@ -267,14 +267,10 @@
   function initHeaderCollapse() {
     const header = document.getElementById('pageHeader');
     const toggleBtn = document.getElementById('headerToggle');
-    const scrollableArea = document.querySelector('.action-tree-scrollable, .task-list-scrollable');
 
-    if (!header || !toggleBtn || !scrollableArea) {
+    if (!header || !toggleBtn) {
       return; // Header not present on this page
     }
-
-    let scrollTimeout;
-    let lastScrollTop = 0;
 
     // Toggle header manually
     toggleBtn.addEventListener('click', (e) => {
@@ -282,22 +278,10 @@
       header.classList.toggle('collapsed');
     });
 
-    // Auto-collapse header on scroll down
-    scrollableArea.addEventListener('scroll', () => {
-      const scrollTop = scrollableArea.scrollTop;
-
-      // Clear previous timeout
-      clearTimeout(scrollTimeout);
-
-      // Collapse when scrolling down past 50px
-      if (scrollTop > 50 && scrollTop > lastScrollTop) {
-        scrollTimeout = setTimeout(() => {
-          header.classList.add('collapsed');
-        }, 150);
-      }
-
-      lastScrollTop = scrollTop;
-    });
+    // Auto-collapse header 2 seconds after page load
+    setTimeout(() => {
+      header.classList.add('collapsed');
+    }, 2000);
   }
 
   /**
