@@ -109,11 +109,11 @@
                         <span class="expand-icon">▶</span>
                         <span>{{a[3]}}: {{a[4]}}</span>
                         {% if has_alert %}<span class="alert-icon" title="Contains output or error details">!</span>{% endif %}
-                    </div>
-                    <div class="action-buttons">
-                        <button class="btn-inline" data-target="input-{{a[0]}}" title="Show Input">Input</button>
-                        <button class="btn-inline" data-target="output-{{a[0]}}" title="Show Output">Output</button>
-                        <button class="btn-inline" data-target="data-{{a[0]}}" title="Show Data">Data</button>
+                        <div class="action-buttons">
+                            <button class="btn-inline" data-target="input-{{a[0]}}" title="Show Input">Input</button>
+                            <button class="btn-inline" data-target="output-{{a[0]}}" title="Show Output">Output</button>
+                            <button class="btn-inline" data-target="data-{{a[0]}}" title="Show Data">Data</button>
+                        </div>
                     </div>
                     <span class="action-metric"></span>
                     <span class="action-metric"></span>
@@ -145,12 +145,12 @@
                                     <span class="expand-icon">▶</span>
                                     <span>{{a[3]}}.{{s[1]}}: {{s[10]}}</span>
                                     {% if s[13]|length %}<span class="alert-icon" title="Contains error details">!</span>{% endif %}
-                                </div>
-                                <div class="action-buttons">
-                                    <button class="btn-inline" data-target="error-{{a[0]}}-{{s[1]}}" title="Show Error">Error</button>
-                                    <button class="btn-inline" data-target="queue-{{a[0]}}-{{s[1]}}" title="Show Queue">Queue</button>
-                                    <button class="btn-inline" data-target="children-{{a[0]}}-{{s[1]}}" title="Show Children">Children</button>
-                                    <button class="btn-inline" data-target="stepdata-{{a[0]}}-{{s[1]}}" title="Show Data">Data</button>
+                                    <div class="action-buttons">
+                                        <button class="btn-inline" data-target="error-{{a[0]}}-{{s[1]}}" title="Show Error">Error</button>
+                                        <button class="btn-inline" data-target="queue-{{a[0]}}-{{s[1]}}" title="Show Queue">Queue</button>
+                                        <button class="btn-inline" data-target="children-{{a[0]}}-{{s[1]}}" title="Show Children">Children</button>
+                                        <button class="btn-inline" data-target="stepdata-{{a[0]}}-{{s[1]}}" title="Show Data">Data</button>
+                                    </div>
                                 </div>
                                 <span class="action-metric">{{ s[4].split(".")[0] }}</span>
                                 <span class="action-metric">{{ s[5].split(".")[0] }}</span>

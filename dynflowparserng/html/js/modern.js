@@ -46,11 +46,12 @@
     const actionNodes = document.querySelectorAll('.action-node');
 
     actionNodes.forEach(node => {
-      const header = node.querySelector('.action-header');
+      const actionClass = node.querySelector('.action-class');
       const details = node.querySelector('.action-details');
+      const header = node.querySelector('.action-header');
 
-      if (header && details) {
-        header.addEventListener('click', (e) => {
+      if (actionClass && details && header) {
+        actionClass.addEventListener('click', (e) => {
           // Don't toggle if clicking on a link or button
           if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
             return;
@@ -66,11 +67,12 @@
     const stepNodes = document.querySelectorAll('.step-node');
 
     stepNodes.forEach(node => {
-      const header = node.querySelector('.step-header');
+      const stepClass = node.querySelector('.step-class');
       const details = node.querySelector('.step-details');
+      const header = node.querySelector('.step-header');
 
-      if (header && details) {
-        header.addEventListener('click', (e) => {
+      if (stepClass && details && header) {
+        stepClass.addEventListener('click', (e) => {
           if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
             return;
           }
