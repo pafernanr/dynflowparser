@@ -139,7 +139,7 @@
             <div class="action-node">
                 <div class="action-header {% if state == 'error' %}has-error{% elif state == 'warning' %}has-warning{% endif %}">
                     <div class="action-class">
-                        {% if a[15]|length %}<span class="expand-icon">▶</span>{% endif %}
+                        {% if a[19]|length %}<span class="expand-icon">▶</span>{% endif %}
                         <span>{{a[3]}}: {{a[4]}}</span>
                         <div class="action-buttons">
                             <button class="btn-inline" data-target="input-{{a[0]}}" title="Show Input">Input</button>
@@ -147,10 +147,10 @@
                             <button class="btn-inline" data-target="data-{{a[0]}}" title="Show Data">Data</button>
                         </div>
                     </div>
-                    <span class="action-metric"></span>
-                    <span class="action-metric"></span>
-                    <span class="action-metric"></span>
-                    <span class="action-metric"></span>
+                    <span class="action-metric">{% if a[15] %}{{ a[15].split(".")[0] }}{% endif %}</span>
+                    <span class="action-metric">{% if a[16] %}{{ a[16].split(".")[0] }}{% endif %}</span>
+                    <span class="action-metric">{% if a[17] %}{{ "{:0,.2f}".format(a[17]) }}{% endif %}</span>
+                    <span class="action-metric">{% if a[18] %}{{ "{:0,.2f}".format(a[18]) }}{% endif %}</span>
                     <span class="status-badge status-{{state}}">{{state}}</span>
                 </div>
 
@@ -168,9 +168,9 @@
                     </div>
 
                     <!-- Steps -->
-                    {% if a[15] %}
+                    {% if a[19] %}
                     <div class="steps-list">
-                        {% for s in a[15] %}
+                        {% for s in a[19] %}
                         <div class="step-node">
                             <div class="step-header">
                                 <div class="step-class">

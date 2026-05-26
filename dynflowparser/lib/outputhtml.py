@@ -222,7 +222,9 @@ class OutputHtml:
                + " a.run_step_id, s.action_class, a.data, a.input, a.output,"
                + " p.result, p.label, MIN(s.state),"
                + " a.caller_execution_plan_id, MAX(t.action), MAX(t.id),"
-               + " MAX(t.parent_task_id), s.execution_time"
+               + " MAX(t.parent_task_id), s.execution_time,"
+               + " MIN(s.started_at), MAX(s.ended_at),"
+               + " SUM(s.real_time), SUM(s.execution_time)"
                + " FROM steps s"
                + " LEFT JOIN tasks t ON s.execution_plan_uuid = t.external_id"
                + " LEFT JOIN plans p ON s.execution_plan_uuid = p.uuid"
@@ -237,8 +239,11 @@ class OutputHtml:
             if not self.conf.args.showall and r[8] == "success":
                 continue
             self.sum_pulp_plans_exectime(r[1], r[7])
-            self.sum_dynflow_plans_exectime(r[1], r[4], r[15])
-            r = list(r[:-1])
+            self.sum_dynflow_plans_exectime(r[1], r[4], r[19])
+            r = list(r)
+            # Remove the old single execution_time field (index 15)
+            # Keep the aggregated fields: started_at(16), ended_at(17), real_time(18), exec_time(19)
+            del r[15]
             r[5] = self.show_json(r[5])
             r[6] = self.show_json(r[6])
             r[7] = self.show_json(r[7])
