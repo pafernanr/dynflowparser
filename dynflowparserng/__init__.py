@@ -8,6 +8,7 @@ import time
 import webbrowser
 
 from dynflowparserng.lib.configuration import Conf
+from dynflowparserng.lib.httpserver import HttpServer
 from dynflowparserng.lib.outputhtml import OutputHtml
 from dynflowparserng.lib.outputsqlite import OutputSQLite
 from dynflowparserng.lib.util import Util
@@ -198,4 +199,19 @@ class DynflowParser:
                   .replace('//', '/')
                   .replace('/./', '/'))
 
-        webbrowser.open_new_tab(f"file:///{indexpath}")
+        if self.conf.args.httpd_server or self.conf.args.ssh_tunnel:
+            # Start HTTP server
+            server = HttpServer(self.conf.args.output_path,
+                                self.conf.args.quiet,
+                                self.conf.args.ssh_tunnel)
+            server.start()
+            try:
+                # Keep server running until Ctrl+C
+                while True:
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                if not self.conf.args.quiet:
+                    print("\nShutting down HTTP server...")
+                server.stop()
+        else:
+            webbrowser.open_new_tab(f"file:///{indexpath}")
