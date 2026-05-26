@@ -7,33 +7,51 @@
     <link rel="stylesheet" href="../html/css/modern.css">
 </head>
 <body class="page-actions">
-    <div class="page-container">
-        <!-- Compact Header Section -->
-        <div class="header-section-compact" id="pageHeader">
-            <div class="header-content">
-            <div class="compact-info">
-                <div class="info-row">
-                    <span class="info-label">Task:</span>
-                    <span class="info-value">{{actions[0][12]}}</span>
-                    <span class="info-separator">|</span>
-                    <span class="info-label">ID:</span>
-                    <span class="info-value font-mono">{{actions[0][13]}}</span>
-                    <span class="info-separator">|</span>
-                    <span class="info-label">Label:</span>
-                    <span class="info-value">{{label}}</span>
-                    {% if caller_execution_plan_id %}
-                    <span class="info-separator">|</span>
-                    <span class="info-label">Caller:</span>
-                    <span class="info-value font-mono">
-                        <a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a>
-                    </span>
-                    {% endif %}
-                    <span class="info-separator">|</span>
-                    <span class="info-label">Plan UUID:</span>
-                    <span class="info-value font-mono">{{execution_plan_uuid}}</span>
-                </div>
-            </div>
+    <!-- Top Project Panel -->
+    <div class="project-panel">
+        <a href="https://github.com/pafernanr/dynflowparser" target="_blank" rel="noopener noreferrer">DynflowParser NG</a>
+    </div>
 
+    <!-- Header Toggle Bar -->
+    <div class="header-toggle-bar">
+        <button class="header-toggle-btn" id="headerToggle" title="Show/Hide Header">
+            <span class="toggle-icon">▲</span>
+        </button>
+        <div class="header-toggle-details">
+            <span class="detail-item">
+                <span class="detail-label">Task:</span>
+                <span class="detail-value">{{actions[0][12]}}</span>
+            </span>
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">Label:</span>
+                <span class="detail-value">{{label}}</span>
+            </span>
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">ID:</span>
+                <span class="detail-value">{{actions[0][13]}}</span>
+            </span>
+            {% if caller_execution_plan_id %}
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">Caller:</span>
+                <span class="detail-value">
+                    <a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a>
+                </span>
+            </span>
+            {% endif %}
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">Plan:</span>
+                <span class="detail-value">{{execution_plan_uuid}}</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Compact Header Section -->
+    <div class="header-section-compact" id="pageHeader">
+            <div class="header-content">
             <div class="stats-compact">
                 <div class="stat-table-compact">
                     <div class="stat-table-title">Dynflow Top 5 (by execution time)</div>
@@ -82,22 +100,20 @@
                 {% endif %}
             </div>
             </div>
-            <div class="header-toggle-bar">
-                <button class="header-toggle-btn" id="headerToggle" title="Show/Hide Header">
-                    <span class="toggle-icon">▲</span>
-                </button>
-                <div class="control-buttons-inline">
-                    <button id="expandErrors" class="btn-control btn-primary">Expand Errors</button>
-                    <button id="expandAll" class="btn-control">Expand All</button>
-                    <button id="collapseAll" class="btn-control">Collapse All</button>
-                </div>
-            </div>
-        </div>
+    </div>
 
+    <div class="page-container">
         <!-- Actions Tree Container -->
         <div class="action-tree-container">
             <div class="action-list-header">
-                <div class="action-col-class">Action / Step</div>
+                <div class="action-col-class">
+                    Action / Step
+                    <div class="control-buttons-inline">
+                        <button id="expandErrors" class="btn-control">Expand Errors</button>
+                        <button id="expandAll" class="btn-control">Expand All</button>
+                        <button id="collapseAll" class="btn-control">Collapse All</button>
+                    </div>
+                </div>
                 <div class="action-col-metric">Started At</div>
                 <div class="action-col-metric">Ended At</div>
                 <div class="action-col-metric">Real Time</div>
@@ -119,12 +135,11 @@
             <div class="action-node">
                 <div class="action-header {% if state == 'error' %}has-error{% elif state == 'warning' %}has-warning{% endif %}">
                     <div class="action-class">
-                        <span class="expand-icon">▶</span>
+                        {% if a[15]|length %}<span class="expand-icon">▶</span>{% endif %}
                         <span>{{a[3]}}: {{a[4]}}</span>
-                        {% if has_alert %}<span class="alert-icon" title="Contains output or error details">!</span>{% endif %}
                         <div class="action-buttons">
                             <button class="btn-inline" data-target="input-{{a[0]}}" title="Show Input">Input</button>
-                            <button class="btn-inline" data-target="output-{{a[0]}}" title="Show Output">Output</button>
+                            <button class="btn-inline" data-target="output-{{a[0]}}" title="Show Output">Output{% if has_alert %}<span class="alert-mark">!</span>{% endif %}</button>
                             <button class="btn-inline" data-target="data-{{a[0]}}" title="Show Data">Data</button>
                         </div>
                     </div>
@@ -155,11 +170,9 @@
                         <div class="step-node">
                             <div class="step-header">
                                 <div class="step-class">
-                                    <span class="expand-icon">▶</span>
                                     <span>{{a[3]}}.{{s[1]}}: {{s[10]}}</span>
-                                    {% if s[13]|length %}<span class="alert-icon" title="Contains error details">!</span>{% endif %}
                                     <div class="action-buttons">
-                                        <button class="btn-inline" data-target="error-{{a[0]}}-{{s[1]}}" title="Show Error">Error</button>
+                                        <button class="btn-inline" data-target="error-{{a[0]}}-{{s[1]}}" title="Show Error">Error{% if s[13]|length %}<span class="alert-mark">!</span>{% endif %}</button>
                                         <button class="btn-inline" data-target="queue-{{a[0]}}-{{s[1]}}" title="Show Queue">Queue</button>
                                         <button class="btn-inline" data-target="children-{{a[0]}}-{{s[1]}}" title="Show Children">Children</button>
                                         <button class="btn-inline" data-target="stepdata-{{a[0]}}-{{s[1]}}" title="Show Data">Data</button>

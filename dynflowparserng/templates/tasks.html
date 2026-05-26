@@ -7,29 +7,47 @@
     <link rel="stylesheet" href="html/css/modern.css">
 </head>
 <body class="page-tasks">
-    <div class="page-container">
-        <!-- Compact Header Section -->
-        <div class="header-section-compact" id="pageHeader">
-            <div class="header-content">
-            <div class="compact-info">
-                <div class="info-row">
-                    <span class="info-label">Host:</span>
-                    <span class="info-value">{{sos['hostname']}}</span>
-                    <span class="info-separator">|</span>
-                    <span class="info-label">Satellite:</span>
-                    <span class="info-value">{{sos['satversion']}}</span>
-                    <span class="info-separator">|</span>
-                    <span class="info-label">TZ:</span>
-                    <span class="info-value">{{sos['timezone']}}</span>
-                    <span class="info-separator">|</span>
-                    <span class="info-label">Tuning:</span>
-                    <span class="info-value">{{sos['tuning']}}</span>
-                    <span class="info-separator">|</span>
-                    <span class="info-label">CPU:</span>
-                    <span class="info-value">{{sos['cpu']}}</span>
-                </div>
-            </div>
+    <!-- Top Project Panel -->
+    <div class="project-panel">
+        <a href="https://github.com/pafernanr/dynflowparser" target="_blank" rel="noopener noreferrer">DynflowParser NG</a>
+    </div>
 
+    <!-- Header Toggle Bar -->
+    <div class="header-toggle-bar">
+        <button class="header-toggle-btn" id="headerToggle" title="Show/Hide Header">
+            <span class="toggle-icon">▲</span>
+        </button>
+        <div class="header-toggle-details">
+            <span class="detail-item">
+                <span class="detail-label">Host:</span>
+                <span class="detail-value">{{sos['hostname']}}</span>
+            </span>
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">Satellite:</span>
+                <span class="detail-value">{{sos['satversion']}}</span>
+            </span>
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">TZ:</span>
+                <span class="detail-value">{{sos['timezone']}}</span>
+            </span>
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">Tuning:</span>
+                <span class="detail-value">{{sos['tuning']}}</span>
+            </span>
+            <span class="detail-separator">|</span>
+            <span class="detail-item">
+                <span class="detail-label">CPU:</span>
+                <span class="detail-value">{{sos['cpu']}}</span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Compact Header Section -->
+    <div class="header-section-compact" id="pageHeader">
+            <div class="header-content">
             <div class="stats-compact">
                 <div class="stat-table-compact">
                     <div class="stat-table-title">Top Dynflow steps per execution time</div>
@@ -75,17 +93,23 @@
                 </div>
             </div>
             </div>
-            <div class="header-toggle-bar">
-                <button class="header-toggle-btn" id="headerToggle" title="Show/Hide Header">
-                    <span class="toggle-icon">▲</span>
-                </button>
-            </div>
-        </div>
+    </div>
 
+    <div class="page-container">
         <!-- Tasks List with Header -->
         <div class="task-list-container">
             <div class="task-list-header">
-                <div class="task-col-action">Task Action / Plan UUID</div>
+                <div class="task-col-action">
+                    Task Action
+                    <div class="control-buttons-inline">
+                        <button id="expandAllTasks" class="btn-control">Expand All</button>
+                        <button id="collapseAllTasks" class="btn-control">Collapse All</button>
+                    </div>
+                </div>
+                <div class="task-col-ids">
+                    <span class="header-line-light">Task ID</span><br>
+                    <span class="header-line-dark">Plan UUID</span>
+                </div>
                 <div class="task-col-timestamp">Started At</div>
                 <div class="task-col-timestamp">Ended At</div>
                 <div class="task-col-state">State</div>
@@ -112,16 +136,17 @@
             {% for t in parent_tasks %}
             <div class="task-item">
                 <div class="task-header">
-                    <div class="task-info">
-                        <span class="task-action" title="{{t[3]}}">{{t[8]}}</span>
-                        <span class="task-meta">
-                            {{t[1]}} |
-                            {% if t[5] == "pending" and t[4] == "scheduled" %}
-                                {{t[2]}}
-                            {% else %}
-                                <a href='actions/{{t[2]}}.html'>{{t[2]}}</a>
-                            {% endif %}
-                        </span>
+                    <div class="task-action-col">
+                        {% if t[1] in child_tasks %}<span class="expand-icon">▶</span>{% endif %}
+                        {% if t[5] == "pending" and t[4] == "scheduled" %}
+                            <span class="task-action" title="{{t[3]}}">{{t[8]}}</span>
+                        {% else %}
+                            <a href='actions/{{t[2]}}.html' class="task-action" title="{{t[3]}}">{{t[8]}}</a>
+                        {% endif %}
+                    </div>
+                    <div class="task-ids">
+                        <div class="task-id-value">{{t[1]}}</div>
+                        <div class="task-plan-value">{{t[2]}}</div>
                     </div>
                     <div class="task-timestamp">{{t[6][:-7]}}</div>
                     <div class="task-timestamp">{{t[7][:-7]}}</div>
@@ -134,16 +159,16 @@
                     {% for child in child_tasks[t[1]] %}
                     <div class="task-child">
                         <div class="task-header">
-                            <div class="task-info">
-                                <span class="task-action" title="{{child[3]}}">{{child[8]}}</span>
-                                <span class="task-meta">
-                                    {{child[1]}} |
-                                    {% if child[5] == "pending" and child[4] == "scheduled" %}
-                                        {{child[2]}}
-                                    {% else %}
-                                        <a href='actions/{{child[2]}}.html'>{{child[2]}}</a>
-                                    {% endif %}
-                                </span>
+                            <div class="task-action-col">
+                                {% if child[5] == "pending" and child[4] == "scheduled" %}
+                                    <span class="task-action" title="{{child[3]}}">{{child[8]}}</span>
+                                {% else %}
+                                    <a href='actions/{{child[2]}}.html' class="task-action" title="{{child[3]}}">{{child[8]}}</a>
+                                {% endif %}
+                            </div>
+                            <div class="task-ids">
+                                <div class="task-id-value">{{child[1]}}</div>
+                                <div class="task-plan-value">{{child[2]}}</div>
                             </div>
                             <div class="task-timestamp">{{child[6][:-7]}}</div>
                             <div class="task-timestamp">{{child[7][:-7]}}</div>

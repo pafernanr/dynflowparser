@@ -108,8 +108,20 @@
 
         if (!targetContent) return;
 
-        // Find the parent details container
-        const detailsContainer = targetContent.parentElement;
+        // Find the parent details container (action-details or step-details)
+        const detailsContainer = targetContent.closest('.action-details, .step-details');
+
+        if (detailsContainer) {
+          // If the parent is not expanded, expand it first
+          if (!detailsContainer.classList.contains('expanded')) {
+            detailsContainer.classList.add('expanded');
+            // Also expand the header
+            const header = detailsContainer.previousElementSibling;
+            if (header) {
+              header.classList.add('expanded');
+            }
+          }
+        }
 
         // Get all buttons in the same group
         const siblingButtons = button.parentElement.querySelectorAll('.btn-inline');
@@ -138,22 +150,34 @@
    * Initialize control buttons
    */
   function initButtons() {
-    // Expand All button
+    // Expand All button (actions page)
     const expandAllBtn = document.getElementById('expandAll');
     if (expandAllBtn) {
       expandAllBtn.addEventListener('click', expandAll);
     }
 
-    // Collapse All button
+    // Collapse All button (actions page)
     const collapseAllBtn = document.getElementById('collapseAll');
     if (collapseAllBtn) {
       collapseAllBtn.addEventListener('click', collapseAll);
     }
 
-    // Expand Errors button
+    // Expand Errors button (actions page)
     const expandErrorsBtn = document.getElementById('expandErrors');
     if (expandErrorsBtn) {
       expandErrorsBtn.addEventListener('click', expandErrors);
+    }
+
+    // Expand All Tasks button (tasks page)
+    const expandAllTasksBtn = document.getElementById('expandAllTasks');
+    if (expandAllTasksBtn) {
+      expandAllTasksBtn.addEventListener('click', expandAllTasks);
+    }
+
+    // Collapse All Tasks button (tasks page)
+    const collapseAllTasksBtn = document.getElementById('collapseAllTasks');
+    if (collapseAllTasksBtn) {
+      collapseAllTasksBtn.addEventListener('click', collapseAllTasks);
     }
   }
 
@@ -276,12 +300,40 @@
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       header.classList.toggle('collapsed');
+      toggleBtn.classList.toggle('collapsed');
     });
 
-    // Auto-collapse header 2 seconds after page load
+    // Auto-collapse header 1 second after page load
     setTimeout(() => {
       header.classList.add('collapsed');
-    }, 2000);
+      toggleBtn.classList.add('collapsed');
+    }, 1000);
+  }
+
+  /**
+   * Expand all task children
+   */
+  function expandAllTasks() {
+    document.querySelectorAll('.task-children').forEach(children => {
+      children.classList.add('expanded');
+      const header = children.previousElementSibling;
+      if (header && header.classList.contains('task-header')) {
+        header.classList.add('expanded');
+      }
+    });
+  }
+
+  /**
+   * Collapse all task children
+   */
+  function collapseAllTasks() {
+    document.querySelectorAll('.task-children').forEach(children => {
+      children.classList.remove('expanded');
+      const header = children.previousElementSibling;
+      if (header && header.classList.contains('task-header')) {
+        header.classList.remove('expanded');
+      }
+    });
   }
 
   /**
