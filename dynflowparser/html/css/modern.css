@@ -393,7 +393,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-primary);
   min-width: 0;
   flex-wrap: wrap;
@@ -531,6 +531,7 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+  font-weight: 600;
   color: var(--text-secondary);
   min-width: 0;
   flex-wrap: wrap;
