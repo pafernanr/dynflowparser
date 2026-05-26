@@ -6,86 +6,60 @@
     <title>DynflowParserNG - Tasks</title>
     <link rel="stylesheet" href="html/css/modern.css">
 </head>
-<body>
-    <div class="container">
-        <!-- Header Section -->
-        <div class="header-section">
-            <div class="header-grid">
-                <div class="info-card">
-                    <h3>System Information</h3>
-                    <div class="info-grid">
-                        <span class="info-label">Hostname:</span>
-                        <span class="info-value">{{sos['hostname']}}</span>
-
-                        <span class="info-label">Satellite Version:</span>
-                        <span class="info-value">{{sos['satversion']}}</span>
-
-                        <span class="info-label">Time Zone:</span>
-                        <span class="info-value">{{sos['timezone']}}</span>
-
-                        <span class="info-label">Tuning:</span>
-                        <span class="info-value">{{sos['tuning']}}</span>
-
-                        <span class="info-label">CPU:</span>
-                        <span class="info-value">{{sos['cpu']}}</span>
-                    </div>
-                </div>
-
-                <div class="info-card">
-                    <h3>Memory</h3>
-                    <pre class="info-value">{{sos['ram']}}</pre>
+<body class="page-tasks">
+    <div class="page-container">
+        <!-- Compact Header Section -->
+        <div class="header-section-compact">
+            <div class="compact-info">
+                <div class="info-row">
+                    <span class="info-label">Host:</span>
+                    <span class="info-value">{{sos['hostname']}}</span>
+                    <span class="info-separator">|</span>
+                    <span class="info-label">Satellite:</span>
+                    <span class="info-value">{{sos['satversion']}}</span>
+                    <span class="info-separator">|</span>
+                    <span class="info-label">TZ:</span>
+                    <span class="info-value">{{sos['timezone']}}</span>
+                    <span class="info-separator">|</span>
+                    <span class="info-label">Tuning:</span>
+                    <span class="info-value">{{sos['tuning']}}</span>
+                    <span class="info-separator">|</span>
+                    <span class="info-label">CPU:</span>
+                    <span class="info-value">{{sos['cpu']}}</span>
                 </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Top Dynflow Steps (by execution time)</h4>
-                    <table class="stat-table">
-                        <thead>
-                            <tr>
-                                <th>Exec Time</th>
-                                <th>Steps</th>
-                                <th>Label</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for r in dynflow_total_exectime %}
-                            <tr>
-                                <td>{{ "{:0,.0f}".format(r[0]) }}</td>
-                                <td>{{ "{:0,.0f}".format(r[1]) }}</td>
-                                <td>{{ r[2] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+            <div class="stats-compact">
+                <div class="stat-compact">
+                    <span class="stat-label">Top Dynflow:</span>
+                    <span class="stat-items">
+                        {% for r in dynflow_total_exectime[:3] %}
+                            <span class="stat-item">{{ r[2] }} ({{ "{:0,.0f}".format(r[0]) }}s)</span>{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </span>
                 </div>
-
-                <div class="stat-card">
-                    <h4>Top Pulpcore Tasks (by execution time)</h4>
-                    <table class="stat-table">
-                        <thead>
-                            <tr>
-                                <th>Exec Time</th>
-                                <th>Count</th>
-                                <th>Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for r in pulp_total_exectime %}
-                            <tr>
-                                <td>{{ "{:0,.0f}".format(r[1][0]) }}</td>
-                                <td>{{ "{:0,.0f}".format(r[1][1]) }}</td>
-                                <td>{{ r[0] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="stat-compact">
+                    <span class="stat-label">Top Pulp:</span>
+                    <span class="stat-items">
+                        {% for r in pulp_total_exectime[:3] %}
+                            <span class="stat-item">{{ r[0] }} ({{ "{:0,.0f}".format(r[1][0]) }}s)</span>{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </span>
                 </div>
             </div>
         </div>
 
-        <!-- Tasks List -->
-        <div class="task-list">
+        <!-- Tasks List with Header -->
+        <div class="task-list-container">
+            <div class="task-list-header">
+                <div class="task-col-action">Task Action / Plan UUID</div>
+                <div class="task-col-timestamp">Started At</div>
+                <div class="task-col-timestamp">Ended At</div>
+                <div class="task-col-state">State</div>
+                <div class="task-col-result">Result</div>
+            </div>
+
+            <div class="task-list-scrollable">
             {% set parent_tasks = [] %}
             {% set child_tasks = {} %}
 
@@ -149,6 +123,7 @@
                 {% endif %}
             </div>
             {% endfor %}
+            </div>
         </div>
     </div>
 
