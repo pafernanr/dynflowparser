@@ -8,9 +8,13 @@ on:
 jobs:
   release-build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Replace version in setup.py
         run: sed -Ei "s/(^[[:space:]]*version=).*/\1'${{github.ref_name}}',/" setup.py
