@@ -10,9 +10,6 @@
     <div class="page-container">
         <!-- Compact Header Section -->
         <div class="header-section-compact" id="pageHeader">
-            <button class="header-toggle-btn" id="headerToggle" title="Show/Hide Header">
-                <span class="toggle-icon">▼</span>
-            </button>
             <div class="header-content">
             <div class="compact-info">
                 <div class="info-row">
@@ -85,6 +82,9 @@
                 {% endif %}
             </div>
             </div>
+            <button class="header-toggle-btn" id="headerToggle" title="Show/Hide Header">
+                <span class="toggle-icon">▲</span>
+            </button>
         </div>
 
         <!-- Control Buttons -->
@@ -98,6 +98,10 @@
         <div class="action-tree-container">
             <div class="action-list-header">
                 <div class="action-col-class">Action / Step</div>
+                <div class="action-col-metric">Started At</div>
+                <div class="action-col-metric">Ended At</div>
+                <div class="action-col-metric">Real Time</div>
+                <div class="action-col-metric">Exec Time</div>
                 <div class="action-col-status">Status</div>
             </div>
             <div class="action-tree-scrollable">
