@@ -81,37 +81,52 @@
       }
     });
 
-    // Initialize tabs
-    initTabs();
+    // Initialize inline content buttons
+    initContentButtons();
 
     // Auto-expand errors on actions page
-    if (document.querySelector('.action-tree')) {
+    if (document.querySelector('.action-tree, .action-tree-scrollable')) {
       setTimeout(expandErrors, 100);
     }
   }
 
   /**
-   * Initialize tab functionality
+   * Initialize inline content button functionality
    */
-  function initTabs() {
-    const tabContainers = document.querySelectorAll('.tabs-container');
+  function initContentButtons() {
+    const contentButtons = document.querySelectorAll('.btn-inline');
 
-    tabContainers.forEach(container => {
-      const tabs = container.querySelectorAll('.tab');
-      const contents = container.parentElement.querySelectorAll('.tab-content');
+    contentButtons.forEach(button => {
+      button.addEventListener('click', (e) => {
+        e.stopPropagation(); // Don't trigger parent header click
 
-      tabs.forEach((tab, index) => {
-        tab.addEventListener('click', () => {
-          // Remove active class from all tabs and contents
-          tabs.forEach(t => t.classList.remove('active'));
-          contents.forEach(c => c.classList.remove('active'));
+        const targetId = button.getAttribute('data-target');
+        const targetContent = document.getElementById(targetId);
 
-          // Add active class to clicked tab and corresponding content
-          tab.classList.add('active');
-          if (contents[index]) {
-            contents[index].classList.add('active');
-          }
-        });
+        if (!targetContent) return;
+
+        // Find the parent details container
+        const detailsContainer = targetContent.parentElement;
+
+        // Get all buttons in the same group
+        const siblingButtons = button.parentElement.querySelectorAll('.btn-inline');
+
+        // Get all content areas in the same details container
+        const siblingContents = detailsContainer.querySelectorAll('.content-area');
+
+        // If this content is already visible, hide it
+        if (targetContent.classList.contains('visible')) {
+          targetContent.classList.remove('visible');
+          button.classList.remove('active');
+        } else {
+          // Hide all other contents and deactivate buttons
+          siblingContents.forEach(c => c.classList.remove('visible'));
+          siblingButtons.forEach(b => b.classList.remove('active'));
+
+          // Show clicked content and activate button
+          targetContent.classList.add('visible');
+          button.classList.add('active');
+        }
       });
     });
   }
@@ -179,6 +194,10 @@
         header.classList.remove('expanded');
       }
     });
+
+    // Hide all content areas and deactivate buttons
+    document.querySelectorAll('.content-area').forEach(c => c.classList.remove('visible'));
+    document.querySelectorAll('.btn-inline').forEach(b => b.classList.remove('active'));
   }
 
   /**

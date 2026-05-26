@@ -110,6 +110,11 @@
                         <span>{{a[3]}}: {{a[4]}}</span>
                         {% if has_alert %}<span class="alert-icon" title="Contains output or error details">!</span>{% endif %}
                     </div>
+                    <div class="action-buttons">
+                        <button class="btn-inline" data-target="input-{{a[0]}}" title="Show Input">Input</button>
+                        <button class="btn-inline" data-target="output-{{a[0]}}" title="Show Output">Output</button>
+                        <button class="btn-inline" data-target="data-{{a[0]}}" title="Show Data">Data</button>
+                    </div>
                     <span class="action-metric"></span>
                     <span class="action-metric"></span>
                     <span class="action-metric"></span>
@@ -118,23 +123,15 @@
                 </div>
 
                 <div class="action-details">
-                    <div class="tabs-container">
-                        <ul class="tabs">
-                            <li class="tab active" data-tab="input-{{a[0]}}">Input</li>
-                            <li class="tab" data-tab="output-{{a[0]}}">Output</li>
-                            <li class="tab" data-tab="data-{{a[0]}}">Data</li>
-                        </ul>
-                    </div>
-
-                    <div class="tab-content active" id="input-{{a[0]}}">
+                    <div class="content-area" id="input-{{a[0]}}">
                         <pre class="code-block">{{a[6]}}</pre>
                     </div>
 
-                    <div class="tab-content" id="output-{{a[0]}}">
+                    <div class="content-area" id="output-{{a[0]}}">
                         <pre class="code-block">{{a[7]}}</pre>
                     </div>
 
-                    <div class="tab-content" id="data-{{a[0]}}">
+                    <div class="content-area" id="data-{{a[0]}}">
                         <pre class="code-block">{{a[5]}}</pre>
                     </div>
 
@@ -149,6 +146,12 @@
                                     <span>{{a[3]}}.{{s[1]}}: {{s[10]}}</span>
                                     {% if s[13]|length %}<span class="alert-icon" title="Contains error details">!</span>{% endif %}
                                 </div>
+                                <div class="action-buttons">
+                                    <button class="btn-inline" data-target="error-{{a[0]}}-{{s[1]}}" title="Show Error">Error</button>
+                                    <button class="btn-inline" data-target="queue-{{a[0]}}-{{s[1]}}" title="Show Queue">Queue</button>
+                                    <button class="btn-inline" data-target="children-{{a[0]}}-{{s[1]}}" title="Show Children">Children</button>
+                                    <button class="btn-inline" data-target="stepdata-{{a[0]}}-{{s[1]}}" title="Show Data">Data</button>
+                                </div>
                                 <span class="action-metric">{{ s[4].split(".")[0] }}</span>
                                 <span class="action-metric">{{ s[5].split(".")[0] }}</span>
                                 <span class="action-metric">{{ "{:0,.2f}".format(s[6]) }}</span>
@@ -157,28 +160,19 @@
                             </div>
 
                             <div class="step-details">
-                                <div class="tabs-container">
-                                    <ul class="tabs">
-                                        <li class="tab active" data-tab="error-{{a[0]}}-{{s[1]}}">Error</li>
-                                        <li class="tab" data-tab="queue-{{a[0]}}-{{s[1]}}">Queue</li>
-                                        <li class="tab" data-tab="children-{{a[0]}}-{{s[1]}}">Children</li>
-                                        <li class="tab" data-tab="stepdata-{{a[0]}}-{{s[1]}}">Data</li>
-                                    </ul>
-                                </div>
-
-                                <div class="tab-content active" id="error-{{a[0]}}-{{s[1]}}">
+                                <div class="content-area" id="error-{{a[0]}}-{{s[1]}}">
                                     <pre class="code-block">{{s[13]}}</pre>
                                 </div>
 
-                                <div class="tab-content" id="queue-{{a[0]}}-{{s[1]}}">
+                                <div class="content-area" id="queue-{{a[0]}}-{{s[1]}}">
                                     <pre class="code-block">{{s[12]}}</pre>
                                 </div>
 
-                                <div class="tab-content" id="children-{{a[0]}}-{{s[1]}}">
+                                <div class="content-area" id="children-{{a[0]}}-{{s[1]}}">
                                     <pre class="code-block">{{s[14]}}</pre>
                                 </div>
 
-                                <div class="tab-content" id="stepdata-{{a[0]}}-{{s[1]}}">
+                                <div class="content-area" id="stepdata-{{a[0]}}-{{s[1]}}">
                                     <pre class="code-block">{{s[15]}}</pre>
                                 </div>
                             </div>
