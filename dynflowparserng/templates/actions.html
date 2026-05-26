@@ -6,40 +6,40 @@
     <title>DynflowParserNG - {{label}}</title>
     <link rel="stylesheet" href="../html/css/modern.css">
 </head>
-<body>
-    <div class="container">
-        <!-- Header Section -->
-        <div class="header-section">
-            <div class="info-card">
-                <div class="info-grid">
-                    <span class="info-label">Task Action:</span>
-                    <span class="info-value"><strong>{{actions[0][12]}}</strong></span>
-
-                    <span class="info-label">Foreman Task ID:</span>
+<body class="page-actions">
+    <div class="page-container">
+        <!-- Compact Header Section -->
+        <div class="header-section-compact">
+            <div class="compact-info">
+                <div class="info-row">
+                    <span class="info-label">Task:</span>
+                    <span class="info-value">{{actions[0][12]}}</span>
+                    <span class="info-separator">|</span>
+                    <span class="info-label">ID:</span>
                     <span class="info-value font-mono">{{actions[0][13]}}</span>
-
-                    <span class="info-label">Plan Label:</span>
-                    <span class="info-value"><strong>{{label}}</strong></span>
-
+                    <span class="info-separator">|</span>
+                    <span class="info-label">Label:</span>
+                    <span class="info-value">{{label}}</span>
                     {% if caller_execution_plan_id %}
-                    <span class="info-label">Caller Plan UUID:</span>
+                    <span class="info-separator">|</span>
+                    <span class="info-label">Caller:</span>
                     <span class="info-value font-mono">
                         <a href='{{caller_execution_plan_id}}.html'>{{caller_execution_plan_id}}</a>
                     </span>
                     {% endif %}
-
-                    <span class="info-label">Execution Plan UUID:</span>
-                    <span class="info-value font-mono"><strong>{{execution_plan_uuid}}</strong></span>
+                    <span class="info-separator">|</span>
+                    <span class="info-label">Plan UUID:</span>
+                    <span class="info-value font-mono">{{execution_plan_uuid}}</span>
                 </div>
             </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h4>Dynflow Top 5 (by execution time)</h4>
-                    <table class="stat-table">
+            <div class="stats-compact">
+                <div class="stat-table-compact">
+                    <div class="stat-table-title">Dynflow Top 5 (by execution time)</div>
+                    <table class="stat-table-mini">
                         <thead>
                             <tr>
-                                <th>Exec Time</th>
+                                <th>Exectime</th>
                                 <th>Steps</th>
                                 <th>Name</th>
                             </tr>
@@ -57,12 +57,12 @@
                 </div>
 
                 {% if pulp_exectime|length > 0 %}
-                <div class="stat-card">
-                    <h4>Pulp Top 5 (by execution time)</h4>
-                    <table class="stat-table">
+                <div class="stat-table-compact">
+                    <div class="stat-table-title">Pulp Top 5 (by execution time)</div>
+                    <table class="stat-table-mini">
                         <thead>
                             <tr>
-                                <th>Exec Time</th>
+                                <th>Exectime</th>
                                 <th>Actions</th>
                                 <th>Name</th>
                             </tr>
@@ -83,14 +83,15 @@
         </div>
 
         <!-- Control Buttons -->
-        <div class="button-group">
+        <div class="button-group-compact">
             <button id="expandErrors" class="btn btn-primary">Expand Errors</button>
             <button id="expandAll" class="btn">Expand All</button>
             <button id="collapseAll" class="btn">Collapse All</button>
         </div>
 
-        <!-- Actions Tree -->
-        <div class="action-tree">
+        <!-- Actions Tree Container -->
+        <div class="action-tree-container">
+            <div class="action-tree-scrollable">
             {% for a in actions %}
             {# Determine action state #}
             {% if a[4] is not none and a[7] is not none and a[4] == 'Actions::RemoteExecution::ProxyAction' and a[7] != '' and '&quot;exit_status&quot;:&nbsp;0,' not in a[7] %}
@@ -188,6 +189,7 @@
                 </div>
             </div>
             {% endfor %}
+            </div>
         </div>
     </div>
 
