@@ -631,28 +631,52 @@ body.page-tasks {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 0.75rem;
+  font-size: 0.75rem;
+}
+
+.stat-table-compact {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-table-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
   font-size: 0.813rem;
 }
 
-.stat-compact {
-  display: flex;
-  gap: var(--spacing-xs);
+.stat-table-mini {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.stat-label {
+.stat-table-mini thead th {
+  text-align: left;
   font-weight: 600;
   color: var(--text-secondary);
-  white-space: nowrap;
+  padding: 0.25rem 0.5rem 0.25rem 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.75rem;
 }
 
-.stat-items {
+.stat-table-mini tbody td {
+  padding: 0.125rem 0.5rem 0.125rem 0;
   color: var(--text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 0.75rem;
 }
 
-.stat-item {
+.stat-table-mini tbody td:first-child,
+.stat-table-mini tbody td:nth-child(2) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  width: 1%;
   white-space: nowrap;
+  font-weight: 500;
+}
+
+.stat-table-mini tbody td:last-child {
+  padding-right: 0;
 }
 
 /* Task List Container with Header */

@@ -30,21 +30,47 @@
             </div>
 
             <div class="stats-compact">
-                <div class="stat-compact">
-                    <span class="stat-label">Top Dynflow:</span>
-                    <span class="stat-items">
-                        {% for r in dynflow_total_exectime[:3] %}
-                            <span class="stat-item">{{ r[2] }} ({{ "{:0,.0f}".format(r[0]) }}s)</span>{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </span>
+                <div class="stat-table-compact">
+                    <div class="stat-table-title">Top Dynflow steps per execution time</div>
+                    <table class="stat-table-mini">
+                        <thead>
+                            <tr>
+                                <th>Exectime</th>
+                                <th>Steps</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in dynflow_total_exectime[:5] %}
+                            <tr>
+                                <td>{{ "{:0,.0f}".format(r[0]) }}</td>
+                                <td>{{ "{:0,.0f}".format(r[1]) }}</td>
+                                <td>{{ r[2] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="stat-compact">
-                    <span class="stat-label">Top Pulp:</span>
-                    <span class="stat-items">
-                        {% for r in pulp_total_exectime[:3] %}
-                            <span class="stat-item">{{ r[0] }} ({{ "{:0,.0f}".format(r[1][0]) }}s)</span>{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </span>
+                <div class="stat-table-compact">
+                    <div class="stat-table-title">Top pulpcore Tasks per execution time</div>
+                    <table class="stat-table-mini">
+                        <thead>
+                            <tr>
+                                <th>Exectime</th>
+                                <th>Count</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in pulp_total_exectime[:5] %}
+                            <tr>
+                                <td>{{ "{:0,.0f}".format(r[1][0]) }}</td>
+                                <td>{{ "{:0,.0f}".format(r[1][1]) }}</td>
+                                <td>{{ r[0] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
