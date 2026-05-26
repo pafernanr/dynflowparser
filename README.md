@@ -21,11 +21,16 @@ Required python libraries:
 - pytz
 
 #### Installation
-~~~
-pip install dynflowparser
-~~~
+There are multiple ways to to install `dynflowparser`.
 
-#### `dynflowparser` Usage
+- Using `pip`.
+  ~~~
+  pip install dynflowparser
+  ~~~
+
+- Using the prebuild packages at [Latest Release](https://github.com/pafernanr/dynflowparser/releases/latest)
+
+#### Usage
 ~~~
 usage: dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO] [-l LAST_N_DAYS] [-n] [-q] [sosreport_path] [output_path]
 
@@ -50,7 +55,7 @@ optional arguments:
   -q, --quiet           Quiet. Don't show progress bar.
 ~~~ 
 
-#### `dynflowparser-export-tasks` Usage
+#### dynflowparser-export-tasks Usage
 This command must be executed on the `Foreman` server.
 ~~~
 usage: dynflowparser-export-tasks [-h] [-d DAYS] [-f FILTER] [-r {cancelled,error,pending,success,warning}] [-s {paused,planning,pending,running,scheduled,stopped}]
