@@ -610,9 +610,54 @@ body.page-tasks {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  padding: 0.375rem 0.75rem;
   box-shadow: var(--shadow-sm);
   flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.header-section-compact.collapsed {
+  max-height: 32px;
+}
+
+.header-section-compact.collapsed .header-content {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.header-toggle-btn {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.688rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.header-toggle-btn:hover {
+  background: var(--bg-tertiary);
+  border-color: var(--primary-color);
+}
+
+.header-toggle-btn .toggle-icon {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.header-section-compact.collapsed .toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.header-content {
+  padding: 0.375rem 0.75rem;
+  transition: all 0.3s ease;
 }
 
 .compact-info {
@@ -860,6 +905,31 @@ body.page-actions .page-container {
   box-shadow: var(--shadow-sm);
   flex: 1;
   min-height: 0;
+}
+
+/* Action List Header */
+.action-list-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--spacing-md);
+  padding: 0.375rem 0.75rem;
+  background: var(--bg-tertiary);
+  border-bottom: 2px solid var(--border-dark);
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.action-col-class {
+  min-width: 0;
+}
+
+.action-col-status {
+  width: 100px;
+  text-align: right;
 }
 
 /* Scrollable Action Tree */

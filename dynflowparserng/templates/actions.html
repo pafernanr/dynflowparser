@@ -9,7 +9,11 @@
 <body class="page-actions">
     <div class="page-container">
         <!-- Compact Header Section -->
-        <div class="header-section-compact">
+        <div class="header-section-compact" id="pageHeader">
+            <button class="header-toggle-btn" id="headerToggle" title="Show/Hide Header">
+                <span class="toggle-icon">▼</span>
+            </button>
+            <div class="header-content">
             <div class="compact-info">
                 <div class="info-row">
                     <span class="info-label">Task:</span>
@@ -80,6 +84,7 @@
                 </div>
                 {% endif %}
             </div>
+            </div>
         </div>
 
         <!-- Control Buttons -->
@@ -91,6 +96,10 @@
 
         <!-- Actions Tree Container -->
         <div class="action-tree-container">
+            <div class="action-list-header">
+                <div class="action-col-class">Action / Step</div>
+                <div class="action-col-status">Status</div>
+            </div>
             <div class="action-tree-scrollable">
             {% for a in actions %}
             {# Determine action state #}

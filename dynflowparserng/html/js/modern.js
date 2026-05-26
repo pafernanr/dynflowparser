@@ -17,6 +17,7 @@
     initTaskList();
     initActionTree();
     initButtons();
+    initHeaderCollapse();
   }
 
   /**
@@ -258,6 +259,45 @@
     }
 
     return parents;
+  }
+
+  /**
+   * Initialize header collapse functionality (actions page)
+   */
+  function initHeaderCollapse() {
+    const header = document.getElementById('pageHeader');
+    const toggleBtn = document.getElementById('headerToggle');
+    const scrollableArea = document.querySelector('.action-tree-scrollable');
+
+    if (!header || !toggleBtn || !scrollableArea) {
+      return; // Not on actions page
+    }
+
+    let scrollTimeout;
+    let lastScrollTop = 0;
+
+    // Toggle header manually
+    toggleBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      header.classList.toggle('collapsed');
+    });
+
+    // Auto-collapse header on scroll down
+    scrollableArea.addEventListener('scroll', () => {
+      const scrollTop = scrollableArea.scrollTop;
+
+      // Clear previous timeout
+      clearTimeout(scrollTimeout);
+
+      // Collapse when scrolling down past 50px
+      if (scrollTop > 50 && scrollTop > lastScrollTop) {
+        scrollTimeout = setTimeout(() => {
+          header.classList.add('collapsed');
+        }, 150);
+      }
+
+      lastScrollTop = scrollTop;
+    });
   }
 
   /**
