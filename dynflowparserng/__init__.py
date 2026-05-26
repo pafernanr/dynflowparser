@@ -7,6 +7,8 @@ import sys
 import time
 import webbrowser
 
+import pandas as pd
+
 from dynflowparserng.lib.configuration import Conf
 from dynflowparserng.lib.httpserver import HttpServer
 from dynflowparserng.lib.outputhtml import OutputHtml
@@ -38,37 +40,24 @@ class DynflowParser:
                 "W",
                 f"read_dynflow: {self.conf.dynflowdata[dtype]['inputfile']} "
                 f"was truncated by sosreport. Some {dtype} may be missing.")
-        sort = (self.conf.dynflowdata[dtype]['headers']
-                .index(self.conf.dynflowdata[dtype]['sortby']))
-        reverse = self.conf.dynflowdata[dtype]['reverse']
-        # Workaround for old sosreport versions (Sat 6.11 RHEL7?)
-        # probably this workaround should be deprecated
-        with open(inputfile, "r+", encoding="utf-8") as csv_file:
-            tmpfile = "/tmp/foreman_tasks_tasks"
-            if dtype == "tasks" and "|" in csv_file.readlines()[0]:
-                self.util.debug(
-                    "W",
-                    f"File {self.conf.dynflowdata[dtype]['inputfile']} "
-                    "is not in CSV format. "
-                    f"Trying to convert it to ({tmpfile}).")
-                csv_file.seek(0)
-                tmp = csv_file.read()
-                tmp = re.sub(r' *\| *', ',', tmp)
-                tmp = re.sub(r'\n\-.*\n', '\n', tmp)
-                tmp = re.sub(r'\n\([0-9]+ rows\)\n+', '', tmp)
-                tmp = re.sub(r'\n +', '\n', tmp)
-                tmp = re.sub(r'^ +', '', tmp)
-                with open(tmpfile, 'w', encoding="utf-8") as f:
-                    f.write(tmp)
-                inputfile = tmpfile
 
-        with open(inputfile, "r+", encoding="utf-8") as csv_file:
-            reader = csv.reader(csv_file, delimiter=",")
-            next(reader)  # discard header line (or truncated first line)
-            sreader = sorted(reader, key=operator.itemgetter(sort),
-                             reverse=reverse)
-        csv_file.close()
-        return sreader
+        sortby_col = self.conf.dynflowdata[dtype]['sortby']
+        reverse = self.conf.dynflowdata[dtype]['reverse']
+
+        # Use pandas for faster CSV reading
+        df = pd.read_csv(
+            inputfile,
+            encoding='utf-8',
+            engine='c',  # Use C engine for better performance
+            na_filter=False,  # Disable NA filtering for speed
+            low_memory=False
+        )
+
+        # Sort the dataframe
+        df = df.sort_values(by=sortby_col, ascending=not reverse)
+
+        # Convert to list of lists (maintaining compatibility)
+        return df.values.tolist()
 
     def get_dynflow_schema(self):
         # 24 is from Satellite 6.11
@@ -197,6 +186,8 @@ class DynflowParser:
             for d in ['tasks', 'plans', 'actions', 'steps']:
                 dynflow = self.read_dynflow(d)
                 sqlite.write(d, dynflow)
+            # Create indexes after all data is inserted for better performance
+            sqlite.create_indexes()
         ###
         # Enrich Plugins
         # dynflowpolling = DynflowPolling(self.conf)

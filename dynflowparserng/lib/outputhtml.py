@@ -25,6 +25,13 @@ class OutputHtml:
         self.pulp_total_rel_exectime = {}
         self.dynflow_plans_exectime = {}
 
+        # Initialize Jinja2 Environment once for better performance
+        parent = os.path.dirname(os.path.realpath(__file__)) + "/../templates/"  # noqa E501
+        self.jinja_env = Environment(
+            loader=FileSystemLoader(parent),
+            autoescape=True  # Enable autoescape for security
+        )
+
     def __enter__(self):
         return self
 
@@ -179,10 +186,20 @@ class OutputHtml:
     def write_actions(self):
         self.util.debug("I", "writeActionTree")
         c = 0
-        # fetch steps
+
+        # Enable query-only mode for better read performance
+        self.db.execute("PRAGMA query_only = ON")
+
+        # fetch steps with optimized query
         steps = {}
-        sql = "SELECT * FROM steps ORDER BY id"
-        rows = self.db.query(sql)
+        # Build WHERE clause for included UUIDs to reduce data loading
+        if self.conf.dynflowdata['includedUUID']:
+            uuid_placeholders = ','.join('?' * len(self.conf.dynflowdata['includedUUID']))  # noqa E501
+            sql = f"SELECT * FROM steps WHERE execution_plan_uuid IN ({uuid_placeholders}) ORDER BY id"  # noqa E501
+            rows = self.db.query(sql, tuple(self.conf.dynflowdata['includedUUID']))  # noqa E501
+        else:
+            sql = "SELECT * FROM steps ORDER BY id"
+            rows = self.db.query(sql)
         for r in rows:
             if not self.conf.args.showall and r[8] == "success":
                 continue
@@ -253,12 +270,20 @@ class OutputHtml:
                     reverse=True)[:5],
             }
             self.write_report(context, "actions.html", outputfile)  # noqa E501
-            if not self.conf.args.quiet:
+            # Update progress bar less frequently (every 100 iterations)
+            if not self.conf.args.quiet and c % 100 == 0:
                 self.pb.print_bar(c)
         self.write_report({'actions': actions}, "tasks.csv",
                           self.conf.args.output_path + "/dynflowparserng.csv")
+
+        # Disable query-only mode
+        self.db.execute("PRAGMA query_only = OFF")
+
         seconds = time.time() - start_time
-        speed = round(c/seconds)
+        if c > 0:
+            speed = round(c/seconds)
+        else:
+            speed = 0
         if not self.conf.args.quiet:
             print("  - Written " + str(c) + " output plans in "
                   + self.util.seconds_to_str(seconds)
@@ -278,16 +303,8 @@ class OutputHtml:
             'sos': self.conf.sos
             })
         self.util.debug("D", "write_report " + outputfile)
-        # Load template
-        parent = os.path.dirname(os.path.realpath(__file__)) + "/../templates/"
-        environment = Environment(loader=FileSystemLoader(parent))
-        template = environment.get_template(templatefile)
-        # ##### could be useful in the future
-        # ##### it can make functions available on jinja2 space
-        # # func_dict = {
-        # #     "show_json": self.show_json
-        # # }
-        # # template.globals.update(func_dict)
-        # Write output csv file
+        # Use cached Jinja2 environment for better performance
+        template = self.jinja_env.get_template(templatefile)
+        # Write output file
         with open(outputfile, mode="w", encoding="utf-8") as results:
             results.write(template.render(context))

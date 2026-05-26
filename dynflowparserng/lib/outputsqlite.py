@@ -13,6 +13,14 @@ class OutputSQLite:
         self.util = Util(conf.args.debug)
         self._conn = sqlite3.connect(conf.dbfile)
         self._cursor = self._conn.cursor()
+
+        # Apply PRAGMA optimizations for better write performance
+        self.execute("PRAGMA synchronous = OFF")
+        self.execute("PRAGMA journal_mode = WAL")
+        self.execute("PRAGMA cache_size = -64000")  # 64MB cache
+        self.execute("PRAGMA temp_store = MEMORY")
+        # Note: EXCLUSIVE locking mode removed to allow multiple connections
+
         self.create_tables()
 
     def __enter__(self):
@@ -57,25 +65,25 @@ class OutputSQLite:
         query = "INSERT INTO tasks VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
         self.util.debug("D", query + ", " + str(values))
         self.executemany(query, values)
-        self.commit()
+        # Commit removed - now handled by caller in write()
 
     def insert_plans(self, values):
         query = "INSERT INTO plans VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
         self.util.debug("D", query + " " + str(values))
         self.executemany(query, values)
-        self.commit()
+        # Commit removed - now handled by caller in write()
 
     def insert_actions(self, values):
         query = "INSERT INTO actions VALUES (?,?,?,?,?,?,?,?,?,?,?)"
         self.util.debug("D", query + " " + str(values))
         self.executemany(query, values)
-        self.commit()
+        # Commit removed - now handled by caller in write()
 
     def insert_steps(self, values):
         query = "INSERT INTO steps VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
         self.util.debug("D", query + " " + str(values))
         self.executemany(query, values)
-        self.commit()
+        # Commit removed - now handled by caller in write()
 
     def create_tables(self):
         self.execute("""SELECT name FROM sqlite_master
@@ -103,7 +111,7 @@ class OutputSQLite:
         user_id INTEGER,
         state_updated_at INTEGER
         )""")
-        self.execute("CREATE INDEX tasks_id ON tasks(id)")
+        # Index creation moved to create_indexes()
         self.commit()
 
     def create_plans(self):
@@ -124,7 +132,7 @@ class OutputSQLite:
         step_ids TEXT,
         data TEXT
         )""")
-        self.execute("CREATE INDEX plans_uuid ON plans(uuid)")
+        # Index creation moved to create_indexes()
         self.commit()
 
     def create_actions(self):
@@ -141,9 +149,7 @@ class OutputSQLite:
         input TEXT,
         output TEXT
         )""")
-        self.execute("""CREATE INDEX actions_execution_plan_id
-                     ON actions(execution_plan_uuid)""")
-        self.execute("CREATE INDEX actions_id ON actions(id)")
+        # Index creation moved to create_indexes()
         self.commit()
 
     def create_steps(self):
@@ -165,11 +171,47 @@ class OutputSQLite:
         children TEXT,
         data TEXT
         )""")
-        self.execute("""CREATE INDEX steps_execution_plan_uuid
-                     ON steps(execution_plan_uuid)""")
-        self.execute("CREATE INDEX steps_action_id ON steps(action_id)")
-        self.execute("CREATE INDEX steps_id ON steps(id)")
+        # Index creation moved to create_indexes()
         self.commit()
+
+    def create_indexes(self):
+        """Create indexes after data insertion for better performance."""
+        if not self.conf.args.quiet:
+            print("Creating database indexes...")
+
+        # Tasks indexes
+        self.execute("CREATE INDEX IF NOT EXISTS tasks_id ON tasks(id)")
+        self.execute(
+            "CREATE INDEX IF NOT EXISTS tasks_external_id "
+            "ON tasks(external_id)")
+
+        # Plans indexes
+        self.execute("CREATE INDEX IF NOT EXISTS plans_uuid ON plans(uuid)")
+
+        # Actions indexes
+        self.execute(
+            "CREATE INDEX IF NOT EXISTS actions_execution_plan_id "
+            "ON actions(execution_plan_uuid)")
+        self.execute("CREATE INDEX IF NOT EXISTS actions_id ON actions(id)")
+
+        # Steps indexes
+        self.execute(
+            "CREATE INDEX IF NOT EXISTS steps_execution_plan_uuid "
+            "ON steps(execution_plan_uuid)")
+        self.execute(
+            "CREATE INDEX IF NOT EXISTS steps_action_id "
+            "ON steps(action_id)")
+        self.execute("CREATE INDEX IF NOT EXISTS steps_id ON steps(id)")
+
+        # Compound indexes for better JOIN performance
+        self.execute(
+            "CREATE INDEX IF NOT EXISTS idx_steps_plan_action "
+            "ON steps(execution_plan_uuid, action_id)")
+
+        self.commit()
+
+        if not self.conf.args.quiet:
+            print("Indexes created successfully.")
 
     def insert_multi(self, dtype, rows):
         if dtype == "tasks":
@@ -193,7 +235,15 @@ class OutputSQLite:
         pb.start_time = datetime.datetime.now()
         start_time = time.time()
         myid = False
+        batch_size = 5000  # Increased from 1000 for better performance
+        progress_update_freq = 1000  # Update progress bar every 1000 rows
+        last_index = 0
+
+        # Begin single transaction for entire write
+        self.execute("BEGIN TRANSACTION")
+
         for i, lcsv in enumerate(csv):
+            last_index = i
             if dtype == "tasks":
                 myid = lcsv[headers.index('external_id')]
             elif dtype == "plans":
@@ -227,20 +277,31 @@ class OutputSQLite:
                         fields.append(lcsv[h])
                 self.util.debug("I", str(fields))
                 multi.append(fields)
-                if i > 999 and i % 1000 == 0:  # insert every 1000 records
+
+                # Insert in larger batches
+                if len(multi) >= batch_size:
                     self.insert_multi(dtype, multi)
                     multi = []
-                if not self.conf.args.quiet:
+
+                # Update progress bar less frequently
+                if not self.conf.args.quiet and i % progress_update_freq == 0:
                     pb.print_bar(i)
 
+        # Insert remaining records
         if len(multi) > 0:
             self.insert_multi(dtype, multi)
             multi = []
 
+        # Commit the transaction
+        self.commit()
+
         if not self.conf.args.quiet:
             seconds = time.time() - start_time
-            speed = round(i/seconds)
-            print("  - Parsed " + str(i) + " " + dtype + " in "
+            if last_index > 0:
+                speed = round(last_index/seconds)
+            else:
+                speed = 0
+            print("  - Parsed " + str(last_index) + " " + dtype + " in "
                   + self.util.seconds_to_str(seconds)
                   + " (" + str(speed) + " lines/second)")
 

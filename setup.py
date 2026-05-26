@@ -11,7 +11,7 @@ def read(fname):
 setuptools.setup(
     name='dynflowparserng',
     version='0.0.0',
-    setup_requires=['Jinja2', 'pytz'],
+    install_requires=['Jinja2', 'pandas', 'pytz'],
     scripts=[
         'dynflowparserng/bin/__init__.py',
         'dynflowparserng_export_tasks/bin/__init__.py'],
