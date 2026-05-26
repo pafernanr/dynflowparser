@@ -45,7 +45,7 @@ Download from [Latest Release](https://github.com/pafernanr/dynflowparser/releas
 ### dynflowparser
 
 ```bash
-dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO] 
+dynflowparser [-h] [--version] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO] 
               [-l LAST_N_DAYS] [-n] [-q] [-o OUTPUT_PATH] 
               [--httpd-server | --ssh-tunnel] [sosreport_path]
 ```
@@ -54,6 +54,8 @@ dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO]
 - `sosreport_path`: Path to sosreport folder (default: current directory)
 
 **Optional arguments:**
+- `-h, --help`: Show help message and exit
+- `--version`: Show program version and exit
 - `-a, --all`: Parse all tasks (default: only unsuccessful)
 - `-d, --debug {D,I,W,E}`: Debug level (default: W)
 - `-f, --from DATE_FROM`: Parse tasks running from this datetime
@@ -67,6 +69,9 @@ dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO]
 
 **Examples:**
 ```bash
+# Show version
+dynflowparser --version
+
 # Parse sosreport in current directory
 dynflowparser
 
