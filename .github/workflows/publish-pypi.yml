@@ -5,7 +5,8 @@ on:
     types: [published]
 
 permissions:
-  contents: read
+  contents: write
+  packages: write
 
 jobs:
   release-build:
@@ -13,6 +14,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Replace version in setup.py
         run: sed -Ei "s/(^[[:space:]]*version=).*/\1'${{github.ref_name}}',/" setup.py
