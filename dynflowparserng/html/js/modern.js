@@ -32,6 +32,10 @@
 
       if (header && children) {
         header.addEventListener('click', () => {
+          // Don't toggle if user is selecting text
+          if (window.getSelection().toString().length > 0) {
+            return;
+          }
           children.classList.toggle('expanded');
           header.classList.toggle('expanded');
         });
@@ -58,6 +62,11 @@
             return;
           }
 
+          // Don't toggle if user is selecting text
+          if (window.getSelection().toString().length > 0) {
+            return;
+          }
+
           details.classList.toggle('expanded');
           header.classList.toggle('expanded');
         });
@@ -75,6 +84,11 @@
       if (stepClass && details && header) {
         stepClass.addEventListener('click', (e) => {
           if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+            return;
+          }
+
+          // Don't toggle if user is selecting text
+          if (window.getSelection().toString().length > 0) {
             return;
           }
 
