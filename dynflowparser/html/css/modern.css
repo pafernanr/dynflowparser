@@ -47,12 +47,20 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-family: 'Red Hat Text', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   font-size: 14px;
   line-height: 1.6;
   color: var(--text-primary);
   background-color: var(--bg-secondary);
   padding: var(--spacing-lg);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Red Hat Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+code, pre, .monospace {
+  font-family: 'Red Hat Mono', 'Courier New', monospace;
 }
 
 /* Container */
@@ -682,6 +690,7 @@ a:hover {
 }
 
 .project-panel .project-name {
+  font-family: 'Red Hat Display', sans-serif;
   font-weight: 600;
   font-size: 1rem;
   color: #ffffff;
