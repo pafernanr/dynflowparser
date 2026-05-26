@@ -262,15 +262,15 @@
   }
 
   /**
-   * Initialize header collapse functionality (actions page)
+   * Initialize header collapse functionality (both pages)
    */
   function initHeaderCollapse() {
     const header = document.getElementById('pageHeader');
     const toggleBtn = document.getElementById('headerToggle');
-    const scrollableArea = document.querySelector('.action-tree-scrollable');
+    const scrollableArea = document.querySelector('.action-tree-scrollable, .task-list-scrollable');
 
     if (!header || !toggleBtn || !scrollableArea) {
-      return; // Not on actions page
+      return; // Header not present on this page
     }
 
     let scrollTimeout;
