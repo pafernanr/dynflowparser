@@ -1,96 +1,158 @@
 <!DOCTYPE html>
-
-<html>
-  <head>
+<html lang="en">
+<head>
     <meta charset="utf-8">
-    <title>Tasks</title>
-    <link rel="stylesheet" href="html/css/dynflowparser.css" />
-    <link rel="stylesheet" href="html/css/jquery.treetable.css" />
-    <link rel="stylesheet" href="html/css/jquery.treetable.theme.default.css" />
-  </head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DynflowParserNG - Tasks</title>
+    <link rel="stylesheet" href="html/css/modern.css">
+</head>
 <body>
-<table width="100%"><tr>
- <td style="width:33%; vertical-align: top;">
-  <table class="sosdetails">
-    <tr>
-      <th>Hostname</th><td>{{sos['hostname']}}</td>
-      <th>version</th><td>{{sos['satversion']}}</td>
-    </tr><tr>
-      <th>Time zone</th><td>{{sos['timezone']}}</td>
-      <th>Tuning</th><td>{{sos['tuning']}}</td>
-    </tr><tr>
-      <th></th><td></td>
-      <th>CPU</th><td>{{sos['cpu']}}</td>
-    </tr><tr>
-      <th colspan="4">Memory</th>
-    </tr><tr>
-      <td colspan="4"><pre>{{sos['ram']}}</pre></td>
-    </tr>
-  </table>
- </td><td style="width:33%; vertical-align: top;">
-  <table class="sosdetails tblTop">
-    <thead>
-      <tr><th colspan="3">Top Dynflow steps per execution time</th></tr>
-    </thead>
-    <tr>
-      <th>Exectime</th><th>Steps</th><th>Label</th>
-    </tr>{% for r in dynflow_total_exectime %}  
-        <tr><td>{{ "{:0,.0f}".format(r[0]) }}</td><td>{{ "{:0,.0f}".format(r[1]) }}</td><td>{{ r[2] }}</td></tr>
-    {% endfor %}
-  </table>
- </td><td style="width:33%; vertical-align: top;">
-  <table class="sosdetails tblTop">
-    <thead>
-      <tr><th colspan="3">Top pulpcore Tasks per execution time</th></tr>
-    </thead>
-    <tr>
-      <th>Exectime</th><th>Count</th><th>Name</th>
-    </tr>{% for r in pulp_total_exectime %}  
-        <tr><td>{{ "{:0,.0f}".format(r[1][0]) }}</td><td>{{ "{:0,.0f}".format(r[1][1]) }}</td><td>{{ r[0] }}</td></tr>
-    {% endfor %}
-  </table>
- </td>
-</tr></table>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+            <div class="header-grid">
+                <div class="info-card">
+                    <h3>System Information</h3>
+                    <div class="info-grid">
+                        <span class="info-label">Hostname:</span>
+                        <span class="info-value">{{sos['hostname']}}</span>
 
-<table id="tblPlans" class="treetable">
-  <thead><tr>
-    <th colspan="2">Foreman</th><th colspan="5">Dynflow</th>
-  </tr></thead>
-  <thead>
-  <tr>
-    <th>Task action</th><!--<th>Task label</th>--><th>Task id</th><th>Plan uuid</th><!--<th>external_id</th>-->
-    <th>Task started_at</th><th>Task ended_at</th> 
-    <th>Task state</th><th>Task result</th>
-  </tr>
-  </thead>
-  <tbody>                                
-  {% for t in rows %} 
-  <tr>
-    <td class="action"> 
-      {% if t[0] and t[0]|length %}
-         <span title="{{t[3]}}" class="folder indented">{{t[8]}}</span>
-      {% else %}
-         <span title="{{t[3]}}" class="folder unindented">{{t[8]}}</span>
-      {% endif %}
-    </td>
-    <td>{{t[1]}}</td>
-    <!--<td>{{t[3]}}</td>-->
-    {% if t[5] == "pending" and t[4] == "scheduled"%}
-    <td>{{t[2]}}</td>
-    {% else %}
-    <td><a href='actions/{{t[2]}}.html'>{{t[2]}}</a></td>
-    {% endif %}
-    <td>{{t[6][:-7]}}</td>
-    <td>{{t[7][:-7]}}</td>
-    <td>{{t[4]}}</td>
-    <td class="{{t[5]}}">
-      {% if t[5]=="error" %}<strong>{{t[5]}}</strong>
-        {% elif t[5] in ["warning", "pending", "skipped"] %}<sup>{{t[5]}}</sup>
-        {% else %}<i>{{t[5]}}</i>
-      {% endif %}
-    </td>
-  </tr>
-  {% endfor %}
-  </tbody>
-</table>
+                        <span class="info-label">Satellite Version:</span>
+                        <span class="info-value">{{sos['satversion']}}</span>
+
+                        <span class="info-label">Time Zone:</span>
+                        <span class="info-value">{{sos['timezone']}}</span>
+
+                        <span class="info-label">Tuning:</span>
+                        <span class="info-value">{{sos['tuning']}}</span>
+
+                        <span class="info-label">CPU:</span>
+                        <span class="info-value">{{sos['cpu']}}</span>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3>Memory</h3>
+                    <pre class="info-value">{{sos['ram']}}</pre>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>Top Dynflow Steps (by execution time)</h4>
+                    <table class="stat-table">
+                        <thead>
+                            <tr>
+                                <th>Exec Time</th>
+                                <th>Steps</th>
+                                <th>Label</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in dynflow_total_exectime %}
+                            <tr>
+                                <td>{{ "{:0,.0f}".format(r[0]) }}</td>
+                                <td>{{ "{:0,.0f}".format(r[1]) }}</td>
+                                <td>{{ r[2] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="stat-card">
+                    <h4>Top Pulpcore Tasks (by execution time)</h4>
+                    <table class="stat-table">
+                        <thead>
+                            <tr>
+                                <th>Exec Time</th>
+                                <th>Count</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in pulp_total_exectime %}
+                            <tr>
+                                <td>{{ "{:0,.0f}".format(r[1][0]) }}</td>
+                                <td>{{ "{:0,.0f}".format(r[1][1]) }}</td>
+                                <td>{{ r[0] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tasks List -->
+        <div class="task-list">
+            {% set parent_tasks = [] %}
+            {% set child_tasks = {} %}
+
+            {# Group tasks by parent/child relationship #}
+            {% for t in rows %}
+                {% if t[0] and t[0]|length %}
+                    {% if t[0] not in child_tasks %}
+                        {% set _ = child_tasks.update({t[0]: []}) %}
+                    {% endif %}
+                    {% set _ = child_tasks[t[0]].append(t) %}
+                {% else %}
+                    {% set _ = parent_tasks.append(t) %}
+                {% endif %}
+            {% endfor %}
+
+            {# Render parent tasks with their children #}
+            {% for t in parent_tasks %}
+            <div class="task-item">
+                <div class="task-header">
+                    <div class="task-info">
+                        <div class="task-action" title="{{t[3]}}">{{t[8]}}</div>
+                        <div class="task-id">
+                            Task ID: {{t[1]}} |
+                            {% if t[5] == "pending" and t[4] == "scheduled" %}
+                                Plan: {{t[2]}}
+                            {% else %}
+                                Plan: <a href='actions/{{t[2]}}.html'>{{t[2]}}</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="task-timestamp">{{t[6][:-7]}}</div>
+                    <div class="task-timestamp">{{t[7][:-7]}}</div>
+                    <div class="task-state">{{t[4]}}</div>
+                    <span class="status-badge status-{{t[5]}}">{{t[5]}}</span>
+                </div>
+
+                {% if t[1] in child_tasks %}
+                <div class="task-children">
+                    {% for child in child_tasks[t[1]] %}
+                    <div class="task-child">
+                        <div class="task-header">
+                            <div class="task-info">
+                                <div class="task-action" title="{{child[3]}}">{{child[8]}}</div>
+                                <div class="task-id">
+                                    Task ID: {{child[1]}} |
+                                    {% if child[5] == "pending" and child[4] == "scheduled" %}
+                                        Plan: {{child[2]}}
+                                    {% else %}
+                                        Plan: <a href='actions/{{child[2]}}.html'>{{child[2]}}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="task-timestamp">{{child[6][:-7]}}</div>
+                            <div class="task-timestamp">{{child[7][:-7]}}</div>
+                            <div class="task-state">{{child[4]}}</div>
+                            <span class="status-badge status-{{child[5]}}">{{child[5]}}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="html/js/modern.js"></script>
+</body>
+</html>
 

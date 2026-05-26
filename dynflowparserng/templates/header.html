@@ -1,7 +1,22 @@
-<table class="sosdetails"><tr>
-    <th>Hostname</th><th>Time zone</th><th>Satellite version</th>
-    <th>Tuning</th><th>CPU</th><th>RAM</th>
-  </tr><tr>
-    <td>{{sos['hostname']}}</td><td>{{sos['timezone']}}</td><td>{{sos['satversion']}}</td>
-    <td>{{sos['tuning']}}</td><td>{{sos['cpu']}}</td><td><pre>{{sos['ram']}}</pre></td>
-  </tr></table>
+<div class="info-card">
+    <h3>System Information</h3>
+    <div class="info-grid">
+        <span class="info-label">Hostname:</span>
+        <span class="info-value">{{sos['hostname']}}</span>
+
+        <span class="info-label">Time Zone:</span>
+        <span class="info-value">{{sos['timezone']}}</span>
+
+        <span class="info-label">Satellite Version:</span>
+        <span class="info-value">{{sos['satversion']}}</span>
+
+        <span class="info-label">Tuning:</span>
+        <span class="info-value">{{sos['tuning']}}</span>
+
+        <span class="info-label">CPU:</span>
+        <span class="info-value">{{sos['cpu']}}</span>
+
+        <span class="info-label">RAM:</span>
+        <span class="info-value"><pre>{{sos['ram']}}</pre></span>
+    </div>
+</div>
