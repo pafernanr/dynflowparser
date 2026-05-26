@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(git commit -m ' *)",
-      "Bash(git mv *)"
+      "Bash(git mv *)",
+      "Bash(git commit -m 'Fix import in bin/__init__.py after rename *)"
     ]
   }
 }
