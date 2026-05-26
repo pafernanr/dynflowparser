@@ -135,14 +135,17 @@
             {# Render parent tasks with their children #}
             {% for t in parent_tasks %}
             <div class="task-item">
-                <div class="task-header">
+                <div class="task-header {% if t[1] in child_tasks %}expanded{% endif %}">
                     <div class="task-action-col">
                         {% if t[1] in child_tasks %}<span class="expand-icon">▶</span>{% endif %}
-                        {% if t[5] == "pending" and t[4] == "scheduled" %}
-                            <span class="task-action" title="{{t[3]}}">{{t[8]}}</span>
-                        {% else %}
-                            <a href='actions/{{t[2]}}.html' class="task-action" title="{{t[3]}}">{{t[8]}}</a>
-                        {% endif %}
+                        <div class="task-action-wrapper">
+                            {% if t[5] == "pending" and t[4] == "scheduled" %}
+                                <span class="task-action">{{t[8]}}</span>
+                            {% else %}
+                                <a href='actions/{{t[2]}}.html' class="task-action">{{t[8]}}</a>
+                            {% endif %}
+                            <div class="task-class">{{t[3]}}</div>
+                        </div>
                     </div>
                     <div class="task-ids">
                         <div class="task-id-value">{{t[1]}}</div>
@@ -155,16 +158,19 @@
                 </div>
 
                 {% if t[1] in child_tasks %}
-                <div class="task-children">
+                <div class="task-children expanded">
                     {% for child in child_tasks[t[1]] %}
                     <div class="task-child">
                         <div class="task-header">
                             <div class="task-action-col">
-                                {% if child[5] == "pending" and child[4] == "scheduled" %}
-                                    <span class="task-action" title="{{child[3]}}">{{child[8]}}</span>
-                                {% else %}
-                                    <a href='actions/{{child[2]}}.html' class="task-action" title="{{child[3]}}">{{child[8]}}</a>
-                                {% endif %}
+                                <div class="task-action-wrapper">
+                                    {% if child[5] == "pending" and child[4] == "scheduled" %}
+                                        <span class="task-action">{{child[8]}}</span>
+                                    {% else %}
+                                        <a href='actions/{{child[2]}}.html' class="task-action">{{child[8]}}</a>
+                                    {% endif %}
+                                    <div class="task-class">{{child[3]}}</div>
+                                </div>
                             </div>
                             <div class="task-ids">
                                 <div class="task-id-value">{{child[1]}}</div>

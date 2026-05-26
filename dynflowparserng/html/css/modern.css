@@ -1,34 +1,37 @@
-/* Modern DynflowParserNG Styles */
+/* Modern DynflowParserNG Styles - Foreman Theme */
 
 :root {
-  --primary-color: #2563eb;
-  --primary-hover: #1d4ed8;
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --error-color: #ef4444;
-  --pending-color: #f59e0b;
-  --skipped-color: #fbbf24;
-  --suspended-color: #fb923c;
+  --foreman-orange: #c44336;
+  --foreman-orange-dark: #a83731;
+  --foreman-orange-light: #d9564a;
+  --primary-color: #c44336;
+  --primary-hover: #a83731;
+  --success-color: #3f9c35;
+  --warning-color: #ec7a08;
+  --error-color: #c9190b;
+  --pending-color: #ec7a08;
+  --skipped-color: #f0ab00;
+  --suspended-color: #f0ab00;
 
   --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
-  --bg-tertiary: #f3f4f6;
-  --bg-code: #1f2937;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #ededed;
+  --bg-code: #292e34;
 
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-light: #9ca3af;
+  --text-primary: #333333;
+  --text-secondary: #72767b;
+  --text-light: #9c9c9c;
 
-  --border-color: #e5e7eb;
-  --border-dark: #d1d5db;
+  --border-color: #d1d1d1;
+  --border-dark: #b3b3b3;
 
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 2px 0 rgba(3, 3, 3, 0.1);
+  --shadow-md: 0 2px 4px 0 rgba(3, 3, 3, 0.12);
+  --shadow-lg: 0 4px 8px 0 rgba(3, 3, 3, 0.16);
 
-  --radius-sm: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
 
   --spacing-xs: 0.5rem;
   --spacing-sm: 0.75rem;
@@ -177,14 +180,14 @@ body {
 .task-item {
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  transition: box-shadow 0.2s ease;
+  box-shadow: none;
+  transition: border-color 0.2s ease;
 }
 
 .task-item:hover {
-  box-shadow: var(--shadow-md);
+  border-color: var(--border-dark);
 }
 
 .task-header {
@@ -203,7 +206,7 @@ body {
 
 .task-action-col {
   display: flex;
-  align-items: center;
+  align-items: start;
   gap: 0.5rem;
   min-width: 0;
 }
@@ -213,10 +216,28 @@ body {
   height: 1rem;
   flex-shrink: 0;
   transition: transform 0.2s ease;
+  margin-top: 0.1rem;
 }
 
 .task-header.expanded .expand-icon {
   transform: rotate(90deg);
+}
+
+.task-action-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.task-class {
+  font-size: 0.688rem;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .task-ids {
@@ -344,7 +365,7 @@ body {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
 }
 
 .action-header {
@@ -426,13 +447,13 @@ body {
 
 .btn-inline:hover {
   background: var(--bg-secondary);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+  border-color: var(--foreman-orange);
+  color: var(--foreman-orange);
 }
 
 .btn-inline.active {
-  background: var(--primary-color);
-  border-color: var(--primary-color);
+  background: var(--foreman-orange);
+  border-color: var(--foreman-orange);
   color: white;
 }
 
@@ -554,36 +575,36 @@ body {
 }
 
 .btn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+  background: var(--foreman-orange);
+  border-color: var(--foreman-orange);
+  color: white;
 }
 
 .btn:active {
-  transform: translateY(1px);
+  transform: scale(0.98);
 }
 
 .btn-primary {
-  background: var(--primary-color);
+  background: var(--foreman-orange);
   color: white;
-  border-color: var(--primary-color);
+  border-color: var(--foreman-orange);
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
-  border-color: var(--primary-hover);
+  background: var(--foreman-orange-dark);
+  border-color: var(--foreman-orange-dark);
   color: white;
 }
 
 /* Links */
 a {
-  color: var(--primary-color);
+  color: var(--foreman-orange);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--primary-hover);
+  color: var(--foreman-orange-dark);
   text-decoration: underline;
 }
 
@@ -644,12 +665,12 @@ a:hover {
 
 /* Project Panel */
 .project-panel {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-bottom: 2px solid #5a67d8;
+  background: #292e34;
+  border-bottom: 3px solid var(--foreman-orange);
   padding: 0.5rem 0.75rem;
   text-align: center;
   flex-shrink: 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);
 }
 
 .project-panel a {
@@ -657,15 +678,14 @@ a:hover {
   font-size: 1rem;
   color: #ffffff;
   text-decoration: none;
-  letter-spacing: 0.025em;
-  transition: all 0.2s ease;
+  letter-spacing: 0.01em;
+  transition: color 0.2s ease;
   display: inline-block;
 }
 
 .project-panel a:hover {
-  color: #ffffff;
+  color: var(--foreman-orange-light);
   text-decoration: none;
-  opacity: 0.9;
 }
 
 /* Tasks Page - Fixed Height Layout */
@@ -738,22 +758,22 @@ body.page-tasks {
   padding: 0.375rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 600;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--foreman-orange);
   color: #ffffff;
-  border: 2px solid #5a67d8;
+  border: 1px solid var(--foreman-orange-dark);
   border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .header-toggle-btn:hover {
-  background: linear-gradient(135deg, #5a67d8 0%, #6b4fa0 100%);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  background: var(--foreman-orange-dark);
+  box-shadow: var(--shadow-md);
 }
 
 .header-toggle-btn .toggle-icon {
@@ -792,7 +812,7 @@ body.page-tasks {
 }
 
 .detail-value a {
-  color: var(--primary-color);
+  color: var(--foreman-orange);
 }
 
 .detail-separator {
@@ -816,9 +836,9 @@ body.page-tasks {
 }
 
 .btn-control:hover {
-  background: var(--bg-secondary);
-  border-color: var(--primary-color);
-  color: var(--primary-color);
+  background: var(--foreman-orange);
+  border-color: var(--foreman-orange);
+  color: white;
 }
 
 .btn-control.btn-primary {
@@ -918,7 +938,7 @@ body.page-tasks {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
   flex: 1;
   min-height: 0;
 }
@@ -991,14 +1011,20 @@ body.page-tasks {
   overflow: hidden;
   text-overflow: ellipsis;
   text-decoration: none;
+  line-height: 1.2;
 }
 
 .task-list-scrollable a.task-action {
-  color: var(--primary-color);
+  color: var(--foreman-orange);
 }
 
 .task-list-scrollable a.task-action:hover {
   text-decoration: underline;
+}
+
+.task-list-scrollable .task-action-wrapper {
+  flex: 1;
+  min-width: 0;
 }
 
 /* Scrollbar Styling */
@@ -1048,7 +1074,7 @@ body.page-actions .page-container {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: none;
   flex: 1;
   min-height: 0;
 }
