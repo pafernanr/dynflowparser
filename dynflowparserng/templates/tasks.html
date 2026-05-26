@@ -80,15 +80,15 @@
             <div class="task-item">
                 <div class="task-header">
                     <div class="task-info">
-                        <div class="task-action" title="{{t[3]}}">{{t[8]}}</div>
-                        <div class="task-id">
-                            Task ID: {{t[1]}} |
+                        <span class="task-action" title="{{t[3]}}">{{t[8]}}</span>
+                        <span class="task-meta">
+                            {{t[1]}} |
                             {% if t[5] == "pending" and t[4] == "scheduled" %}
-                                Plan: {{t[2]}}
+                                {{t[2]}}
                             {% else %}
-                                Plan: <a href='actions/{{t[2]}}.html'>{{t[2]}}</a>
+                                <a href='actions/{{t[2]}}.html'>{{t[2]}}</a>
                             {% endif %}
-                        </div>
+                        </span>
                     </div>
                     <div class="task-timestamp">{{t[6][:-7]}}</div>
                     <div class="task-timestamp">{{t[7][:-7]}}</div>
@@ -102,15 +102,15 @@
                     <div class="task-child">
                         <div class="task-header">
                             <div class="task-info">
-                                <div class="task-action" title="{{child[3]}}">{{child[8]}}</div>
-                                <div class="task-id">
-                                    Task ID: {{child[1]}} |
+                                <span class="task-action" title="{{child[3]}}">{{child[8]}}</span>
+                                <span class="task-meta">
+                                    {{child[1]}} |
                                     {% if child[5] == "pending" and child[4] == "scheduled" %}
-                                        Plan: {{child[2]}}
+                                        {{child[2]}}
                                     {% else %}
-                                        Plan: <a href='actions/{{child[2]}}.html'>{{child[2]}}</a>
+                                        <a href='actions/{{child[2]}}.html'>{{child[2]}}</a>
                                     {% endif %}
-                                </div>
+                                </span>
                             </div>
                             <div class="task-timestamp">{{child[6][:-7]}}</div>
                             <div class="task-timestamp">{{child[7][:-7]}}</div>
