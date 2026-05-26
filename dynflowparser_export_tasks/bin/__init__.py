@@ -6,7 +6,7 @@ sys.path.insert(0, "/usr/lib/tools/")
 
 try:
     sys.path.insert(0, os.getcwd())
-    from dynflowparserng_export_tasks import DynflowParserExportTasks
+    from dynflowparser_export_tasks import DynflowParserExportTasks
 except KeyboardInterrupt as exc:
     raise SystemExit() from exc
 

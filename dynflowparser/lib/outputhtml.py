@@ -8,9 +8,9 @@ import time
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
-from dynflowparserng.lib.outputsqlite import OutputSQLite
-from dynflowparserng.lib.util import ProgressBarFromFileLines
-from dynflowparserng.lib.util import Util
+from dynflowparser.lib.outputsqlite import OutputSQLite
+from dynflowparser.lib.util import ProgressBarFromFileLines
+from dynflowparser.lib.util import Util
 
 
 class OutputHtml:

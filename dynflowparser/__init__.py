@@ -9,12 +9,12 @@ import webbrowser
 
 import pandas as pd
 
-from dynflowparserng.lib.configuration import Conf
-from dynflowparserng.lib.httpserver import HttpServer
-from dynflowparserng.lib.outputhtml import OutputHtml
-from dynflowparserng.lib.outputsqlite import OutputSQLite
-from dynflowparserng.lib.util import Util
-# from dynflowparserng.plugins.dynflowpolling import DynflowPolling
+from dynflowparser.lib.configuration import Conf
+from dynflowparser.lib.httpserver import HttpServer
+from dynflowparser.lib.outputhtml import OutputHtml
+from dynflowparser.lib.outputsqlite import OutputSQLite
+from dynflowparser.lib.util import Util
+# from dynflowparser.plugins.dynflowpolling import DynflowPolling
 
 
 class DynflowParser:

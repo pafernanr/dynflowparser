@@ -2,8 +2,8 @@ import csv
 import os
 import sys
 
-from dynflowparserng.lib.util import Util
-from dynflowparserng_export_tasks.lib.configuration import Conf
+from dynflowparser.lib.util import Util
+from dynflowparser_export_tasks.lib.configuration import Conf
 
 
 class DynflowParserExportTasks:

@@ -1,6 +1,6 @@
-### dynflowparserng (Next Generation)
+### dynflowparser (Next Generation)
 Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and generates user friendly html pages for Tasks, Plans, Actions and Steps.
-Companion command `dynflowparserng-export-tasks` helps to overcome `sosreport` file size limitations. (Read [Limitations](#limitations) below)
+Companion command `dynflowparser-export-tasks` helps to overcome `sosreport` file size limitations. (Read [Limitations](#limitations) below)
 
 - Only unsuccessful Tasks are parsed by default. (Use '-a' to parse all).
 - Failed Actions & Steps are automatically expanded on the Plan page for easy error location.
@@ -12,7 +12,7 @@ Companion command `dynflowparserng-export-tasks` helps to overcome `sosreport` f
 
 | Tasks list | Task details | Lynx |
 | --- | --- | --- |
-| ![](https://raw.githubusercontent.com/pafernanr/dynflowparserng/refs/heads/main/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparserng/refs/heads/main/docs/files/_screenshot2.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparserng/refs/heads/main/docs/files/_screenshot3.png) |
+| ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot2.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot3.png) |
 
 
 #### Dependencies
@@ -21,24 +21,24 @@ Required python libraries:
 - pytz
 
 #### Installation
-There are multiple ways to to install `dynflowparserng`.
+There are multiple ways to to install `dynflowparser`.
 
 - Using `pip`.
   ~~~
-  pip install dynflowparserng
+  pip install dynflowparser
   ~~~
 
-- Using the prebuild packages at [Latest Release](https://github.com/pafernanr/dynflowparserng/releases/latest)
+- Using the prebuild packages at [Latest Release](https://github.com/pafernanr/dynflowparser/releases/latest)
 
 #### Usage
 ~~~
-usage: dynflowparserng [-h] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO] [-l LAST_N_DAYS] [-n] [-q] [sosreport_path] [output_path]
+usage: dynflowparser [-h] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO] [-l LAST_N_DAYS] [-n] [-q] [sosreport_path] [output_path]
 
 Get sosreport dynflow files and generates user friendly html pages for tasks, plans, actions and steps
 
 positional arguments:
   sosreport_path        Path to sos report folder. Default is current path.
-  output_path           Output path. Default is './dynflowparserng/'.
+  output_path           Output path. Default is './dynflowparser/'.
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -55,10 +55,10 @@ optional arguments:
   -q, --quiet           Quiet. Don't show progress bar.
 ~~~ 
 
-#### dynflowparserng-export-tasks Usage
+#### dynflowparser-export-tasks Usage
 This command must be executed on the `Foreman` server.
 ~~~
-usage: dynflowparserng-export-tasks [-h] [-d DAYS] [-f FILTER] [-r {cancelled,error,pending,success,warning}] [-s {paused,planning,pending,running,scheduled,stopped}]
+usage: dynflowparser-export-tasks [-h] [-d DAYS] [-f FILTER] [-r {cancelled,error,pending,success,warning}] [-s {paused,planning,pending,running,scheduled,stopped}]
 
 Create a Foreman task-export compressed file.
 

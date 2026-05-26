@@ -3,8 +3,8 @@ import json
 import sqlite3
 import time
 
-from dynflowparserng.lib.util import ProgressBarFromFileLines
-from dynflowparserng.lib.util import Util
+from dynflowparser.lib.util import ProgressBarFromFileLines
+from dynflowparser.lib.util import Util
 
 
 class OutputSQLite:

@@ -9,27 +9,27 @@ def read(fname):
 
 
 setuptools.setup(
-    name='dynflowparserng',
+    name='dynflowparser',
     version='0.0.0',
     install_requires=['Jinja2', 'pandas', 'pytz'],
     scripts=[
-        'dynflowparserng/bin/__init__.py',
-        'dynflowparserng_export_tasks/bin/__init__.py'],
+        'dynflowparser/bin/__init__.py',
+        'dynflowparser_export_tasks/bin/__init__.py'],
     entry_points={
         'console_scripts': [
-            'dynflowparserng=dynflowparserng.bin:main',
-            'dynflowparserng-export-tasks=dynflowparserng_export_tasks.bin:main',
+            'dynflowparser=dynflowparser.bin:main',
+            'dynflowparser-export-tasks=dynflowparser_export_tasks.bin:main',
             ],
         },
     packages=setuptools.find_packages(),
     package_data={
-        'dynflowparserng.html.css': ['*'],
-        'dynflowparserng.html.js': ['*'],
-        'dynflowparserng.templates': ['*'],
+        'dynflowparser.html.css': ['*'],
+        'dynflowparser.html.js': ['*'],
+        'dynflowparser.templates': ['*'],
     },
     license='GPLv3',
     author='Pablo Fernández Rodríguez',
-    url='https://github.com/pafernanr/dynflowparserng',
+    url='https://github.com/pafernanr/dynflowparser',
     keywords='theforeman dynflow',
     description="""
         Get sosreport dynflow files and generates user friendly html pages for

@@ -2,7 +2,7 @@ import argparse
 import os
 import shutil
 
-from dynflowparserng.lib.util import Util
+from dynflowparser.lib.util import Util
 
 
 class Conf:

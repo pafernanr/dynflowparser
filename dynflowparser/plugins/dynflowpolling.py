@@ -4,8 +4,8 @@ from os.path import isfile
 from os.path import join
 import re
 
-from dynflowparserng.lib.util import ProgressBarFromFileLines
-from dynflowparserng.lib.util import Util
+from dynflowparser.lib.util import ProgressBarFromFileLines
+from dynflowparser.lib.util import Util
 
 
 class DynflowPolling:
