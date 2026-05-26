@@ -208,6 +208,10 @@ class DynflowParser:
             except KeyboardInterrupt:
                 if not self.conf.args.quiet:
                     print("\nShutting down HTTP server...")
-                server.stop()
+                try:
+                    server.stop()
+                except KeyboardInterrupt:
+                    # Suppress second Ctrl+C during shutdown
+                    pass
         else:
             webbrowser.open_new_tab(f"file:///{indexpath}")

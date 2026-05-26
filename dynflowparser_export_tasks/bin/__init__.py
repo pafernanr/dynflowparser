@@ -12,7 +12,11 @@ except KeyboardInterrupt as exc:
 
 
 def main():
-    DynflowParserExportTasks().main()
+    try:
+        DynflowParserExportTasks().main()
+    except KeyboardInterrupt:
+        # Clean exit on Ctrl+C
+        os._exit(0)
     os._exit(0)
 
 

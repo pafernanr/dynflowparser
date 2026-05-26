@@ -268,7 +268,7 @@ class OutputSQLite:
                         else:
                             value = str(lcsv[h])
                             if header == "output":
-                                value = self.parse_action_output(myid, value)
+                                value = self.parse_action_output(value)
                             fields.append(value)
                     elif headers[h] in datefields:
                         fields.append(self.util.change_timezone(
@@ -305,7 +305,7 @@ class OutputSQLite:
                   + self.util.seconds_to_str(seconds)
                   + " (" + str(speed) + " lines/second)")
 
-    def parse_action_output(self, execution_plan_uuid, txt):
+    def parse_action_output(self, txt):
         txt = txt.replace("\\r", "").replace("\\n", "\n")
         try:
             json_v = json.loads(txt)
