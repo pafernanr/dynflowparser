@@ -618,7 +618,7 @@ body.page-tasks {
 }
 
 .header-section-compact.collapsed {
-  max-height: 20px;
+  max-height: 1.5rem;
 }
 
 .header-section-compact.collapsed .header-content {
