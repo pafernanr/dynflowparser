@@ -668,19 +668,31 @@ a:hover {
   background: #292e34;
   border-bottom: 3px solid var(--foreman-orange);
   padding: 0.5rem 0.75rem;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   flex-shrink: 0;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);
 }
 
-.project-panel a {
+.project-panel .project-name {
   font-weight: 600;
   font-size: 1rem;
   color: #ffffff;
   text-decoration: none;
   letter-spacing: 0.01em;
   transition: color 0.2s ease;
-  display: inline-block;
+}
+
+.project-panel .project-author {
+  font-size: 0.75rem;
+  color: #a0a0a0;
+}
+
+.project-panel .project-author a {
+  color: #a0a0a0;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .project-panel a:hover {
