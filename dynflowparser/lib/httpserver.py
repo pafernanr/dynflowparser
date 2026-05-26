@@ -1,7 +1,9 @@
 import http.server
 import os
+import re
 import socket
 import socketserver
+import subprocess
 import threading
 
 
@@ -23,13 +25,59 @@ class HttpServer:
         self.port = None
         self.ip_addresses = []
 
+    def get_interface_for_ip(self, ip):
+        """Get network interface name for a given IP address.
+
+        Args:
+            ip: IP address string
+
+        Returns:
+            str: Interface name or None if not found
+        """
+        try:
+            # Try using 'ip addr' command (modern Linux)
+            result = subprocess.run(['ip', 'addr'], capture_output=True,
+                                    text=True, timeout=2)
+            if result.returncode == 0:
+                current_iface = None
+                for line in result.stdout.split('\n'):
+                    # Match interface name (e.g., "2: eth0:")
+                    iface_match = re.match(r'^\d+:\s+(\S+):', line)
+                    if iface_match:
+                        current_iface = iface_match.group(1)
+                    # Match IP address
+                    if current_iface and f'inet {ip}/' in line:
+                        return current_iface
+        except Exception:
+            pass
+
+        # Fallback: try ifconfig
+        try:
+            result = subprocess.run(['ifconfig'], capture_output=True,
+                                    text=True, timeout=2)
+            if result.returncode == 0:
+                current_iface = None
+                for line in result.stdout.split('\n'):
+                    # Match interface name (e.g., "eth0: flags=...")
+                    iface_match = re.match(r'^(\S+):', line)
+                    if iface_match:
+                        current_iface = iface_match.group(1)
+                    # Match IP address
+                    if current_iface and f'inet {ip} ' in line:
+                        return current_iface
+        except Exception:
+            pass
+
+        return None
+
     def get_all_ips(self):
         """Get all available IP addresses for network interfaces.
 
         Returns:
-            list: List of IP addresses (excluding localhost)
+            list: List of tuples (interface_name, ip_address)
         """
-        ip_addresses = []
+        ip_interfaces = []
+        seen_ips = set()
 
         # Get hostname and resolve all IPs
         hostname = socket.gethostname()
@@ -39,28 +87,31 @@ class HttpServer:
             for info in addr_info:
                 ip = info[4][0]
                 # Only include IPv4 addresses, exclude localhost
-                if ':' not in ip and ip != '127.0.0.1' and ip not in ip_addresses:  # noqa E501
-                    ip_addresses.append(ip)
+                if ':' not in ip and ip != '127.0.0.1' and ip not in seen_ips:
+                    seen_ips.add(ip)
+                    iface = self.get_interface_for_ip(ip)
+                    ip_interfaces.append((iface, ip))
         except Exception:
             pass
 
         # If we didn't get any IPs, try the socket method
-        if not ip_addresses:
+        if not ip_interfaces:
             try:
                 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 s.connect(("8.8.8.8", 80))
                 ip = s.getsockname()[0]
                 s.close()
                 if ip != '127.0.0.1':
-                    ip_addresses.append(ip)
+                    iface = self.get_interface_for_ip(ip)
+                    ip_interfaces.append((iface, ip))
             except Exception:
                 pass
 
         # Fallback to localhost if nothing else works
-        if not ip_addresses:
-            ip_addresses.append("127.0.0.1")
+        if not ip_interfaces:
+            ip_interfaces.append((None, "127.0.0.1"))
 
-        return ip_addresses
+        return ip_interfaces
 
     def get_fqdn(self):
         """Get the fully qualified domain name of the host.
@@ -152,13 +203,16 @@ class HttpServer:
                 # Display URLs for all IPs
                 if not self.quiet:
                     print("\nHTTP Server started. Access at:")
-                    for ip in self.ip_addresses:
+                    for iface, ip in self.ip_addresses:
                         url = f"http://{ip}:{self.port}/index.html"
-                        print(f"  - {url}")
+                        if iface:
+                            print(f"  - {iface}: {url}")
+                        else:
+                            print(f"  - {url}")
                     print("\nPress Ctrl+C to stop the server and exit.")
 
-                # Return the primary URL
-                return f"http://{self.ip_addresses[0]}:{self.port}/index.html"
+                # Return the primary URL (first IP)
+                return f"http://{self.ip_addresses[0][1]}:{self.port}/index.html"
 
         except Exception as e:
             if not self.quiet:
