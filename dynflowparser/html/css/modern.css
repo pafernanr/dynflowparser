@@ -704,6 +704,7 @@ a:hover {
   color: #a0a0a0;
   text-decoration: none;
   transition: color 0.2s ease;
+  align-self: flex-end;
 }
 
 .project-panel a:hover {
