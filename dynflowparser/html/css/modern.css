@@ -773,7 +773,6 @@ body.page-tasks {
   align-items: center;
   gap: 0.375rem;
   font-size: 0.75rem;
-  margin-left: auto;
   flex-wrap: wrap;
   line-height: 1;
 }
@@ -852,7 +851,7 @@ body.page-tasks {
   border: 1px solid var(--border-dark);
   border-radius: var(--radius-sm);
   background: var(--bg-primary);
-  color: var(--text-secondary);
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
@@ -995,11 +994,11 @@ body.page-tasks {
 }
 
 .header-line-light {
-  color: var(--text-secondary);
+  color: #c0c0c0;
 }
 
 .header-line-dark {
-  color: var(--text-primary);
+  color: #e8e8e8;
   font-weight: 700;
 }
 
