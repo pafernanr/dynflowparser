@@ -268,6 +268,7 @@ class OutputHtml:
                     self.dynflow_plans_exectime[execution_plan_uuid].items(),
                     key=lambda item: item[1],
                     reverse=True)[:5],
+                "sos": self.conf.sos,
             }
             self.write_report(context, "actions.html", outputfile)  # noqa E501
             # Update progress bar less frequently (every 100 iterations)

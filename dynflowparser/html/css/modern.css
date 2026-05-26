@@ -675,6 +675,12 @@ a:hover {
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.12);
 }
 
+.project-panel .project-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .project-panel .project-name {
   font-weight: 600;
   font-size: 1rem;
@@ -682,6 +688,12 @@ a:hover {
   text-decoration: none;
   letter-spacing: 0.01em;
   transition: color 0.2s ease;
+}
+
+.project-panel .project-version {
+  font-size: 0.75rem;
+  color: #a0a0a0;
+  font-weight: 400;
 }
 
 .project-panel .project-author {

@@ -1,6 +1,9 @@
 import os
 import setuptools
 
+# Import version from _version.py
+from dynflowparser._version import __version__
+
 
 def read(fname):
     return open(
@@ -10,7 +13,7 @@ def read(fname):
 
 setuptools.setup(
     name='dynflowparser',
-    version='0.0.0',
+    version=__version__,
     install_requires=['Jinja2', 'pandas', 'pytz'],
     scripts=[
         'dynflowparser/bin/__init__.py',

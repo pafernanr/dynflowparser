@@ -2,6 +2,7 @@ import argparse
 import os
 import shutil
 
+from dynflowparser._version import __version__
 from dynflowparser.lib.util import Util
 
 
@@ -26,11 +27,17 @@ class Conf:
             }
         self.writesql = True
         self.sos = {}
+        self.sos['version'] = __version__
         self.dbfile = ""
 
         self.parser = argparse.ArgumentParser(
             description="Get sosreport dynflow files and generates user"
             + " friendly html pages for tasks, plans, actions and steps"
+            )
+        self.parser.add_argument(
+            '--version',
+            action='version',
+            version=f'%(prog)s {__version__}'
             )
         self.parser.add_argument(
             '-a',
