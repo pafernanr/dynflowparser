@@ -1,8 +1,6 @@
 import csv
 import datetime
-import operator
 import os
-import re
 import sys
 import time
 import webbrowser
@@ -14,7 +12,6 @@ from dynflowparser.lib.httpserver import HttpServer
 from dynflowparser.lib.outputhtml import OutputHtml
 from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.util import Util
-# from dynflowparser.plugins.dynflowpolling import DynflowPolling
 
 
 class DynflowParser:
@@ -188,12 +185,6 @@ class DynflowParser:
                 sqlite.write(d, dynflow)
             # Create indexes after all data is inserted for better performance
             sqlite.create_indexes()
-        ###
-        # Enrich Plugins
-        # dynflowpolling = DynflowPolling(self.conf)
-        # dynflowpolling.main()
-        # PulpCore(self.conf).main()
-        ###
         html.write()
         indexpath = f"{self.conf.args.output_path}/index.html"
         if not self.conf.args.quiet:
