@@ -1015,7 +1015,7 @@ body.page-tasks {
 }
 
 .task-list-scrollable a.task-action {
-  color: var(--foreman-orange);
+  color: var(--text-primary);
 }
 
 .task-list-scrollable a.task-action:hover {
