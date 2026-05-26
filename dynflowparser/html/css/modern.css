@@ -687,10 +687,6 @@ a:hover {
 .project-panel .project-author {
   font-size: 0.75rem;
   color: #a0a0a0;
-}
-
-.project-panel .project-author a {
-  color: #a0a0a0;
   text-decoration: none;
   transition: color 0.2s ease;
 }
