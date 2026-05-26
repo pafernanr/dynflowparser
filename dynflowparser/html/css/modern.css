@@ -852,7 +852,7 @@ body.page-tasks {
   border: 1px solid var(--border-dark);
   border-radius: var(--radius-sm);
   background: var(--bg-primary);
-  color: var(--text-primary);
+  color: var(--text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
