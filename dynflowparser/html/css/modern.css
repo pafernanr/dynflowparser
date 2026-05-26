@@ -233,7 +233,6 @@ body {
 
 .task-class {
   font-size: 0.688rem;
-  color: var(--text-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
