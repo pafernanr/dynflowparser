@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la ../dynflowparser)",
+      "Read(//home/pablofr/Documents/pablo/work/RH/repos/dynflowparser/**)",
+      "Bash(mv dynflowparser *)",
+      "Bash(mv dynflowparser_export_tasks dynflowparserng_export_tasks)",
+      "Bash(mv dynflowparser.spec dynflowparserng.spec)"
+    ],
+    "additionalDirectories": [
+      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng"
+    ]
+  }
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tasks</title>
+    <link rel="stylesheet" href="html/css/dynflowparser.css" />
+    <link rel="stylesheet" href="html/css/jquery.treetable.css" />
+    <link rel="stylesheet" href="html/css/jquery.treetable.theme.default.css" />
+  </head>
+<body>
+<table width="100%"><tr>
+ <td style="width:33%; vertical-align: top;">
+  <table class="sosdetails">
+    <tr>
+      <th>Hostname</th><td>{{sos['hostname']}}</td>
+      <th>version</th><td>{{sos['satversion']}}</td>
+    </tr><tr>
+      <th>Time zone</th><td>{{sos['timezone']}}</td>
+      <th>Tuning</th><td>{{sos['tuning']}}</td>
+    </tr><tr>
+      <th></th><td></td>
+      <th>CPU</th><td>{{sos['cpu']}}</td>
+    </tr><tr>
+      <th colspan="4">Memory</th>
+    </tr><tr>
+      <td colspan="4"><pre>{{sos['ram']}}</pre></td>
+    </tr>
+  </table>
+ </td><td style="width:33%; vertical-align: top;">
+  <table class="sosdetails tblTop">
+    <thead>
+      <tr><th colspan="3">Top Dynflow steps per execution time</th></tr>
+    </thead>
+    <tr>
+      <th>Exectime</th><th>Steps</th><th>Label</th>
+    </tr>{% for r in dynflow_total_exectime %}  
+        <tr><td>{{ "{:0,.0f}".format(r[0]) }}</td><td>{{ "{:0,.0f}".format(r[1]) }}</td><td>{{ r[2] }}</td></tr>
+    {% endfor %}
+  </table>
+ </td><td style="width:33%; vertical-align: top;">
+  <table class="sosdetails tblTop">
+    <thead>
+      <tr><th colspan="3">Top pulpcore Tasks per execution time</th></tr>
+    </thead>
+    <tr>
+      <th>Exectime</th><th>Count</th><th>Name</th>
+    </tr>{% for r in pulp_total_exectime %}  
+        <tr><td>{{ "{:0,.0f}".format(r[1][0]) }}</td><td>{{ "{:0,.0f}".format(r[1][1]) }}</td><td>{{ r[0] }}</td></tr>
+    {% endfor %}
+  </table>
+ </td>
+</tr></table>
+
+<table id="tblPlans" class="treetable">
+  <thead><tr>
+    <th colspan="2">Foreman</th><th colspan="5">Dynflow</th>
+  </tr></thead>
+  <thead>
+  <tr>
+    <th>Task action</th><!--<th>Task label</th>--><th>Task id</th><th>Plan uuid</th><!--<th>external_id</th>-->
+    <th>Task started_at</th><th>Task ended_at</th> 
+    <th>Task state</th><th>Task result</th>
+  </tr>
+  </thead>
+  <tbody>                                
+  {% for t in rows %} 
+  <tr>
+    <td class="action"> 
+      {% if t[0] and t[0]|length %}
+         <span title="{{t[3]}}" class="folder indented">{{t[8]}}</span>
+      {% else %}
+         <span title="{{t[3]}}" class="folder unindented">{{t[8]}}</span>
+      {% endif %}
+    </td>
+    <td>{{t[1]}}</td>
+    <!--<td>{{t[3]}}</td>-->
+    {% if t[5] == "pending" and t[4] == "scheduled"%}
+    <td>{{t[2]}}</td>
+    {% else %}
+    <td><a href='actions/{{t[2]}}.html'>{{t[2]}}</a></td>
+    {% endif %}
+    <td>{{t[6][:-7]}}</td>
+    <td>{{t[7][:-7]}}</td>
+    <td>{{t[4]}}</td>
+    <td class="{{t[5]}}">
+      {% if t[5]=="error" %}<strong>{{t[5]}}</strong>
+        {% elif t[5] in ["warning", "pending", "skipped"] %}<sup>{{t[5]}}</sup>
+        {% else %}<i>{{t[5]}}</i>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+

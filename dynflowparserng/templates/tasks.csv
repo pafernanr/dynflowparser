@@ -1,0 +1,27 @@
+parent_task_id  task_id	task_label	plan_label	uuid	class	state	input	output	data	step_class	step_started_at	step_ended_at	step_real_time	step_execution_time	step_error	step_queue	step_children	step_data
+{% for as in actions.values() %}{% for a in as %}{#
+  #}{% if a[4] is not none and a[7] is not none and a[4] == 'Actions::RemoteExecution::ProxyAction' and a[7] != '' and '&quot;exit_status&quot;:&nbsp;0,' not in a[7] %}{#
+    #}{% set state = 'error' %}{#
+  #}{% else %}{#
+    #}{% set state = a[10] %}{#
+  #}{% endif %}{#
+  #}{% for s in a[14] %}{#
+    #}{{a[14]}}	{#
+    #}{{a[13]}}	{#
+    #}{{a[12]}}	{#
+    #}{{a[9]}}	{#
+    #}{{a[1]}}	{#
+    #}{{a[4]}}	{#
+    #}{{state}}	{#
+    #}{{a[6]|replace("\t","")|replace('&nbsp;', ' ')|replace('&quot;', '"')|replace("<br>"," ")|replace("\r","")}}	{#
+    #}{{a[7]|replace("\t","")|replace('&nbsp;', ' ')|replace('&quot;', '"')|replace("<br>"," ")|replace("\r","")}}	{#
+    #}{{a[5]|replace("\t","")|replace('&nbsp;', ' ')|replace('&quot;', '"')|replace("<br>"," ")|replace("\r","")}}	{#
+    #}{{s[10]}}	{#
+    #}{{s[4]}}	{#
+    #}{{s[5]}}	{#
+    #}{{s[6]}}	{#
+    #}{{s[7]}}	{#
+    #}{{s[13]|replace("\t","")|replace('&nbsp;', ' ')|replace('&quot;', '"')|replace("<br>"," ")|replace("\r","")}}	{#
+    #}{{s[12]|replace("\t","")|replace('&nbsp;', ' ')|replace('&quot;', '"')|replace("<br>"," ")|replace("\r","")}}	{#
+    #}{{s[14]|replace("\t","")|replace('&nbsp;', ' ')|replace('&quot;', '"')|replace("<br>"," ")|replace("\r","")}}
+{% endfor %}{% endfor %}{% endfor %}
