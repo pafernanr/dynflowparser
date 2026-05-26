@@ -16,11 +16,10 @@ The companion command `dynflowparser-export-tasks` overcomes sosreport file size
 - **Error Navigation**: Failed Actions & Steps automatically expanded for quick troubleshooting
 - **System Context**: Header displays Hostname, Timezone, Satellite version, RAM, CPU, and Tuning profile
 - **Timezone Support**: UTC dates automatically converted to sosreport timezone
-- **JSON Formatting**: Indented and readable JSON fields for Actions & Steps
+- **Formatting**: Indented and readable JSON fields for Actions & Steps
 - **HTTP Server**: Built-in web server with `--httpd-server` and `--ssh-tunnel` options
 - **Browser Integration**: Automatically opens output in default browser
 - **CLI Friendly**: Lynx-compatible for terminal-based browsing
-- **Performance**: Optimized CSV parsing and SQLite operations with progress tracking
 
 ## Requirements
 
