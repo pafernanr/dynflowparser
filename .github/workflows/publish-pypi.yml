@@ -14,8 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Replace version in _version.py
-        run: cat __VERSION__
+      - name: Replace version in __VERSION__
+        run: echo "${{github.ref_name}}" > dynflowparser/__VERSION__
 
       - uses: actions/setup-python@v5
         with:

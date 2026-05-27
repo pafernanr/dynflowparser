@@ -2,7 +2,7 @@ import os
 import setuptools
 
 
-version_file = os.path.join(os.path.dirname(__file__), '__VERSION__')
+version_file = os.path.join(os.path.dirname(__file__), 'dynflowparser', '__VERSION__')
 
 
 def read(fname):
@@ -27,6 +27,7 @@ setuptools.setup(
         },
     packages=setuptools.find_packages(),
     package_data={
+        'dynflowparser': ['__VERSION__'],
         'dynflowparser.html.css': ['*'],
         'dynflowparser.html.js': ['*'],
         'dynflowparser.templates': ['*'],

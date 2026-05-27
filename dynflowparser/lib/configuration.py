@@ -141,7 +141,7 @@ class Conf:
 
     def get_version(self):
         fname = os.path.join(os.path.dirname(__file__),
-                             '..', '..', '__VERSION__')
+                             '..', '__VERSION__')
         version = open(
             fname, encoding="utf-8"
             ).read()

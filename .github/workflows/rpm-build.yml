@@ -15,8 +15,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Replace version in _version.py
-        run: cat __VERSION__
+      - name: Replace version in __VERSION__
+        run: echo "${{github.ref_name}}" > dynflowparser/__VERSION__
 
       - name: Replace version in RPM spec so correct source is downloaded when building RPM
         run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ env.PKG_NAME }}.spec
@@ -38,8 +38,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Replace version in _version.py
-        run: sed -Ei 's/(^__version__[[:space:]]*=[[:space:]]*).*/\1"${{github.ref_name}}"/' dynflowparser/_version.py
+      - name: Replace version in __VERSION__
+        run: echo "${{github.ref_name}}" > dynflowparser/__VERSION__
 
       - name: Replace version in RPM spec so correct source is downloaded when building RPM
         run: sed -Ei 's/(^Version:[[:space:]]*).*/\1${{github.ref_name}}/' ${{ env.PKG_NAME }}.spec
