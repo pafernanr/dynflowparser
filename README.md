@@ -15,7 +15,7 @@ The companion command `dynflowparser-export-tasks` overcomes sosreport file size
 
 | Tasks List | Task Details |
 | --- | --- |
-| ![](https://raw.githubusercontent.com/pafernanr/dynflowparser-ng/refs/heads/main/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser-ng/refs/heads/main/docs/files/_screenshot2.png) |
+| ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/dynflowparser-ng/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/dynflowparser-ng/docs/files/_screenshot2.png) |
 
 ## Main Features
 
