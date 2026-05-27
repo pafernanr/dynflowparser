@@ -2,7 +2,6 @@ import argparse
 import os
 import shutil
 
-from dynflowparser._version import __version__
 from dynflowparser.lib.util import Util
 
 
@@ -27,7 +26,6 @@ class Conf:
             }
         self.writesql = True
         self.sos = {}
-        self.sos['version'] = __version__
         self.dbfile = ""
 
         self.parser = argparse.ArgumentParser(
@@ -38,7 +36,7 @@ class Conf:
             '-v',
             '--version',
             action='version',
-            version=f'%(prog)s {__version__}'
+            version=self.get_version(),
             )
         self.parser.add_argument(
             '-a',
@@ -140,6 +138,15 @@ class Conf:
                     os.path.realpath(__file__)) + "/../html",
                     self.args.output_path + "/html")
         self.dbfile = self.args.output_path + "/dynflowparserng.db"
+
+    def get_version(self):
+        fname = os.path.join(os.path.dirname(__file__),
+                             '..', '..', '__VERSION__')
+        version = open(
+            fname, encoding="utf-8"
+            ).read()
+        self.sos['version'] = version
+        return version
 
     def valid_output_path(self, path):
         if path[:1] == "/":

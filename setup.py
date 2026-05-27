@@ -1,8 +1,8 @@
 import os
 import setuptools
 
-# Import version from _version.py
-from dynflowparser._version import __version__
+
+version_file = os.path.join(os.path.dirname(__file__), '__VERSION__')
 
 
 def read(fname):
@@ -13,7 +13,7 @@ def read(fname):
 
 setuptools.setup(
     name='dynflowparser',
-    version=__version__,
+    version=read(version_file),
     install_requires=['Jinja2', 'pandas', 'pytz'],
     setup_requires=['Jinja2', 'pandas', 'pytz'],
     scripts=[
