@@ -14,8 +14,8 @@ DynflowParser reads Dynflow task data from a [sosreport](https://github.com/sosr
 The companion command `dynflowparser-export-tasks` overcomes sosreport file size limitations by exporting tasks directly from the Foreman database.
 
 | Tasks List | Task Details |
-| --- | --- | --- |
-| ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/main/docs/files/_screenshot2.png) |
+| --- | --- |
+| ![](docs/files/_screenshot1.png) | ![](docs/files/_screenshot2.png) |
 
 ## Main Features
 
