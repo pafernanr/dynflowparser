@@ -125,18 +125,18 @@ class DynflowParser:
                     'class', 'action_class', 'queue', 'error',
                     'children', 'data']
             }
-        if self.conf.dynflowdata['version'] == "25":  # from Satellite 6.19
-            self.conf.dynflowdata['tasks'] = {
-                'inputfile': "/sos_commands/foreman/foreman_tasks_tasks",
-                'sortby': 'started_at',
-                'reverse': True,
-                'dates': ['started_at', 'ended_at', 'state_updated_at'],
-                'json': [],
-                'headers': ['id', 'dtype', 'label', 'started_at', 'ended_at',
-                            'state', 'result', 'external_id', 'parent_task_id',
-                            'start_at', 'start_before', 'action',
-                            'state_updated_at', 'user_id']
-            }
+            if self.conf.dynflowdata['version'] == "25":  # from Satellite 6.19
+                self.conf.dynflowdata['tasks'] = {
+                    'inputfile': "/sos_commands/foreman/foreman_tasks_tasks",
+                    'sortby': 'started_at',
+                    'reverse': True,
+                    'dates': ['started_at', 'ended_at', 'state_updated_at'],
+                    'json': [],
+                    'headers': ['id', 'dtype', 'label', 'started_at', 'ended_at',
+                                'state', 'result', 'external_id', 'parent_task_id',
+                                'start_at', 'start_before', 'action',
+                                'state_updated_at', 'user_id']
+                }
         else:
             print("ERROR: Dynflow schema version "
                   + f"{self.conf.dynflowdata['version']} is not supported. "
