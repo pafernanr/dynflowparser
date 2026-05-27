@@ -35,6 +35,7 @@ class Conf:
             + " friendly html pages for tasks, plans, actions and steps"
             )
         self.parser.add_argument(
+            '-v',
             '--version',
             action='version',
             version=f'%(prog)s {__version__}'
@@ -80,7 +81,7 @@ class Conf:
         self.parser.add_argument(
             '-n',
             '--nosql',
-            help='Reuse existent sqlite file. (Useful for development).',
+            help='Reuse existent sqlite file.',
             default=False,
             action='store_true'
             )
@@ -107,6 +108,7 @@ class Conf:
             action='store_true'
             )
         server_group.add_argument(
+            '-s',
             '--ssh-tunnel',
             dest='ssh_tunnel',
             help='Start an HTTP server and show SSH tunnel commands.',

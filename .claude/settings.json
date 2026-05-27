@@ -5,7 +5,11 @@
       "Bash(git mv *)",
       "Bash(git commit -m 'Fix import in bin/__init__.py after rename *)",
       "Bash(git rm *)",
-      "Bash(python3 -m py_compile /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/lib/httpserver.py)"
+      "Bash(python3 -m py_compile /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/lib/httpserver.py)",
+      "Bash(python3 -m py_compile /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/__init__.py /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/bin/__init__.py /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser_export_tasks/bin/__init__.py)",
+      "Bash(git reset *)",
+      "Bash(git push *)",
+      "Bash(python3 -m py_compile /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/templates/tasks.html /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/templates/actions.html)"
     ]
   }
 }

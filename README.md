@@ -1,5 +1,12 @@
 # DynflowParser
 
+## What's new
+
+**DynflowParser** brings significant improvements over the original version including:
+- 5-10x faster performance with optimized CSV parsing (pandas) and SQLite operations (WAL mode, compound indexes); 
+- Built-in HTTP server with network interface detection and SSH tunnel support for easy local and remote access;
+- Enhanced UX with full-width responsive layout, improved text readability.
+
 ## Description
 
 DynflowParser reads Dynflow task data from a [sosreport](https://github.com/sosreport/sos) and generates user-friendly HTML pages for analyzing Foreman/Satellite task execution. It provides an intuitive interface to browse Tasks, Plans, Actions, and Steps with automatic error highlighting and timezone conversion.
@@ -12,14 +19,14 @@ The companion command `dynflowparser-export-tasks` overcomes sosreport file size
 
 ## Main Features
 
-- **Smart Filtering**: Only unsuccessful tasks parsed by default (use `-a` for all tasks)
+- **Smart Filtering**: Only failed tasks parsed by default (use `-a` for all tasks)
 - **Error Navigation**: Failed Actions & Steps automatically expanded for quick troubleshooting
 - **System Context**: Header displays Hostname, Timezone, Satellite version, RAM, CPU, and Tuning profile
 - **Timezone Support**: UTC dates automatically converted to sosreport timezone
-- **Formatting**: Indented and readable JSON fields for Actions & Steps
-- **HTTP Server**: Built-in web server with `--httpd-server` and `--ssh-tunnel` options
+- **Formatting**: Indented and readable fields for Actions & Steps
+- **HTTP Server**: Built-in web server with `--httpd-server` and `--ssh-tunnel` options for remote web access
 - **Browser Integration**: Automatically opens output in default browser
-- **CLI Friendly**: Lynx-compatible for terminal-based browsing
+- **CLI Friendly**: (Work In Progress) Lynx-compatible for terminal-based browsing
 
 ## Requirements
 
@@ -55,17 +62,17 @@ dynflowparser [-h] [--version] [-a] [-d {D,I,W,E}] [-f DATE_FROM] [-t DATE_TO]
 
 **Optional arguments:**
 - `-h, --help`: Show help message and exit
-- `--version`: Show program version and exit
+- `-v, --version`: Show program version and exit
 - `-a, --all`: Parse all tasks (default: only unsuccessful)
 - `-d, --debug {D,I,W,E}`: Debug level (default: W)
 - `-f, --from DATE_FROM`: Parse tasks running from this datetime
 - `-t, --to DATE_TO`: Parse tasks running up to this datetime
 - `-l, --last LAST_N_DAYS`: Parse only last N days (overrides `--from` and `--to`)
-- `-n, --nosql`: Reuse existing SQLite file (useful for development)
+- `-n, --nosql`: Reuse existing SQLite file
 - `-q, --quiet`: Quiet mode, no progress bar
 - `-o, --output_path OUTPUT_PATH`: Write output to this path (default: `./dynflowparserng/`)
 - `--httpd-server`: Start HTTP server to serve generated pages
-- `--ssh-tunnel`: Start HTTP server with SSH tunnel instructions (localhost binding)
+- `-s, --ssh-tunnel`: Start HTTP server with SSH tunnel instructions (localhost binding)
 
 **Examples:**
 ```bash
