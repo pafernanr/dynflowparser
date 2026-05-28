@@ -1,4 +1,4 @@
-"""Common data handling and hierarchy building for UI implementations."""
+"""Shared data handling and hierarchy building for UI implementations."""
 
 
 class ActionHierarchy:

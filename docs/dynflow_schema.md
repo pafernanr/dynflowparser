@@ -144,3 +144,29 @@ Action 1 (success) - EXPANDED
 Even though Actions 1 and 2 show success, they are auto-expanded because Action 4 → Step 4.6 has a skipped state.
 
 **Note:** This behavior ensures users can quickly identify problems in deeply nested hierarchies without manually expanding every action.
+
+### Circular References in Action Hierarchy
+
+**Problem:** In rare cases, two actions may have mutual parent-child references, creating a circular relationship (A→B and B→A).
+
+**Solution:** The hierarchy building logic detects circular references and resolves them deterministically:
+1. The action with the **lower ID** becomes the root
+2. The action with the **higher ID** becomes its child
+3. A `processed_circular` set prevents duplicate processing
+
+**Example:**
+```
+Action 1: caller_action_id = 2 (points to Action 2 as parent)
+Action 2: caller_action_id = 1 (points to Action 1 as parent)
+
+Resolved hierarchy:
+Action 1 (root - lower ID)
+  └─ Action 2 (child - higher ID)
+```
+
+**Implementation:** Both HTML and terminal UIs use shared code from `lib/ui/shared/data.py`:
+- `ActionHierarchy.build_hierarchy()` detects and resolves circular references
+- Cycle detection using `visited` sets prevents infinite recursion during rendering
+- Jinja2 templates include additional cycle detection in recursive macros
+
+**Note:** Circular references should not occur in normal Dynflow execution but are handled defensively to prevent UI crashes.

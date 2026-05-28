@@ -185,16 +185,19 @@
    * Initialize control buttons
    */
   function initButtons() {
-    // Expand All button (actions page)
-    const expandAllBtn = document.getElementById('expandAll');
-    if (expandAllBtn) {
-      expandAllBtn.addEventListener('click', expandAll);
-    }
-
-    // Collapse All button (actions page)
-    const collapseAllBtn = document.getElementById('collapseAll');
-    if (collapseAllBtn) {
-      collapseAllBtn.addEventListener('click', collapseAll);
+    // Toggle All button (actions page)
+    const toggleAllBtn = document.getElementById('toggleAll');
+    if (toggleAllBtn) {
+      toggleAllBtn.addEventListener('click', () => {
+        // Check if currently showing "Expand All" or "Collapse All"
+        if (toggleAllBtn.textContent === 'Expand All') {
+          expandAll();
+          toggleAllBtn.textContent = 'Collapse All';
+        } else {
+          collapseAll();
+          toggleAllBtn.textContent = 'Expand All';
+        }
+      });
     }
 
     // Expand Errors button (actions page)
@@ -203,16 +206,19 @@
       expandErrorsBtn.addEventListener('click', autoExpandErrors);
     }
 
-    // Expand All Tasks button (tasks page)
-    const expandAllTasksBtn = document.getElementById('expandAllTasks');
-    if (expandAllTasksBtn) {
-      expandAllTasksBtn.addEventListener('click', expandAllTasks);
-    }
-
-    // Collapse All Tasks button (tasks page)
-    const collapseAllTasksBtn = document.getElementById('collapseAllTasks');
-    if (collapseAllTasksBtn) {
-      collapseAllTasksBtn.addEventListener('click', collapseAllTasks);
+    // Toggle All Tasks button (tasks page)
+    const toggleAllTasksBtn = document.getElementById('toggleAllTasks');
+    if (toggleAllTasksBtn) {
+      toggleAllTasksBtn.addEventListener('click', () => {
+        // Check if currently showing "Collapse All" or "Expand All"
+        if (toggleAllTasksBtn.textContent === 'Collapse All') {
+          collapseAllTasks();
+          toggleAllTasksBtn.textContent = 'Expand All';
+        } else {
+          expandAllTasks();
+          toggleAllTasksBtn.textContent = 'Collapse All';
+        }
+      });
     }
   }
 

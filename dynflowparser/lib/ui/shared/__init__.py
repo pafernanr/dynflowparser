@@ -1,4 +1,4 @@
-"""Common code shared between HTML and Text UI implementations."""
+"""Shared code between HTML and Text UI implementations."""
 from .data import ActionHierarchy
 from .data import DataProvider
 

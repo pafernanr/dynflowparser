@@ -6,7 +6,7 @@ from textual.containers import VerticalScroll
 from textual.widgets import DataTable
 from textual.widgets import Static
 
-from dynflowparser.lib.ui.common import ActionHierarchy
+from dynflowparser.lib.ui.shared import ActionHierarchy
 
 
 class HeaderSeparator(Static):

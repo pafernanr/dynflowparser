@@ -11,7 +11,7 @@ from jinja2 import FileSystemLoader
 
 from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.ui.base import BaseOutput
-from dynflowparser.lib.ui.common import ActionHierarchy
+from dynflowparser.lib.ui.shared import ActionHierarchy
 from dynflowparser.lib.util import ProgressBarFromFileLines
 from dynflowparser.lib.util import Util
 
