@@ -827,12 +827,10 @@ class ActionsTreeTable(DataTable):
         """Auto-expand actions that have non-success states.
 
         Simple approach:
-        - If an action status is non-success: expand all parents up to root
-        - If a step status is non-success: expand all parents up to root
+        - If an action status is not "success": expand all parents up to root
+        - If a step status is not "success": expand all parents up to root
         - Stop iterating when finding a parent that's already expanded
         """
-        non_success_states = {'error', 'warning', 'pending', 'skipped',
-                              'suspended'}
         actions_to_expand = set()
 
         # Build parent map (reverse of child_actions)
@@ -868,7 +866,7 @@ class ActionsTreeTable(DataTable):
         for action_id, action in self.actions_by_id.items():
             # Action state is at index 10
             action_state = str(action[10]).lower() if action[10] else ""
-            if action_state in non_success_states:
+            if action_state and action_state != "success":
                 expand_all_parents(action_id)
 
         # 2. Find actions with steps that have non-success status
@@ -876,7 +874,7 @@ class ActionsTreeTable(DataTable):
             for step in steps:
                 # Step state is at index 3
                 step_state = str(step[3]).lower() if step[3] else ""
-                if step_state in non_success_states:
+                if step_state and step_state != "success":
                     expand_all_parents(action_id)
                     break  # Only need one non-success step
 

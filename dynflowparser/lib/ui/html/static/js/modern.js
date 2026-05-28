@@ -267,11 +267,11 @@
    * Optimized: stops iterating up the tree when finding an already-expanded parent
    */
   function autoExpandErrors() {
-    const nonSuccessStates = ['error', 'warning', 'pending', 'skipped', 'suspended'];
-
-    // Find all status badges with non-success states
-    const selector = nonSuccessStates.map(state => `.status-${state}`).join(', ');
-    const errorBadges = document.querySelectorAll(selector);
+    // Find all status badges that are NOT success
+    const allStatusBadges = document.querySelectorAll('[class*="status-"]');
+    const errorBadges = Array.from(allStatusBadges).filter(badge =>
+      !badge.classList.contains('status-success')
+    );
 
     errorBadges.forEach(badge => {
       // Find the parent action or step node
