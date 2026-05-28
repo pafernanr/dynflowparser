@@ -6,6 +6,8 @@ from textual.containers import VerticalScroll
 from textual.widgets import DataTable
 from textual.widgets import Static
 
+from dynflowparser.lib.ui.common import ActionHierarchy
+
 
 class HeaderSeparator(Static):
     """Orange separator line below header."""
@@ -788,61 +790,10 @@ class ActionsTreeTable(DataTable):
         """
         actions_raw = self.db.query(actions_query, (self.plan_uuid,))
 
-        # Build action hierarchy based on caller_action_id
-        # Two-pass approach:
-        # 1. Index all actions by ID
-        # 2. Build parent-child relationships, treating orphaned refs as roots
-
-        self.actions_by_id = {}
-        self.child_actions = {}  # Map parent_action_id -> [child_actions]
-
-        # First pass: index all actions in THIS plan
-        for action in actions_raw:
-            action_id = action[0]
-            self.actions_by_id[action_id] = action
-
-        # Second pass: build hierarchy
-        # An action is a root if:
-        #  - caller_action_id is NULL/empty/0 (explicit root)
-        #  - caller_action_id points to action not in this plan (orphaned ref)
-        #  - Both actions reference each other (data issue): lower ID wins
-        self.root_actions = []
-        processed_circular = set()  # Track circular pairs we've handled
-
-        for action in actions_raw:
-            action_id = action[0]
-            caller_action_id = action[2]
-
-            # Check if this is a root action
-            if caller_action_id is None or caller_action_id == '' or caller_action_id == 0:
-                # Explicit root (no caller)
-                self.root_actions.append(action)
-            elif caller_action_id not in self.actions_by_id:
-                # Orphaned reference - caller doesn't exist in this plan
-                self.root_actions.append(action)
-            else:
-                # Check for mutual reference (data issue, shouldn't happen per schema)
-                caller_action = self.actions_by_id[caller_action_id]
-                caller_of_caller = caller_action[2]
-
-                if caller_of_caller == action_id:
-                    # Mutual reference: A→B and B→A
-                    # Lower ID wins as root, higher becomes its child
-                    pair = tuple(sorted([action_id, caller_action_id]))
-                    if pair not in processed_circular:
-                        processed_circular.add(pair)
-                        if action_id < caller_action_id:
-                            # This is the root
-                            self.root_actions.append(action)
-                            if action_id not in self.child_actions:
-                                self.child_actions[action_id] = []
-                            self.child_actions[action_id].append(caller_action)
-                        # else: the other action will be root when we process it
-                else:
-                    # Normal parent-child relationship
-                    if caller_action_id not in self.child_actions:
-                        self.child_actions[caller_action_id] = []
-                    self.child_actions[caller_action_id].append(action)
+        # Build action hierarchy using shared code
+        self.root_actions, self.child_actions, self.actions_by_id = (
+            ActionHierarchy.build_hierarchy(actions_raw)
+        )
 
         # Query steps for actions
         steps_query = """
@@ -875,55 +826,15 @@ class ActionsTreeTable(DataTable):
     def _auto_expand_non_success(self):
         """Auto-expand actions that have non-success states.
 
-        Expands actions where:
-        - Any step has error/warning/pending/skipped/suspended state
-        - Any child action (recursively) has such states
-        Also expands all parent actions leading to the problematic item.
+        Simple approach:
+        - If an action status is non-success: expand all parents up to root
+        - If a step status is non-success: expand all parents up to root
+        - Stop iterating when finding a parent that's already expanded
         """
-        error_states = {'error', 'warning', 'pending', 'skipped', 'suspended'}
-
-        def has_non_success_descendant(action_id, visited=None):
-            """Recursively check if action or descendants have non-success state.
-
-            Args:
-                action_id: The action ID to check
-                visited: Set of already visited action IDs (prevent infinite loops)
-
-            Returns:
-                bool: True if this action or any descendant has non-success state
-            """
-            if visited is None:
-                visited = set()
-
-            if action_id in visited:
-                return False
-
-            visited.add(action_id)
-
-            # Check this action's steps
-            if action_id in self.steps_by_action:
-                for step in self.steps_by_action[action_id]:
-                    step_state = str(step[3]).lower() if step[3] else ""
-                    if step_state in error_states:
-                        return True
-
-            # Check child actions recursively
-            if action_id in self.child_actions:
-                for child_action in self.child_actions[action_id]:
-                    child_id = child_action[0]
-                    if has_non_success_descendant(child_id, visited):
-                        return True
-
-            return False
-
-        # Mark actions that need expansion
+        non_success_states = {'error', 'warning', 'pending', 'skipped',
+                              'suspended'}
         actions_to_expand = set()
 
-        for action_id in self.actions_by_id:
-            if has_non_success_descendant(action_id):
-                actions_to_expand.add(action_id)
-
-        # Also expand all parents of expanded actions
         # Build parent map (reverse of child_actions)
         action_to_parent = {}
         for parent_id, children in self.child_actions.items():
@@ -931,18 +842,43 @@ class ActionsTreeTable(DataTable):
                 child_id = child_action[0]
                 action_to_parent[child_id] = parent_id
 
-        # For each action to expand, also expand all its ancestors
-        for action_id in list(actions_to_expand):
+        def expand_all_parents(action_id):
+            """Add action and all its parents to expansion set.
+
+            Stops when finding a parent already in the expansion set.
+            """
             current = action_id
             visited = set()
-            while current in action_to_parent:
+            while True:
                 if current in visited:
-                    # Prevent infinite loop in case of data issues
                     break
                 visited.add(current)
-                parent_id = action_to_parent[current]
-                actions_to_expand.add(parent_id)
-                current = parent_id
+
+                # If already expanded, stop iterating
+                if current in actions_to_expand:
+                    break
+
+                actions_to_expand.add(current)
+
+                if current not in action_to_parent:
+                    break
+                current = action_to_parent[current]
+
+        # 1. Find actions with non-success status
+        for action_id, action in self.actions_by_id.items():
+            # Action state is at index 10
+            action_state = str(action[10]).lower() if action[10] else ""
+            if action_state in non_success_states:
+                expand_all_parents(action_id)
+
+        # 2. Find actions with steps that have non-success status
+        for action_id, steps in self.steps_by_action.items():
+            for step in steps:
+                # Step state is at index 3
+                step_state = str(step[3]).lower() if step[3] else ""
+                if step_state in non_success_states:
+                    expand_all_parents(action_id)
+                    break  # Only need one non-success step
 
         self.expanded_actions = actions_to_expand
 

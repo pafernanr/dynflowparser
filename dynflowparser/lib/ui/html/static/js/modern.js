@@ -54,6 +54,28 @@
       const actionClass = node.querySelector('.action-class');
       const details = node.querySelector('.action-details');
       const header = node.querySelector('.action-header');
+      const expandIcon = actionClass ? actionClass.querySelector('.expand-icon') : null;
+
+      // Shared toggle function for both icon and action class clicks
+      const toggleAction = () => {
+        // Toggle steps and child actions
+        const stepsLists = details.querySelectorAll(':scope > .steps-list');
+        const childActions = details.querySelectorAll(':scope > .child-actions');
+
+        stepsLists.forEach(list => list.classList.toggle('expanded'));
+        childActions.forEach(child => child.classList.toggle('expanded'));
+
+        // Toggle header and details (icon rotation handled by CSS)
+        header.classList.toggle('expanded');
+        details.classList.toggle('expanded');
+      };
+
+      if (expandIcon) {
+        expandIcon.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleAction();
+        });
+      }
 
       if (actionClass && details && header) {
         actionClass.addEventListener('click', (e) => {
@@ -67,8 +89,7 @@
             return;
           }
 
-          details.classList.toggle('expanded');
-          header.classList.toggle('expanded');
+          toggleAction();
         });
       }
     });
@@ -101,9 +122,9 @@
     // Initialize inline content buttons
     initContentButtons();
 
-    // Auto-expand errors on actions page
+    // Auto-expand errors on page load
     if (document.querySelector('.action-tree, .action-tree-scrollable')) {
-      setTimeout(expandErrors, 100);
+      setTimeout(autoExpandErrors, 100);
     }
   }
 
@@ -179,7 +200,7 @@
     // Expand Errors button (actions page)
     const expandErrorsBtn = document.getElementById('expandErrors');
     if (expandErrorsBtn) {
-      expandErrorsBtn.addEventListener('click', expandErrors);
+      expandErrorsBtn.addEventListener('click', autoExpandErrors);
     }
 
     // Expand All Tasks button (tasks page)
@@ -242,44 +263,67 @@
   }
 
   /**
-   * Expand only nodes with errors or warnings
+   * Auto-expand actions and steps with non-success status
+   * Optimized: stops iterating up the tree when finding an already-expanded parent
    */
-  function expandErrors() {
-    // First collapse all
-    collapseAll();
+  function autoExpandErrors() {
+    const nonSuccessStates = ['error', 'warning', 'pending', 'skipped', 'suspended'];
 
-    // Find all error and warning status badges
-    const errorNodes = document.querySelectorAll(
-      '.status-error, .status-warning, .status-pending, .status-skipped, .status-suspended'
-    );
+    // Find all status badges with non-success states
+    const selector = nonSuccessStates.map(state => `.status-${state}`).join(', ');
+    const errorBadges = document.querySelectorAll(selector);
 
-    errorNodes.forEach(badge => {
+    errorBadges.forEach(badge => {
       // Find the parent action or step node
-      let node = badge.closest('.action-node, .step-node');
+      const node = badge.closest('.action-node, .step-node');
 
       if (node) {
-        const details = node.querySelector('.action-details, .step-details');
-        const header = node.querySelector('.action-header, .step-header');
-
-        if (details && header) {
-          details.classList.add('expanded');
-          header.classList.add('expanded');
+        // For actions with non-success status: expand it and all parents
+        if (node.classList.contains('action-node')) {
+          expandNodeAndParents(node);
         }
 
-        // Also expand parent action if this is a step
+        // For steps with non-success status: expand all parent actions
         if (node.classList.contains('step-node')) {
           const parentAction = node.closest('.action-node');
           if (parentAction) {
-            const parentDetails = parentAction.querySelector('.action-details');
-            const parentHeader = parentAction.querySelector('.action-header');
-            if (parentDetails && parentHeader) {
-              parentDetails.classList.add('expanded');
-              parentHeader.classList.add('expanded');
-            }
+            expandNodeAndParents(parentAction);
           }
         }
       }
     });
+  }
+
+  /**
+   * Expand a node and all its parent action nodes up to the root
+   * Stops when it finds a parent that's already expanded
+   */
+  function expandNodeAndParents(node) {
+    let current = node;
+
+    while (current && current.classList.contains('action-node')) {
+      const details = current.querySelector(':scope > .action-details');
+      const header = current.querySelector(':scope > .action-header');
+      const stepsLists = details ? details.querySelectorAll(':scope > .steps-list') : [];
+      const childActions = details ? details.querySelectorAll(':scope > .child-actions') : [];
+      const expandIcon = current.querySelector(':scope > .action-header .expand-icon');
+
+      // Check if already expanded - if so, stop iterating
+      if (details && details.classList.contains('expanded')) {
+        break;
+      }
+
+      // Expand this node
+      if (details && header) {
+        details.classList.add('expanded');
+        header.classList.add('expanded');
+        stepsLists.forEach(list => list.classList.add('expanded'));
+        childActions.forEach(child => child.classList.add('expanded'));
+      }
+
+      // Move to parent action node
+      current = current.parentElement ? current.parentElement.closest('.action-node') : null;
+    }
   }
 
   /**

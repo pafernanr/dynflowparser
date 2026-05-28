@@ -24,7 +24,7 @@
         <div class="header-toggle-details">
             <span class="detail-item">
                 <span class="detail-label">Task:</span>
-                <span class="detail-value">{{actions[0][12]}}</span>
+                <span class="detail-value">{{root_actions[0][12] if root_actions else ''}}</span>
             </span>
             <span class="detail-separator">|</span>
             <span class="detail-item">
@@ -34,7 +34,7 @@
             <span class="detail-separator">|</span>
             <span class="detail-item">
                 <span class="detail-label">ID:</span>
-                <span class="detail-value">{{actions[0][13]}}</span>
+                <span class="detail-value">{{root_actions[0][13] if root_actions else ''}}</span>
             </span>
             {% if caller_execution_plan_id %}
             <span class="detail-separator">|</span>
@@ -125,7 +125,14 @@
                 <div class="action-col-status">Status</div>
             </div>
             <div class="action-tree-scrollable">
-            {% for a in actions %}
+            {# Macro to recursively render action and its children #}
+            {% macro render_action(a, child_actions, visited=[]) %}
+            {% set action_id = a[0] %}
+            {# Prevent infinite recursion from circular references #}
+            {% if action_id in visited %}
+                {# Skip this action to prevent cycle #}
+            {% else %}
+            {% set _ = visited.append(action_id) %}
             {# Determine action state #}
             {% if a[4] is not none and a[7] is not none and a[4] == 'Actions::RemoteExecution::ProxyAction' and a[7] != '' and '&quot;exit_status&quot;:&nbsp;0,' not in a[7] %}
                 {% set state = 'error' %}
@@ -139,7 +146,7 @@
             <div class="action-node">
                 <div class="action-header {% if state == 'error' %}has-error{% elif state == 'warning' %}has-warning{% endif %}">
                     <div class="action-class">
-                        {% if a[19]|length %}<span class="expand-icon">▶</span>{% endif %}
+                        {% if a[19]|length or action_id in child_actions %}<span class="expand-icon">▶</span>{% endif %}
                         <span>{{a[3]}}: {{a[4]}}</span>
                         <div class="action-buttons">
                             <button class="btn-inline" data-target="input-{{a[0]}}" title="Show Input">Input</button>
@@ -210,8 +217,23 @@
                         {% endfor %}
                     </div>
                     {% endif %}
+
+                    <!-- Child actions (nested) -->
+                    {% if action_id in child_actions %}
+                    <div class="child-actions">
+                        {% for child in child_actions[action_id] %}
+                            {{ render_action(child, child_actions, visited) }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
+            {% endif %}
+            {% endmacro %}
+
+            {# Render all root actions #}
+            {% for root in root_actions %}
+                {{ render_action(root, child_actions) }}
             {% endfor %}
             </div>
         </div>

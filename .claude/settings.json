@@ -25,7 +25,20 @@
       "Bash(ls -la /tmp/old/dynflowparser/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/ 2>&1 | head -20)",
       "Read(//tmp/old/dynflowparser/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/**)",
       "Bash(python3)",
-      "Bash(sqlite3 -column /home/pablofr/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db)"
+      "Bash(sqlite3 -column /home/pablofr/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db)",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT t.id, t.external_id, COUNT\\(a.id\\) as action_count FROM tasks t LEFT JOIN actions a ON t.external_id = a.execution_plan_uuid GROUP BY t.id LIMIT 10;\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT a.id, a.caller_action_id, a.class FROM actions WHERE execution_plan_uuid = 'ab8781bc-90f8-4731-9e53-d59cae8cc2ee' ORDER BY a.id;\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \".schema actions\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT id, caller_action_id, class FROM actions WHERE execution_plan_uuid = 'ab8781bc-90f8-4731-9e53-d59cae8cc2ee' ORDER BY id;\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT execution_plan_uuid, COUNT\\(*\\) as cnt FROM actions WHERE caller_action_id IS NOT NULL AND caller_action_id != '' AND caller_action_id != 0 GROUP BY execution_plan_uuid HAVING COUNT\\(*\\) = \\(SELECT COUNT\\(*\\) FROM actions a2 WHERE a2.execution_plan_uuid = actions.execution_plan_uuid\\) LIMIT 5;\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT id, caller_action_id, class FROM actions WHERE execution_plan_uuid = '128c4931-c2d9-4ae2-b087-752ca89deef0' ORDER BY id LIMIT 20;\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT t.external_id FROM tasks WHERE t.id = '803663b2-308c-49be-b0b5-4f4043587d83';\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT external_id FROM tasks WHERE id = '803663b2-308c-49be-b0b5-4f4043587d83';\")",
+      "Bash(sqlite3 ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT id, caller_action_id, class FROM actions WHERE execution_plan_uuid = '82512462-a441-4fae-857c-91fd1832587c' ORDER BY id;\")",
+      "Bash(mkdir -p ~/Downloads/circular_reference)",
+      "Bash(cp ~/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db ~/Downloads/circular_reference/)",
+      "Bash(sqlite3 dynflowparserng.db \"SELECT a.id, a.class, s.state FROM actions a LEFT JOIN steps s ON a.id = s.action_id WHERE a.execution_plan_uuid = '82512462-a441-4fae-857c-91fd1832587c' AND a.class LIKE '%GenerateMetadata%' ORDER BY a.id, s.id LIMIT 20\")",
+      "Bash(sqlite3 dynflowparserng.db \"SELECT a.id, a.class, COUNT\\(s.id\\) as step_count, GROUP_CONCAT\\(DISTINCT s.state\\) as states FROM actions a LEFT JOIN steps s ON a.id = s.action_id WHERE a.execution_plan_uuid = '82512462-a441-4fae-857c-91fd1832587c' GROUP BY a.id ORDER BY a.id\")"
     ],
     "additionalDirectories": [
       "/home/pablofr/work/repos/dynflowparserng/dynflowparser/lib/ui",
@@ -36,7 +49,9 @@
       "/home/pablofr/work/repos/dynflowparserng/dynflowparser",
       "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser",
       "/home/pablofr/work/repos/dynflowparserng",
-      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng"
+      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng",
+      "/home/pablofr/Downloads",
+      "/home/pablofr/Documents/pablo/work/RH/cases/04453004/005_sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro.tar.xz/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro"
     ]
   }
 }

@@ -6,11 +6,14 @@ import os
 import re
 import time
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
 
 from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.ui.base import BaseOutput
-from dynflowparser.lib.util import ProgressBarFromFileLines, Util
+from dynflowparser.lib.ui.common import ActionHierarchy
+from dynflowparser.lib.util import ProgressBarFromFileLines
+from dynflowparser.lib.util import Util
 
 
 class HtmlOutput(BaseOutput):
@@ -347,8 +350,15 @@ class HtmlOutput(BaseOutput):
                 + execution_plan_uuid
                 + ".html"
             )
+
+            # Build action hierarchy using shared code
+            root_actions, child_actions, actions_by_id = (
+                ActionHierarchy.build_hierarchy(data)
+            )
+
             context = {
-                "actions": data,
+                "root_actions": root_actions,
+                "child_actions": child_actions,
                 "label": data[0][9],
                 "execution_plan_uuid": execution_plan_uuid,
                 "caller_execution_plan_id": data[0][11],

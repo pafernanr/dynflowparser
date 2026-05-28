@@ -399,20 +399,23 @@ body {
 }
 
 .action-class .expand-icon {
+  width: 1rem;
+  height: 1rem;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
+  user-select: none;
   cursor: pointer;
+}
+
+.action-header.expanded .expand-icon {
+  transform: rotate(90deg);
 }
 
 .expand-icon {
   flex-shrink: 0;
   width: 1rem;
   height: 1rem;
-  transition: transform 0.2s ease;
   user-select: none;
-}
-
-.expanded .expand-icon {
-  transform: rotate(90deg);
 }
 
 .alert-mark {
@@ -503,6 +506,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+/* Child actions */
+.child-actions {
+  padding-left: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .step-node {
