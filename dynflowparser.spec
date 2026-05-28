@@ -15,6 +15,7 @@ BuildRequires:  python3-setuptools
 Requires: python3-jinja2
 Requires: python3-pytz
 Requires: python3-pandas
+Requires: python3-textual
 
 %description
 Read sosreport dynflow files and generates user friendly html pages for Tasks, Plans, Actions and Steps

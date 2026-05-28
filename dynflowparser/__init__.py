@@ -5,7 +5,6 @@ import webbrowser
 from dynflowparser.lib.configuration import Conf
 from dynflowparser.lib.httpserver import HttpServer
 from dynflowparser.lib.inputdynflow import InputDynflow
-from dynflowparser.lib.outputhtml import OutputHtml
 from dynflowparser.lib.outputsqlite import OutputSQLite
 from dynflowparser.lib.util import Util
 
@@ -20,7 +19,6 @@ class DynflowParser:
     def main(self):
         start_time = time.time()
         sqlite = OutputSQLite(self.conf)
-        html = OutputHtml(self.conf)
         headers = self.conf.dynflowdata['tasks']['headers']
         dynflow = self.input_dynflow.read_dynflow('tasks')
         if self.conf.args.last_n_days:
@@ -73,32 +71,44 @@ class DynflowParser:
                 sqlite.write(d, dynflow)
             # Create indexes after all data is inserted for better performance
             sqlite.create_indexes()
-        html.write()
-        indexpath = f"{self.conf.args.output_path}/index.html"
-        if not self.conf.args.quiet:
-            print("\nUTC dates converted to: " + self.conf.sos['timezone'])
-            print("TotalTime: "
-                  + self.util.seconds_to_str(time.time() - start_time) + "\n")
-            print(f"OutputFile: {indexpath}"
-                  .replace('//', '/')
-                  .replace('/./', '/'))
 
-        if self.conf.args.httpd_server:
-            # Start HTTP server
-            server = HttpServer(self.conf.args.output_path,
-                                self.conf.args.quiet)
-            server.start()
-            try:
-                # Keep server running until Ctrl+C
-                while True:
-                    time.sleep(1)
-            except KeyboardInterrupt:
-                if not self.conf.args.quiet:
-                    print("\nShutting down HTTP server...")
-                try:
-                    server.stop()
-                except KeyboardInterrupt:
-                    # Suppress second Ctrl+C during shutdown
-                    pass
+        # Route to appropriate UI based on --text flag
+        if self.conf.args.text_ui:
+            # Text UI mode - launch interactive Textual TUI
+            from dynflowparser.lib.ui.text.output import TextOutput
+            output = TextOutput(self.conf)
+            output.write()  # Blocking call - runs until user quits
         else:
-            webbrowser.open_new_tab(f"file:///{indexpath}")
+            # HTML mode - generate HTML files
+            from dynflowparser.lib.ui.html.output import HtmlOutput
+            html = HtmlOutput(self.conf)
+            html.write()
+
+            indexpath = f"{self.conf.args.output_path}/index.html"
+            if not self.conf.args.quiet:
+                print("\nUTC dates converted to: " + self.conf.sos['timezone'])
+                print("TotalTime: "
+                      + self.util.seconds_to_str(time.time() - start_time) + "\n")
+                print(f"OutputFile: {indexpath}"
+                      .replace('//', '/')
+                      .replace('/./', '/'))
+
+            if self.conf.args.httpd_server:
+                # Start HTTP server
+                server = HttpServer(self.conf.args.output_path,
+                                    self.conf.args.quiet)
+                server.start()
+                try:
+                    # Keep server running until Ctrl+C
+                    while True:
+                        time.sleep(1)
+                except KeyboardInterrupt:
+                    if not self.conf.args.quiet:
+                        print("\nShutting down HTTP server...")
+                    try:
+                        server.stop()
+                    except KeyboardInterrupt:
+                        # Suppress second Ctrl+C during shutdown
+                        pass
+            else:
+                webbrowser.open_new_tab(f"file:///{indexpath}")

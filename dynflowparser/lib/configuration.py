@@ -97,10 +97,18 @@ class Conf:
             default=self.cwd,
             type=self.valid_output_path
             )
-        self.parser.add_argument(
+        output_group = self.parser.add_mutually_exclusive_group()
+        output_group.add_argument(
             '--httpd-server',
             dest='httpd_server',
             help='Start an HTTP server to serve the generated pages (shows SSH tunnel setup instructions).',
+            default=False,
+            action='store_true'
+            )
+        output_group.add_argument(
+            '--text',
+            dest='text_ui',
+            help='Launch interactive terminal UI instead of generating HTML.',
             default=False,
             action='store_true'
             )
@@ -121,13 +129,27 @@ class Conf:
         if os.path.exists(self.args.output_path):
             if self.writesql:
                 shutil.rmtree(self.args.output_path)
-            else:
+            elif not self.args.text_ui:
+                # Only clean HTML directories in HTML mode
                 for d in ["/actions", "/html"]:
-                    shutil.rmtree(self.args.output_path + d)
-        os.makedirs(self.args.output_path + "/actions")
-        shutil.copytree(os.path.dirname(
-                    os.path.realpath(__file__)) + "/../html",
-                    self.args.output_path + "/html")
+                    if os.path.exists(self.args.output_path + d):
+                        shutil.rmtree(self.args.output_path + d)
+
+        # Create base output directory (needed for both HTML and Text modes)
+        os.makedirs(self.args.output_path, exist_ok=True)
+
+        # Only create HTML directories and copy static assets in HTML mode
+        if not self.args.text_ui:
+            os.makedirs(self.args.output_path + "/actions", exist_ok=True)
+            # Copy static assets from new location
+            static_src = os.path.join(
+                os.path.dirname(os.path.realpath(__file__)),
+                "ui", "html", "static"
+            )
+            static_dest = self.args.output_path + "/html"
+            if os.path.exists(static_src):
+                shutil.copytree(static_src, static_dest)
+
         self.dbfile = self.args.output_path + "/dynflowparserng.db"
 
     def get_version(self):

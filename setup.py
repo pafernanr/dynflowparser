@@ -2,7 +2,9 @@ import os
 import setuptools
 
 
-version_file = os.path.join(os.path.dirname(__file__), 'dynflowparser', '__VERSION__')
+version_file = os.path.join(
+    os.path.dirname(__file__), 'dynflowparser', '__VERSION__'
+)
 
 
 def read(fname):
@@ -14,8 +16,8 @@ def read(fname):
 setuptools.setup(
     name='dynflowparser',
     version=read(version_file),
-    install_requires=['Jinja2', 'pandas', 'pytz'],
-    setup_requires=['Jinja2', 'pandas', 'pytz'],
+    install_requires=['Jinja2', 'pandas', 'pytz', 'textual>=0.50.0'],
+    setup_requires=['Jinja2', 'pandas', 'pytz', 'textual>=0.50.0'],
     scripts=[
         'dynflowparser/bin/__init__.py',
         'dynflowparser_export_tasks/bin/__init__.py'],
@@ -28,9 +30,11 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     package_data={
         'dynflowparser': ['__VERSION__'],
-        'dynflowparser.html.css': ['*'],
-        'dynflowparser.html.js': ['*'],
-        'dynflowparser.templates': ['*'],
+        'dynflowparser.lib.ui.html': [
+            'templates/*',
+            'static/css/*',
+            'static/js/*'
+        ],
     },
     license='GPLv3',
     author='Pablo Fernández Rodríguez',

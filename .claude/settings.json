@@ -10,7 +10,33 @@
       "Bash(git reset *)",
       "Bash(git push *)",
       "Bash(python3 -m py_compile /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/templates/tasks.html /home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/templates/actions.html)",
-      "Bash(python3 -m py_compile dynflowparser/__init__.py dynflowparser/lib/inputdynflow.py)"
+      "Bash(python3 -m py_compile dynflowparser/__init__.py dynflowparser/lib/inputdynflow.py)",
+      "Read(//home/pablofr/work/repos/dynflowparserng/dynflowparser/lib/**)",
+      "Read(//home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/lib/**)",
+      "Bash(cd /home/pablofr/work/repos/dynflowparserng && mv dynflowparser/templates/* dynflowparser/lib/ui/html/templates/ && rmdir dynflowparser/templates)",
+      "Read(//home/pablofr/work/repos/dynflowparserng/**)",
+      "Read(//home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/**)",
+      "Bash(python3 -c \"from dynflowparser.lib.ui.html.output import HtmlOutput; print\\('HTML import: OK'\\)\")",
+      "Bash(python3 -c \"from dynflowparser.lib.ui.text.output import TextOutput; print\\('Text import: OK'\\)\")",
+      "Bash(pip install *)",
+      "Bash(python3 -m dynflowparser.bin --help)",
+      "Bash(python3 -c ' *)",
+      "Bash(sqlite3 -header /home/pablofr/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db \"SELECT id, caller_action_id FROM actions WHERE execution_plan_uuid = '803663b2-308c-49be-b0b5-4f4043587d83' ORDER BY id;\")",
+      "Bash(ls -la /tmp/old/dynflowparser/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/ 2>&1 | head -20)",
+      "Read(//tmp/old/dynflowparser/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/**)",
+      "Bash(python3)",
+      "Bash(sqlite3 -column /home/pablofr/work/cases/04453004/sat/dynflowparserng/sosreport-h1-o-rhss6p1-04453004-2026-05-22-gqlopro/dynflowparserng.db)"
+    ],
+    "additionalDirectories": [
+      "/home/pablofr/work/repos/dynflowparserng/dynflowparser/lib/ui",
+      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/lib/ui",
+      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/templates",
+      "/home/pablofr/work/repos/dynflowparserng/dynflowparser/lib",
+      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser/lib",
+      "/home/pablofr/work/repos/dynflowparserng/dynflowparser",
+      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng/dynflowparser",
+      "/home/pablofr/work/repos/dynflowparserng",
+      "/home/pablofr/Documents/pablo/work/RH/repos/dynflowparserng"
     ]
   }
 }
