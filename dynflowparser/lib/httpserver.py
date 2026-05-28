@@ -10,17 +10,15 @@ import threading
 class HttpServer:
     """HTTP server to serve generated HTML pages."""
 
-    def __init__(self, output_path, quiet=False, ssh_tunnel=False):
+    def __init__(self, output_path, quiet=False):
         """Initialize HTTP server.
 
         Args:
             output_path: Path to the directory containing generated HTML files
             quiet: If True, suppress output messages
-            ssh_tunnel: If True, show SSH tunnel commands instead of URLs
         """
         self.output_path = output_path
         self.quiet = quiet
-        self.ssh_tunnel = ssh_tunnel
         self.server = None
         self.port = None
         self.ip_addresses = []
@@ -159,60 +157,47 @@ class HttpServer:
 
         # Create and start server
         try:
-            if self.ssh_tunnel:
-                # SSH tunnel mode: bind to localhost only
-                bind_address = '127.0.0.1'
-                self.server = ThreadedHTTPServer((bind_address, self.port),
-                                                 handler)
+            # Bind to all interfaces
+            self.ip_addresses = self.get_all_ips()
+            self.server = ThreadedHTTPServer(('0.0.0.0', self.port),
+                                             handler)
 
-                # Start server in background thread
-                server_thread = threading.Thread(
-                    target=self.server.serve_forever)
-                server_thread.daemon = True
-                server_thread.start()
+            # Start server in background thread
+            server_thread = threading.Thread(
+                target=self.server.serve_forever)
+            server_thread.daemon = True
+            server_thread.start()
 
-                # Display SSH tunnel commands
-                if not self.quiet:
-                    hostname = self.get_fqdn()
-                    print("\nHTTP Server started in SSH tunnel mode.")
-                    print("\n- Create the SSH tunnel using:")
-                    print("  ~~~")
-                    print(f"  ssh -L {self.port}:localhost:{self.port} "
-                          f"{hostname}")
-                    print("  ~~~")
-                    print("\n- Browse local tunnel at:")
-                    print("  ~~~")
-                    print(f"  http://localhost:{self.port}/index.html")
-                    print("  ~~~")
-                    print("\nPress Ctrl+C to stop the server and exit.")
+            # Display both access options
+            if not self.quiet:
+                hostname = self.get_fqdn()
 
-                return f"http://localhost:{self.port}/index.html"
+                print("\nHTTP Server started.")
 
-            else:
-                # Normal mode: bind to all interfaces
-                self.ip_addresses = self.get_all_ips()
-                self.server = ThreadedHTTPServer(('0.0.0.0', self.port),
-                                                 handler)
+                # Option 1: Direct access via public IPs
+                print("\nOption 1: Direct access (if network allows):")
+                for iface, ip in self.ip_addresses:
+                    url = f"http://{ip}:{self.port}/index.html"
+                    if iface:
+                        print(f"  - {iface}: {url}")
+                    else:
+                        print(f"  - {url}")
 
-                # Start server in background thread
-                server_thread = threading.Thread(
-                    target=self.server.serve_forever)
-                server_thread.daemon = True
-                server_thread.start()
+                # Option 2: SSH tunnel access
+                print("\nOption 2: SSH tunnel access:")
+                print("  - Create the SSH tunnel using a new terminal:")
+                print("    ~~~")
+                print(f"    ssh -L {self.port}:localhost:{self.port} {hostname}")
+                print("    ~~~")
+                print("  - Open this URL in your browser:")
+                print("    ~~~")
+                print(f"    http://localhost:{self.port}/index.html")
+                print("    ~~~")
 
-                # Display URLs for all IPs
-                if not self.quiet:
-                    print("\nHTTP Server started. Access at:")
-                    for iface, ip in self.ip_addresses:
-                        url = f"http://{ip}:{self.port}/index.html"
-                        if iface:
-                            print(f"  - {iface}: {url}")
-                        else:
-                            print(f"  - {url}")
-                    print("\nPress Ctrl+C to stop the server and exit.")
+                print("\nPress Ctrl+C to stop the server and exit.")
 
-                # Return the primary URL (first IP)
-                return f"http://{self.ip_addresses[0][1]}:{self.port}/index.html"
+            # Return the primary URL (first IP)
+            return f"http://{self.ip_addresses[0][1]}:{self.port}/index.html"
 
         except Exception as e:
             if not self.quiet:

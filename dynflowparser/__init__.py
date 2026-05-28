@@ -83,11 +83,10 @@ class DynflowParser:
                   .replace('//', '/')
                   .replace('/./', '/'))
 
-        if self.conf.args.httpd_server or self.conf.args.ssh_tunnel:
+        if self.conf.args.httpd_server:
             # Start HTTP server
             server = HttpServer(self.conf.args.output_path,
-                                self.conf.args.quiet,
-                                self.conf.args.ssh_tunnel)
+                                self.conf.args.quiet)
             server.start()
             try:
                 # Keep server running until Ctrl+C

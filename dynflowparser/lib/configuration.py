@@ -97,19 +97,10 @@ class Conf:
             default=self.cwd,
             type=self.valid_output_path
             )
-        server_group = self.parser.add_mutually_exclusive_group()
-        server_group.add_argument(
+        self.parser.add_argument(
             '--httpd-server',
             dest='httpd_server',
-            help='Start an HTTP server to serve the generated pages.',
-            default=False,
-            action='store_true'
-            )
-        server_group.add_argument(
-            '-s',
-            '--ssh-tunnel',
-            dest='ssh_tunnel',
-            help='Start an HTTP server and show SSH tunnel commands.',
+            help='Start an HTTP server to serve the generated pages (shows SSH tunnel setup instructions).',
             default=False,
             action='store_true'
             )
