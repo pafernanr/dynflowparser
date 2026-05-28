@@ -13,9 +13,9 @@ DynflowParser reads Dynflow task data from a [sosreport](https://github.com/sosr
 
 The companion command `dynflowparser-export-tasks` overcomes sosreport file size limitations by exporting tasks directly from the Foreman database.
 
-| Tasks List | Task Details |
-| --- | --- |
-| ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/dynflowparser-ng/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/dynflowparser-ng/docs/files/_screenshot2.png) |
+| Tasks List | Task Details | Terminal |
+| --- | --- | --- |
+| ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/dynflowparser-ng/docs/files/_screenshot1.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/dynflowparser-ng/docs/files/_screenshot2.png) | ![](https://raw.githubusercontent.com/pafernanr/dynflowparser/refs/heads/dynflowparser-ng/docs/files/_screenshot3.png) |
 
 ## Main Features
 
@@ -26,7 +26,7 @@ The companion command `dynflowparser-export-tasks` overcomes sosreport file size
 - **Formatting**: Indented and readable fields for Actions & Steps
 - **HTTP Server**: Built-in web server with `--httpd-server` and `--ssh-tunnel` options for remote web access
 - **Browser Integration**: Automatically opens output in default browser
-- **CLI Friendly**: (Work In Progress) Lynx-compatible for terminal-based browsing
+- **CLI Friendly**: Terminal-based browsing
 
 ## Requirements
 
