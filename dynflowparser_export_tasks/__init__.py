@@ -65,6 +65,27 @@ class DynflowParserExportTasks:
         }
 
     def main(self):
+        # Display deprecation warning
+        print("\n" + "="*80)
+        print("WARNING: This project is DEPRECATED")
+        print("="*80)
+        print("\nThis project has been deprecated in favor of DynflowBrowser.")
+        print("Please use DynflowBrowser for new projects and consider migrating existing workflows.")
+        print("\nDynflowBrowser: https://github.com/pafernanr/dynflowbrowser/")
+        print("\n" + "="*80 + "\n")
+
+        # Ask for confirmation
+        try:
+            response = input("Do you want to continue anyway? (y/N): ").strip().lower()
+            if response not in ['y', 'yes']:
+                print("Execution cancelled.")
+                sys.exit(0)
+        except (EOFError, KeyboardInterrupt):
+            print("\nExecution cancelled.")
+            sys.exit(0)
+
+        print()  # Add blank line for readability
+
         # get basic sosreport details
         self.util.exec_command(f"timedatectl &> {self.conf.outdir}/sos_commands/systemd/timedatectl")  # noqa E501
         self.util.exec_command(f"hostname &> {self.conf.outdir}/hostname")
