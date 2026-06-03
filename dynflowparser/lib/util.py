@@ -64,7 +64,9 @@ class Util:
                 return datetime.datetime.strptime(d, v)
             except ValueError:
                 continue
-        self.debug('E', f"not a valid date: {d!r}. Valid formats: {str(valid)}")
+        # TODO: Fix dynflowparser to not output invalid dates like '1'
+        # For now, log warning and return None to skip corrupt date fields
+        self.debug('I', f"Invalid date value {d!r}, setting to NULL")
         return None
 
     def change_timezone(self, tz, d):
