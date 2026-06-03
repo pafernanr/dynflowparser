@@ -64,14 +64,17 @@ class Util:
                 return datetime.datetime.strptime(d, v)
             except ValueError:
                 continue
-        self.debug('E', f"not a valid date: {d!r}. Valid formats: {str(valid)}")
-        sys.exit(1)
+        # TODO: Fix dynflowparser to not output invalid dates like '1'
+        # For now, log warning and return None to skip corrupt date fields
+        self.debug('I', f"Invalid date value {d!r}, setting to NULL")
+        return None
 
     def change_timezone(self, tz, d):
         if d is not None and d != "":
-            return self.to_timezone(
-                tz, self.date_from_string(d))
-        return d
+            parsed_date = self.date_from_string(d)
+            if parsed_date is not None:
+                return self.to_timezone(tz, parsed_date)
+        return None
 
 
 # adopted from https://github.com/pavlinamv/rails-load-stats-py/blob/main/progress_bar.py  # noqa E501

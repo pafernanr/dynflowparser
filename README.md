@@ -1,4 +1,7 @@
 ### dynflowparser
+
+> **⚠️ DEPRECATED**: This project has been deprecated in favor of [DynflowBrowser](https://github.com/pafernanr/dynflowbrowser/). Please use DynflowBrowser for new projects and consider migrating existing workflows.
+
 Reads the dynflow files from a [sosreport](https://github.com/sosreport/sos) and generates user friendly html pages for Tasks, Plans, Actions and Steps.
 Companion command `dynflowparser-export-tasks` helps to overcome `sosreport` file size limitations. (Read [Limitations](#limitations) below)
 
