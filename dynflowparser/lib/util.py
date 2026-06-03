@@ -69,9 +69,10 @@ class Util:
 
     def change_timezone(self, tz, d):
         if d is not None and d != "":
-            return self.to_timezone(
-                tz, self.date_from_string(d))
-        return d
+            parsed_date = self.date_from_string(d)
+            if parsed_date is not None:
+                return self.to_timezone(tz, parsed_date)
+        return None
 
 
 # adopted from https://github.com/pavlinamv/rails-load-stats-py/blob/main/progress_bar.py  # noqa E501
