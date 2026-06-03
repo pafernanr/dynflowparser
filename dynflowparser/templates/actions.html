@@ -91,8 +91,8 @@
             <span class="file"></span><span class="show">{{a[3]}}.{{s[1]}}: {{s[10]}}</span>
             {% if s[13]|length %}<span class="caution">!</span>{% endif %}
           </td>
-          <td>{{ s[4].split(".")[0] }}</td>
-          <td>{{ s[5].split(".")[0] }}</td>
+          <td>{{ (s[4] or "None").split(".")[0] }}</td>
+          <td>{{ (s[5] or "").split(".")[0] }}</td>
           <td>{{ "{:0,.2f}".format(s[6]) }}</td>
           <td>{{ "{:0,.2f}".format(s[7]) }}</td>
           <td class="{{s[3]}}">
