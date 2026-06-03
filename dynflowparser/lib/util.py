@@ -65,7 +65,7 @@ class Util:
             except ValueError:
                 continue
         self.debug('E', f"not a valid date: {d!r}. Valid formats: {str(valid)}")
-        sys.exit(1)
+        return None
 
     def change_timezone(self, tz, d):
         if d is not None and d != "":
